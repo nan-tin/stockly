@@ -1,0 +1,9 @@
+{
+  "editor.tabSize": 2,
+  "files.autoSave": "onFocusChange",
+
+  "ruby.interpreter.commandPath": "/home/ron/.rbenv/shims/ruby",
+  "rubyLsp.rubyVersionManager": "rbenv",
+  "rubyLsp.useBundler": true
+}
+
