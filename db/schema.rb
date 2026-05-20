@@ -10,9 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_19_133138) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_19_222130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "group_users", comment: "共有グループ所属情報", force: :cascade do |t|
+    t.bigint "user_id", null: false, comment: "ユーザーID"
+    t.bigint "group_id", null: false, comment: "グループID"
+    t.string "display_name", null: false, comment: "共有時の表示名"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_users_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_group_users_on_user_id_and_group_id", unique: true
+    t.index ["user_id"], name: "index_group_users_on_user_id"
+  end
+
+  create_table "groups", comment: "共有グループ", force: :cascade do |t|
+    t.string "invite_code", null: false, comment: "グループ招待コード"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invite_code"], name: "index_groups_on_invite_code", unique: true
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +44,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_19_133138) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "group_users", "groups"
+  add_foreign_key "group_users", "users"
 end
