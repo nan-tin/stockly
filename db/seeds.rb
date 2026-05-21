@@ -1,14 +1,23 @@
-user = User.create!(
-  email: "test@example.com",
-  password: "password"
-)
-  
-group = Group.create!(
-  invite_code: "12345678"
+user = User.find_or_create_by!(email: "test@example.com") do |u|
+  u.password = "password"
+end
+
+group = Group.find_or_create_by!(invite_code: "12345678")
+
+GroupUser.find_or_create_by!(
+  user: user,
+  group: group
+) do |gu|
+  gu.display_name = "ron"
+end
+
+Category.find_or_create_by!(
+  group: group,
+  name: "食品"
 )
 
-GroupUser.create!(
-  user: user,
+Category.find_or_create_by!(
   group: group,
-  display_name: "ron"
+  name: "日用品"
 )
+

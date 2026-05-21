@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_19_222130) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_20_231740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", comment: "カテゴリー", force: :cascade do |t|
+    t.bigint "group_id", null: false, comment: "所属共有グループID"
+    t.string "name", null: false, comment: "カテゴリー名"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id", "name"], name: "index_categories_on_group_id_and_name", unique: true
+    t.index ["group_id"], name: "index_categories_on_group_id"
+  end
 
   create_table "group_users", comment: "共有グループ所属情報", force: :cascade do |t|
     t.bigint "user_id", null: false, comment: "ユーザーID"
@@ -44,6 +53,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_19_222130) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "categories", "groups"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
 end
