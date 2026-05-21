@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group: one
+  category: one
+  name: MyString
+  quantity: 1
+  purchased_at: 2026-05-22
+  expired_at: 2026-05-22
+  memo: MyText
+
+two:
+  group: two
+  category: two
+  name: MyString
+  quantity: 1
+  purchased_at: 2026-05-22
+  expired_at: 2026-05-22
+  memo: MyText

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_20_231740) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_21_223937) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,6 +41,20 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_20_231740) do
     t.index ["invite_code"], name: "index_groups_on_invite_code", unique: true
   end
 
+  create_table "items", comment: "在庫アイテム", force: :cascade do |t|
+    t.bigint "group_id", null: false, comment: "所属共有グループID"
+    t.bigint "category_id", null: false, comment: "カテゴリーID"
+    t.string "name", null: false, comment: "商品名"
+    t.integer "quantity", default: 0, null: false, comment: "在庫数"
+    t.date "purchased_at", comment: "購入日"
+    t.date "expired_at", comment: "期限日"
+    t.text "memo", comment: "メモ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_items_on_category_id"
+    t.index ["group_id"], name: "index_items_on_group_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -56,4 +70,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_20_231740) do
   add_foreign_key "categories", "groups"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
+  add_foreign_key "items", "categories"
+  add_foreign_key "items", "groups"
 end
