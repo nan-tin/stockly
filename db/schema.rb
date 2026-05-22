@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_21_223937) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_22_221134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,6 +55,26 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_21_223937) do
     t.index ["group_id"], name: "index_items_on_group_id"
   end
 
+  create_table "shopping_items", comment: "買い物アイテム", force: :cascade do |t|
+    t.bigint "shopping_list_id", null: false, comment: "所属買い物リストID"
+    t.bigint "category_id", null: false, comment: "カテゴリーID"
+    t.string "name", null: false, comment: "商品名"
+    t.integer "quantity", default: 1, null: false, comment: "購入予定数"
+    t.text "memo", comment: "メモ"
+    t.boolean "is_purchased", default: false, null: false, comment: "購入済みフラグ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_shopping_items_on_category_id"
+    t.index ["shopping_list_id"], name: "index_shopping_items_on_shopping_list_id"
+  end
+
+  create_table "shopping_lists", comment: "買い物リスト", force: :cascade do |t|
+    t.bigint "group_id", null: false, comment: "所属共有グループID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_shopping_lists_on_group_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -72,4 +92,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_21_223937) do
   add_foreign_key "group_users", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "groups"
+  add_foreign_key "shopping_items", "categories"
+  add_foreign_key "shopping_items", "shopping_lists"
+  add_foreign_key "shopping_lists", "groups"
 end

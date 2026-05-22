@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shopping_list: one
+  category: one
+  name: MyString
+  quantity: 1
+  memo: MyText
+  is_purchased: false
+
+two:
+  shopping_list: two
+  category: two
+  name: MyString
+  quantity: 1
+  memo: MyText
+  is_purchased: false

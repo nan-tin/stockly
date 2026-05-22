@@ -40,3 +40,14 @@ Item.find_or_create_by!(
   item.quantity = 10
 end
 
+shopping_list = ShoppingList.find_or_create_by!(
+  group: group
+  )
+
+ShoppingItem.find_or_create_by!(
+  shopping_list: shopping_list,
+  category: food,
+  name: "牛乳"
+) do |item|
+  item.quantity = 2
+end
