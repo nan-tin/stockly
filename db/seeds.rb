@@ -51,3 +51,13 @@ ShoppingItem.find_or_create_by!(
 ) do |item|
   item.quantity = 2
 end
+
+Consumption.find_or_create_by!(
+  group: group,
+  name: "冷凍餃子",
+  consumed_on: Date.today,
+) do |consumption|
+  consumption.category = food
+  consumption.category_name = food.name
+  consumption.memo = "夕食で消費"
+end

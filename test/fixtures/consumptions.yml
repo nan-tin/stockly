@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group: one
+  category: one
+  name: MyString
+  consumed_on: 2026-05-23
+  memo: MyText
+
+two:
+  group: two
+  category: two
+  name: MyString
+  consumed_on: 2026-05-23
+  memo: MyText
