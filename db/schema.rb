@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_23_122656) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_23_232500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_23_122656) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["invite_code"], name: "index_groups_on_invite_code", unique: true
+  end
+
+  create_table "inquiries", comment: "お問い合わせ", force: :cascade do |t|
+    t.bigint "user_id", null: false, comment: "問い合わせユーザーID"
+    t.integer "inquiry_type", null: false, comment: "問い合わせ種類"
+    t.string "email", null: false, comment: "返信先メールアドレス"
+    t.text "content", null: false, comment: "問い合わせ内容"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
   create_table "items", comment: "在庫アイテム", force: :cascade do |t|
@@ -105,6 +115,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_23_122656) do
   add_foreign_key "consumptions", "groups"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
+  add_foreign_key "inquiries", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "groups"
   add_foreign_key "shopping_items", "categories"
