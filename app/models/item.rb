@@ -2,6 +2,8 @@ class Item < ApplicationRecord
   belongs_to :group
   belongs_to :category
 
+  has_one_attached :image
+
   validates :name, 
             presence: true,
             length: { maximum: 50 }

@@ -1,6 +1,8 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
+  has_one_attached :image
+
   enum inquiry_type: {
     bug: 0,
     feature: 1,
