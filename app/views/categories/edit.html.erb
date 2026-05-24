@@ -1,0 +1,12 @@
+<h1>カテゴリ編集</h1>
+
+<%= form_with model: @category do |f| %>
+  <div>
+    <%= f.label :name, "カテゴリー名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.submit "更新" %>
+  </div>
+<% end %>
