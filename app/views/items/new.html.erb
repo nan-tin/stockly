@@ -1,0 +1,45 @@
+<h1>アイテム作成</h1>
+
+<%= form_with model: @item do |f| %>
+  <div>
+    <%= f.label :category_id, "カテゴリー" %>
+    <%= f.collection_select :category_id,
+                             current_group.categories,
+                             :id,
+                             :name %>
+  </div>
+
+  <div>
+    <%= f.label :name, "商品名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :quantity, "数量" %>
+    <%= f.number_field :quantity %>
+  </div>
+
+  <div>
+    <%= f.label :purchased_at, "購入日" %>
+    <%= f.date_field :purchased_at %>
+  </div>
+
+  <div>
+    <%= f.label :expired_at, "期限日" %>
+    <%= f.date_field :expired_at %>
+  </div>
+
+  <div>
+    <%= f.label :memo, "メモ" %>
+    <%= f.text_area :memo %>
+  </div>
+
+  <div>
+    <%= f.label :image, "画像" %>
+    <%= f.file_field :image %>
+  </div>
+
+  <div>
+    <%= f.submit "作成" %>
+  </div>
+<% end %>

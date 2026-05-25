@@ -39,10 +39,6 @@ class CategoriesController < ApplicationController
 
   private
 
-  def current_group
-    current_user.groups.first
-  end
-
   def category_params
     params.require(:category).permit(:name)
   end

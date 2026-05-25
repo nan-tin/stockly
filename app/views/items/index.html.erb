@@ -1,0 +1,12 @@
+<h1>Items</h1>
+
+<%= link_to "新規作成", new_item_path %>
+
+<ul>
+  <% @items.each do |item| %>
+    <li>
+      <%= item.name %>
+      (<%= item.category.name %>)
+    </li>
+  <% end %>
+</ul>
