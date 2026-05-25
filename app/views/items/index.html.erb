@@ -5,8 +5,18 @@
 <ul>
   <% @items.each do |item| %>
     <li>
+      <% if item.image.attached? %>
+        <%= image_tag item.image, width: 100 %>
+      <% end %>
+
       <%= item.name %>
       (<%= item.category.name %>)
+
+      <%= link_to "編集", edit_item_path(item) %>
+
+      <%= button_to "削除", 
+                    item_path(item), 
+                    method: :delete %>
     </li>
   <% end %>
 </ul>
