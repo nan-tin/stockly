@@ -7,6 +7,7 @@ class ShoppingItemsController < ApplicationController
                         .shopping_list
                         .shopping_items
                         .includes(:category)
+                        .where(is_purchased: false)
   end
 
   def new
@@ -21,6 +22,27 @@ class ShoppingItemsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def purchase
+    shopping_item = current_group
+                      .shopping_list
+                      .shopping_items
+                      .find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      shopping_item.update!(is_purchased: true)
+
+      current_group.items.create!(
+        category: shopping_item.category,
+        name: shopping_item.name,
+        quantity: shopping_item.quantity,
+        memo: shopping_item.memo
+      )
+    end
+
+    redirect_to shopping_items_path,
+                notice: "購入済みにしました"
   end
 
   def edit
@@ -53,5 +75,5 @@ class ShoppingItemsController < ApplicationController
   def set_shopping_item
     @shopping_item = current_group.shopping_list.shopping_items.find(params[:id])
   end
-  
+
 end

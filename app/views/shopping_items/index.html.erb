@@ -20,6 +20,9 @@
         <td><%= shopping_item.quantity %></td>
 
         <td>
+          <%= button_to "購入済みにする",
+                        purchase_shopping_item_path(shopping_item),
+                        method: :patch %>
           <%= link_to "編集", edit_shopping_item_path(shopping_item) %>
 
           <%= link_to "削除",

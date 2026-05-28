@@ -5,5 +5,9 @@ Rails.application.routes.draw do
 
   resources :categories
   resources :items
-  resources :shopping_items
+  resources :shopping_items do
+    member do
+      patch :purchase
+    end
+  end
 end
