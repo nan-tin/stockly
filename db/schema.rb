@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_24_012224) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_27_062809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,12 +54,13 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_24_012224) do
   create_table "consumptions", comment: "消費履歴", force: :cascade do |t|
     t.bigint "group_id", null: false, comment: "所属共有グループID"
     t.bigint "category_id", comment: "カテゴリーID"
-    t.string "name", null: false, comment: "消費した商品名"
-    t.date "consumed_on", null: false, comment: "消費日"
+    t.string "item_name", null: false, comment: "消費した商品名"
+    t.date "consumed_at", null: false, comment: "消費日"
     t.text "memo", comment: "消費時点のメモ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "category_name", null: false, comment: "消費時点のカテゴリー名"
+    t.integer "quantity", default: 1, null: false, comment: "消費数"
     t.index ["category_id"], name: "index_consumptions_on_category_id"
     t.index ["group_id"], name: "index_consumptions_on_group_id"
   end

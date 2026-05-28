@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update destroy]
 
   def index
-    @categories = current_user.groups.first.categories
+    @categories = current_group.categories
   end
 
   def new
@@ -11,7 +11,7 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    @category = current_user.groups.first.categories.build(category_params)
+    @category = current_group.categories.build(category_params)
 
     if @category.save
       redirect_to categories_path, notice: "カテゴリーを作成しました"

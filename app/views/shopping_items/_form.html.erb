@@ -1,0 +1,39 @@
+<%= form_with model: @shopping_item do |f| %>
+
+  <% if @shopping_item.errors.any? %>
+    <div>
+      <ul>
+        <% @shopping_item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= f.label :category_id, "カテゴリー" %>
+
+    <%= f.collection_select :category_id,
+                             current_group.categories,
+                             :id,
+                             :name %>
+  </div>
+
+  <div>
+    <%= f.label :name, "商品名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :quantity, "購入予定数" %>
+    <%= f.number_field :quantity %>
+  </div>
+
+  <div>
+    <%= f.label :memo, "メモ" %>
+    <%= f.text_area :memo %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

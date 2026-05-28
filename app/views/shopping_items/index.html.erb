@@ -1,0 +1,35 @@
+<h1>買うもの一覧</h1>
+
+<%= link_to "買うもの追加", new_shopping_item_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>カテゴリ</th>
+      <th>商品名</th>
+      <th>購入予定数</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @shopping_items.each do |shopping_item| %>
+      <tr>
+        <td><%= shopping_item.category.name %></td>
+        <td><%= shopping_item.name %></td>
+        <td><%= shopping_item.quantity %></td>
+
+        <td>
+          <%= link_to "編集", edit_shopping_item_path(shopping_item) %>
+
+          <%= link_to "削除",
+                      shopping_item_path(shopping_item),
+                      data: {
+                        turbo_method: :delete,
+                        turbo_confirm: "本当に削除しますか？"
+                      } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
