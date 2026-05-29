@@ -4,7 +4,12 @@ class ItemsController < ApplicationController
 
   #includes は「N+1問題」を防ぐためのメソッド
   def index
-    @items = current_group.items.includes(:category).with_attached_image
+    @items = current_group
+                .items
+                .includes(:category, image_attachment: :blob)
+    if params[:keyword].present?
+      @items = @items.where("items.name ILIKE ?", "%#{params[:keyword]}%")
+    end
   end
 
   def new
