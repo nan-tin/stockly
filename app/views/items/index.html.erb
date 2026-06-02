@@ -3,7 +3,20 @@
 <%= form_with url: items_path, method: :get do |f| %>
   <%= f.text_field :keyword, value: params[:keyword], placeholder: "商品名を入力" %>
   <%= f.submit "検索" %>
+
+  <%= f.select :sort,
+             [
+               ["購入が新しい順", "purchased_desc"],
+               ["購入が古い順", "purchased_asc"],
+               ["在庫数が多い順", "quantity_desc"],
+               ["在庫数が少ない順", "quantity_asc"],
+               ["あいうえお順", "name_asc"]
+             ],
+             { include_blank: "並び替えを選択" },
+             { selected: params[:sort] } %>
 <% end %>
+
+
 
 <%= link_to "新規作成", new_item_path %>
 

@@ -10,6 +10,19 @@ class ItemsController < ApplicationController
     if params[:keyword].present?
       @items = @items.where("items.name ILIKE ?", "%#{params[:keyword]}%")
     end
+
+    case params[:sort]
+    when "purchased_desc"
+      @items = @items.order(purchased_at: :desc)
+    when "purchased_asc"
+      @items = @items.order(purchased_at: :asc)
+    when "quantity_desc"
+      @items = @items.order(quantity: :desc)
+    when "quantity_asc"
+      @items = @items.order(quantity: :asc)
+    when "name_asc"
+      @items = @items.order(name: :asc)
+    end
   end
 
   def new
