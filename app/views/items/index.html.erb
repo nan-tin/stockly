@@ -20,21 +20,30 @@
 
 <%= link_to "新規作成", new_item_path %>
 
-<ul>
-  <% @items.each do |item| %>
-    <li>
-      <% if item.image.attached? %>
-        <%= image_tag item.image, width: 100 %>
-      <% end %>
+<%= form_with url: bulk_destroy_items_path, method: :delete do %>
+  <ul>
+    <% @items.each do |item| %>
+      <li>
+        <%= check_box_tag "item_ids[]", item.id %>
 
-      <%= item.name %>
-      (<%= item.category.name %>)
+        <% if item.image.attached? %>
+          <%= image_tag item.image, width: 100 %>
+        <% end %>
 
-      <%= link_to "編集", edit_item_path(item) %>
+        <%= item.name %>
+        (<%= item.category.name %>)
 
-      <%= button_to "削除", 
-                    item_path(item), 
-                    method: :delete %>
-    </li>
-  <% end %>
-</ul>
+        <%= link_to "編集", edit_item_path(item) %>
+
+        <%= link_to "削除", 
+                    item_path(item),
+                    data: {
+                      turbo_method: :delete,
+                      turbo_confirm: "本当に削除しますか？"
+                    }  %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= submit_tag "選択したアイテムを削除" %>
+<% end %>
