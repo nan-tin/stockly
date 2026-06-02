@@ -61,6 +61,25 @@ class ItemsController < ApplicationController
     redirect_to items_path, notice: "選択したアイテムを削除しました"
   end
 
+  def consume 
+    item = current_group.items.find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      current_group.consumptions.create!(
+        category: item.category,
+        category_name: item.category.name,
+        item_name: item.name,
+        quantity: item.quantity,
+        consumed_at: Date.current,
+        memo: item.memo
+      )
+
+      item.destroy!
+    end
+
+    redirect_to items_path, notice: "消費履歴を登録しました"
+  end
+
   private
 
   def item_params

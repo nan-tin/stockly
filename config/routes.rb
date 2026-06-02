@@ -10,6 +10,10 @@ Rails.application.routes.draw do
     collection do
       delete :bulk_destroy
     end
+
+    member do
+      patch :consume
+    end
   end
 
    # member do ... endはIDを必要とする追加アクション

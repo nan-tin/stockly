@@ -41,6 +41,13 @@
                       turbo_method: :delete,
                       turbo_confirm: "本当に削除しますか？"
                     }  %>
+
+        <%= link_to "消費",
+                    consume_item_path(item),
+                    data: {
+                      turbo_method: :patch,
+                      turbo_confirm: "本当に消費しますか？"
+                    } %>
       </li>
     <% end %>
   </ul>
