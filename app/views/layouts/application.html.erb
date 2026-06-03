@@ -18,5 +18,16 @@
     <% end %>  
 
     <%= yield %>
+    <% if user_signed_in? %>
+      <footer>
+        <nav>
+          <%= link_to "ホーム", items_path %>
+          <%= link_to "買う物", shopping_items_path %>
+          <%= link_to "アイテム追加", new_item_path %>
+          <%= link_to "消費履歴", consumptions_path %>
+          <%= link_to "設定", categories_path %>
+        </nav>
+      </footer>
+    <% end %>
   </body>
 </html>
