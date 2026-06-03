@@ -1,0 +1,23 @@
+<h1>消費履歴</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>消費日</th>
+      <th>カテゴリー</th>
+      <th>商品名</th>
+      <th>消費数</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @consumptions.each do |consumption| %>
+      <tr>
+        <td><%= consumption.consumed_at %></td>
+        <td><%= consumption.category_name %></td>
+        <td><%= consumption.item_name %></td>
+        <td><%= consumption.quantity %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

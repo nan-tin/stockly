@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'consumptions/index'
   devise_for :users
   
   root "categories#index"
@@ -22,4 +23,6 @@ Rails.application.routes.draw do
       patch :purchase
     end
   end
+
+  resources :consumptions, only: [:index]
 end
