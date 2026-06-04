@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get "settings", to: "settings#index"
+
   get "consumptions/index", to: "consumptions#index"
+
   devise_for :users
   
   root "categories#index"
@@ -26,4 +28,6 @@ Rails.application.routes.draw do
   end
 
   resources :consumptions, only: [:index]
+
+  resources :inquiries, only: %i[new create]
 end

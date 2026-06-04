@@ -1,0 +1,41 @@
+<h1>お問い合わせ</h1>
+
+<%= form_with model: @inquiry do |f| %>
+
+  <% if @inquiry.errors.any? %>
+    <ul>
+      <% @inquiry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  
+  <div>
+    <%= f.label :inquiry_type, "お問い合わせの種類" %>
+    <%= f.select :inquiry_type,
+                 Inquiry.inquiry_types.keys.map { |key| [key, key] } %>
+  </div>
+
+  <div>
+    <%= f.label :email, "返信先メールアドレス" %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :content, "お問い合わせ内容" %>
+    <%= f.text_area :content %>
+  </div>
+
+  <div>
+    <%= f.label :image, "画像添付" %>
+    <%= f.file_field :image %>
+  </div>
+
+  <div>
+    <%= f.submit "送信" %>
+  </div>
+
+<% end %>
+
+
+
