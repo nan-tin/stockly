@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  get 'consumptions/index'
+  get "settings", to: "settings#index"
+  get "consumptions/index", to: "consumptions#index"
   devise_for :users
   
   root "categories#index"

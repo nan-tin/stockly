@@ -1,0 +1,9 @@
+<h1>設定</h1>
+
+<ul>
+  <li><%= link_to "カテゴリー管理", categories_path %></li>
+  <li><%= link_to "お問い合わせ", "#" %></li>
+  <li><%= link_to "利用規約", "#" %></li>
+  <li><%= link_to "プライバシーポリシー", "#" %></li>
+  <li><%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete } %></li>
+</ul>
