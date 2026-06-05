@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "terms", to: "static_pages#terms"
+  get "privacy", to: "static_pages#privacy"
+  
   get "settings", to: "settings#index"
 
   get "consumptions/index", to: "consumptions#index"
