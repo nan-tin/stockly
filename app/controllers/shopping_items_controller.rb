@@ -31,18 +31,19 @@ class ShoppingItemsController < ApplicationController
                       .find(params[:id])
 
     ActiveRecord::Base.transaction do
-      shopping_item.update!(is_purchased: true)
-
       current_group.items.create!(
         category: shopping_item.category,
         name: shopping_item.name,
         quantity: shopping_item.quantity,
+        purchased_at: Date.current,
         memo: shopping_item.memo
       )
+
+      shopping_item.destroy!
     end
 
     redirect_to shopping_items_path,
-                notice: "購入済みにしました"
+                notice: "在庫へ追加しました"
   end
 
   def edit
