@@ -56,6 +56,8 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://rspec.info/features/7-1/rspec-rails
   config.include FactoryBot::Syntax::Methods
+
+  config.include Devise::Test::IntegrationHelpers, type: :request
   #
   # You can also this infer these behaviours automatically by location, e.g.
   # /spec/models would pull in the same behaviour as `type: :model` but this
