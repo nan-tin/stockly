@@ -1,13 +1,35 @@
-<h1>Categories</h1>
+<h1 class="mb-6 text-2xl font-bold">カテゴリー</h1>
 
-<%= link_to "新規作成", new_category_path %>
+<div class="mb-4 flex justify-end">
+  <%= link_to "新規作成",
+        new_category_path,
+        class: "rounded-lg bg-stone-900 px-4 py-2 text-sm font-semibold text-white" %>
+</div>
 
-<ul>
+<div class="space-y-3">
   <% @categories.each do |category| %>
-    <li>
-      <%= category.name %>
-      <%= link_to "編集", edit_category_path(category) %>
-      <%= button_to "削除", category_path(category), method: :delete %>
-    </li>
+    <div class="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-lg font-semibold"><%= category.name %></p>
+        </div>
+
+        <div class="flex gap-2">
+          <%= link_to "編集",
+                edit_category_path(category),
+                class: "rounded-lg border border-blue-200 px-3 py-1.5 text-sm font-semibold text-blue-600" %>
+
+          <%= button_to "削除",
+                category_path(category),
+                method: :delete,
+                class: "rounded-lg border border-red-200 px-3 py-1.5 text-sm font-semibold text-red-600",
+                form: {
+                  data: {
+                    turbo_confirm: "本当に削除しますか？"
+                  }
+                } %>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
+</div>
