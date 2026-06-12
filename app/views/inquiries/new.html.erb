@@ -1,41 +1,73 @@
-<h1>お問い合わせ</h1>
+<h1 class="mb-6 text-2xl font-bold">お問い合わせ</h1>
 
-<%= form_with model: @inquiry do |f| %>
+<div class="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+  <%= form_with model: @inquiry, class: "space-y-5" do |f| %>
 
-  <% if @inquiry.errors.any? %>
-    <ul>
-      <% @inquiry.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+    <% if @inquiry.errors.any? %>
+      <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <p class="font-semibold">入力内容を確認してください</p>
+
+        <ul class="mt-2 list-disc pl-5">
+          <% @inquiry.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :inquiry_type,
+            "お問い合わせの種類",
+            class: "mb-1 block text-sm font-semibold text-stone-700" %>
+
+      <%= f.select :inquiry_type,
+            [
+              ["不具合報告", "bug"],
+              ["機能要望", "feature"],
+              ["その他", "other"]
+            ],
+            {},
+            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :email,
+            "返信先メールアドレス",
+            class: "mb-1 block text-sm font-semibold text-stone-700" %>
+
+      <%= f.email_field :email,
+            placeholder: "example@email.com",
+            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :content,
+            "お問い合わせ内容",
+            class: "mb-1 block text-sm font-semibold text-stone-700" %>
+
+      <%= f.text_area :content,
+            rows: 6,
+            placeholder: "お問い合わせ内容をご入力ください",
+            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :image,
+            "画像添付",
+            class: "mb-1 block text-sm font-semibold text-stone-700" %>
+
+      <%= f.file_field :image,
+            class: "block w-full text-sm text-stone-700 file:mr-4 file:rounded-lg file:border-0 file:bg-stone-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" %>
+    </div>
+
+    <div class="flex gap-3 pt-4">
+      <%= link_to "キャンセル",
+            settings_path,
+            class: "flex-1 rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-sm font-semibold text-stone-700" %>
+
+      <%= f.submit "送信",
+            class: "flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-semibold text-white" %>
+    </div>
+
   <% end %>
-  
-  <div>
-    <%= f.label :inquiry_type, "お問い合わせの種類" %>
-    <%= f.select :inquiry_type,
-                 Inquiry.inquiry_types.keys.map { |key| [key, key] } %>
-  </div>
-
-  <div>
-    <%= f.label :email, "返信先メールアドレス" %>
-    <%= f.email_field :email %>
-  </div>
-
-  <div>
-    <%= f.label :content, "お問い合わせ内容" %>
-    <%= f.text_area :content %>
-  </div>
-
-  <div>
-    <%= f.label :image, "画像添付" %>
-    <%= f.file_field :image %>
-  </div>
-
-  <div>
-    <%= f.submit "送信" %>
-  </div>
-
-<% end %>
-
-
-
+</div>
