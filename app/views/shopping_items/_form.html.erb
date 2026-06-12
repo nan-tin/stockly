@@ -1,39 +1,53 @@
-<%= form_with model: @shopping_item do |f| %>
-
+<%= form_with model: @shopping_item, class: "space-y-5" do |f| %>
   <% if @shopping_item.errors.any? %>
-    <div>
-      <ul>
+    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+      <p class="font-semibold">入力内容を確認してください</p>
+      <ul class="mt-2 list-disc pl-5">
         <% @shopping_item.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-  <div>
-    <%= f.label :category_id, "カテゴリー" %>
 
+  <div>
+    <%= f.label :category_id, "カテゴリー", class: "mb-1 block text-sm font-semibold text-stone-700" %>
     <%= f.collection_select :category_id,
-                             current_group.categories,
-                             :id,
-                             :name %>
+          current_group.categories,
+          :id,
+          :name,
+          {},
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
   </div>
 
   <div>
-    <%= f.label :name, "商品名" %>
-    <%= f.text_field :name %>
+    <%= f.label :name, "商品名", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.text_field :name,
+          placeholder: "例：みかん",
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
   </div>
 
   <div>
-    <%= f.label :quantity, "購入予定数" %>
-    <%= f.number_field :quantity %>
+    <%= f.label :quantity, "購入予定数", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.number_field :quantity,
+          min: 1,
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
   </div>
 
   <div>
-    <%= f.label :memo, "メモ" %>
-    <%= f.text_area :memo %>
+    <%= f.label :memo, "メモ", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.text_area :memo,
+          rows: 4,
+          placeholder: "例：和歌山県産のみかん",
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
   </div>
 
-  <div>
-    <%= f.submit %>
+  <div class="flex gap-3 pt-4">
+    <%= link_to "キャンセル",
+          shopping_items_path,
+          class: "flex-1 rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-sm font-semibold text-stone-700" %>
+
+    <%= f.submit @shopping_item.persisted? ? "更新" : "登録",
+          class: "flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-semibold text-white" %>
   </div>
 <% end %>
