@@ -5,27 +5,31 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="min-h-screen bg-stone-50 text-stone-900">
     <% flash.each do |message_type, message| %>
-      <div>
+      <div class="mx-auto mt-4 max-w-md rounded-lg bg-green-100 px-4 py-3 text-sm text-green-800">
         <%= message %>
       </div>
-    <% end %>  
+    <% end %>
 
-    <%= yield %>
+    <main class="mx-auto min-h-screen max-w-md px-4 pb-24 pt-6">
+      <%= yield %>
+    </main>
+
     <% if user_signed_in? %>
-      <footer>
-        <nav>
-          <%= link_to "ホーム", items_path %>
-          <%= link_to "買う物", shopping_items_path %>
-          <%= link_to "アイテム追加", new_item_path %>
-          <%= link_to "消費履歴", consumptions_path %>
-          <%= link_to "設定", settings_path %>
+      <footer class="fixed bottom-0 left-0 right-0 border-t border-stone-200 bg-white">
+        <nav class="mx-auto grid max-w-md grid-cols-5 text-center text-xs text-stone-700">
+          <%= link_to "ホーム", items_path, class: "py-3" %>
+          <%= link_to "買う物", shopping_items_path, class: "py-3" %>
+          <%= link_to "追加", new_item_path, class: "py-3" %>
+          <%= link_to "履歴", consumptions_path, class: "py-3" %>
+          <%= link_to "設定", settings_path, class: "py-3" %>
         </nav>
       </footer>
     <% end %>

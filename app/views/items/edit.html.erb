@@ -1,52 +1,5 @@
-<h1>アイテム編集</h1>
+<h1 class="mb-6 text-2xl font-bold">アイテム編集</h1>
 
-<%= form_with model: @item do |f| %>
-  <% if @item.image.attached? %>
-    <div>
-      <p>現在の画像</p>
-      <%= image_tag @item.image, width: 100 %>
-    </div>
-  <% end %>
-
-  <div>
-    <%= f.label :image, "画像" %>
-    <%= f.file_field :image %>
-  </div>
-
-  <div>
-    <%= f.label :category_id, "カテゴリー" %>
-    <%= f.collection_select :category_id,
-                             current_group.categories,
-                             :id,
-                             :name %>
-  </div>
-
-  <div>
-    <%= f.label :name, "商品名" %>
-    <%= f.text_field :name %>
-  </div>
-
-  <div>
-    <%= f.label :quantity, "数量" %>
-    <%= f.number_field :quantity %>
-  </div>
-
-  <div>
-    <%= f.label :purchased_at, "購入日" %>
-    <%= f.date_field :purchased_at %>
-  </div>
-
-  <div>
-    <%= f.label :expired_at, "期限日" %>
-    <%= f.date_field :expired_at %>
-  </div>
-
-  <div>
-    <%= f.label :memo, "メモ" %>
-    <%= f.text_area :memo %>
-  </div>
-
-  <div>
-    <%= f.submit "更新" %>
-  </div>
-<% end %>
+<div class="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+  <%= render "form", item: @item, submit_text: "更新" %>
+</div>

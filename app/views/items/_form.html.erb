@@ -1,0 +1,78 @@
+<%= form_with model: item, class: "space-y-5" do |f| %>
+  <% if item.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+      <p class="font-semibold">入力内容を確認してください</p>
+      <ul class="mt-2 list-disc pl-5">
+        <% item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if item.persisted? && item.image.attached? %>
+    <div>
+      <p class="mb-2 text-sm font-semibold text-stone-700">現在の画像</p>
+      <%= image_tag item.image, class: "h-28 w-28 rounded-xl object-cover" %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :image, "画像", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.file_field :image,
+          class: "block w-full text-sm text-stone-700 file:mr-4 file:rounded-lg file:border-0 file:bg-stone-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" %>
+  </div>
+
+  <div>
+    <%= f.label :category_id, "カテゴリー", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.collection_select :category_id,
+          current_group.categories,
+          :id,
+          :name,
+          {},
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :name, "商品名", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.text_field :name,
+          placeholder: "例：みかん",
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :quantity, "在庫数", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.number_field :quantity,
+          min: 0,
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :expired_at, "期限日", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.date_field :expired_at,
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :purchased_at, "購入日", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.date_field :purchased_at,
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :memo, "メモ", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.text_area :memo,
+          rows: 4,
+          placeholder: "例：和歌山県産のみかん",
+          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  </div>
+
+  <div class="flex gap-3 pt-4">
+    <%= link_to "キャンセル",
+          items_path,
+          class: "flex-1 rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-sm font-semibold text-stone-700" %>
+
+    <%= f.submit submit_text,
+          class: "flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-semibold text-white" %>
+  </div>
+<% end %>
