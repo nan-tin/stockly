@@ -56,6 +56,11 @@ class ItemsController < ApplicationController
   end
 
   def bulk_destroy
+    if params[:item_ids].blank?
+      redirect_to items_path, alert: "削除するアイテムを選択してください"
+      return
+    end
+
     current_group.items.where(id: params[:item_ids]).destroy_all
 
     redirect_to items_path, notice: "選択したアイテムを削除しました"
