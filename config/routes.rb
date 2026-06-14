@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   
   get "settings", to: "settings#index"
 
-  get "consumptions/index", to: "consumptions#index"
+  #get "consumptions/index", to: "consumptions#index"
 
   devise_for :users
   
