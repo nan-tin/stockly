@@ -10,6 +10,13 @@ class User < ApplicationRecord
 
   after_create :create_default_group
 
+  def self.guest
+    create!(
+      email: "guest_#{SecureRandom.hex(10)}@example.com",
+      password: SecureRandom.urlsafe_base64
+    )
+  end
+
   private
 
   def create_default_group
