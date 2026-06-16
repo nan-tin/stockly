@@ -13,7 +13,9 @@ class User < ApplicationRecord
   def self.guest
     create!(
       email: "guest_#{SecureRandom.hex(10)}@example.com",
-      password: SecureRandom.urlsafe_base64
+      password: SecureRandom.urlsafe_base64,
+      guest_token: SecureRandom.urlsafe_base64(32),
+      guest_token_expires_at: 30.days.from_now
     )
   end
 
