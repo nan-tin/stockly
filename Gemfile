@@ -4,6 +4,8 @@ ruby '3.2.8'
 
 gem "devise"
 
+gem "heroicon-rails"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.1.6'
 
