@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
     member do
       patch :consume
+      patch :add_to_shopping_item
     end
   end
 

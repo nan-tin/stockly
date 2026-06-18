@@ -31,13 +31,17 @@ class ShoppingItemsController < ApplicationController
                       .find(params[:id])
 
     ActiveRecord::Base.transaction do
-      current_group.items.create!(
+      item = current_group.items.find_or_initialize_by(
         category: shopping_item.category,
-        name: shopping_item.name,
-        quantity: shopping_item.quantity,
-        purchased_at: Date.current,
-        memo: shopping_item.memo
+        name: shopping_item.name
       )
+
+      item.quantity ||= 0
+      item.quantity += shopping_item.quantity
+      item.purchased_at = Date.current
+      item.memo = shopping_item.memo if item.memo.blank?
+
+      item.save!
 
       shopping_item.destroy!
     end

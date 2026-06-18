@@ -1,97 +1,191 @@
-<h1 class="mb-8 text-2xl font-bold">家の在庫</h1>
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <div class="bg-white px-4 pb-3 pt-5">
+    <div class="flex items-center justify-between">
+      <details class="relative">
+        <summary class="list-none cursor-pointer rounded-full border border-stone-900 px-3 py-1 text-sm font-semibold">
+          ▼
+          <% if @selected_category_id.present? %>
+            <%= @categories.find { |category| category.id.to_s == @selected_category_id.to_s }&.name %>
+          <% else %>
+            全てのアイテム
+          <% end %>
+        </summary>
 
-<%= form_with url: items_path, method: :get, class: "mb-5 space-y-4" do |f| %>
-  <div class="flex gap-2">
-    <%= f.text_field :keyword,
-          value: params[:keyword],
-          placeholder: "商品名を入力",
-          class: "min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base" %>
+        <div class="absolute left-0 z-30 mt-2 w-40 overflow-hidden rounded-2xl bg-white text-sm shadow-lg ring-1 ring-stone-200">
+          <%= link_to "全てのアイテム",
+                items_path(display: @display, sort: params[:sort]),
+                class: "block border-b border-stone-100 px-4 py-3" %>
 
-    <%= f.submit "検索",
-          class: "rounded-xl bg-blue-600 px-5 text-base font-semibold text-white" %>
+          <% @categories.each do |category| %>
+            <%= link_to category.name,
+                  items_path(category_id: category.id, display: @display, sort: params[:sort]),
+                  class: "block border-b border-stone-100 px-4 py-3" %>
+          <% end %>
+        </div>
+      </details>
+
+      <div class="flex items-center gap-5">
+        <%= link_to items_path(search: "true"), class: "text-stone-900" do %>
+          <%= heroicon "magnifying-glass", type: :outline, class: "h-7 w-7" %>
+        <% end %>
+
+        <details class="relative">
+          <summary class="list-none cursor-pointer text-2xl font-bold leading-none">･･･</summary>
+
+          <div class="absolute right-0 z-20 mt-3 w-56 overflow-hidden rounded-2xl bg-white text-center shadow-lg ring-1 ring-stone-200">
+            <p class="pt-3 text-sm font-semibold">編集操作</p>
+            <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
+
+            <%= link_to "並び替えを行う", items_path(category_id: params[:category_id], display: params[:display], menu: "sort"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
+            <%= link_to "複数選択を行う", items_path(category_id: params[:category_id], display: params[:display], select: "true"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
+            <%= link_to "表示変更を行う", items_path(category_id: params[:category_id], sort: params[:sort], menu: "display"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
+            <%= link_to "閉じる", items_path(category_id: params[:category_id], display: params[:display], sort: params[:sort]), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
+          </div>
+        </details>
+      </div>
+    </div>
   </div>
 
-  <%= f.select :sort,
-        [
-          ["購入が新しい順", "purchased_desc"],
-          ["購入が古い順", "purchased_asc"],
-          ["在庫数が多い順", "quantity_desc"],
-          ["在庫数が少ない順", "quantity_asc"],
-          ["あいうえお順", "name_asc"]
-        ],
-        { include_blank: "並び替えを選択" },
-        {
-          selected: params[:sort],
-          class: "min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base"
-        } %>
-<% end %>
+  <% if params[:search] == "true" || params[:keyword].present? %>
+    <div class="bg-white px-4 py-3">
+      <%= form_with url: items_path, method: :get, class: "flex items-center gap-3" do |f| %>
+        <%= link_to items_path, class: "text-stone-900" do %>
+          <span class="text-3xl leading-none">‹</span>
+        <% end %>
 
-<div class="mb-6 flex justify-end">
-  <%= link_to "新規作成",
-        new_item_path,
-        class: "rounded-xl bg-stone-900 px-6 py-3 text-base font-semibold text-white shadow-sm" %>
-</div>
+        <div class="flex min-h-12 flex-1 items-center rounded-2xl bg-stone-100 px-3">
+          <%= heroicon "magnifying-glass", type: :outline, class: "mr-2 h-6 w-6" %>
+          <%= f.text_field :keyword,
+                value: params[:keyword],
+                placeholder: "アイテム名を入力",
+                class: "w-full bg-transparent text-base outline-none" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 
-<%= form_with url: bulk_destroy_items_path, method: :delete do %>
-  <div class="space-y-4">
-    <% @items.each do |item| %>
-      <div class="rounded-2xl border border-stone-200 bg-white p-5 shadow-md">
-        <div class="flex items-start gap-4">
-          <%= check_box_tag "item_ids[]", item.id, false, class: "mt-1 h-5 w-5 rounded border-stone-300" %>
+  <% if params[:menu] == "sort" %>
+    <div class="mx-4 mt-4 overflow-hidden rounded-2xl bg-white text-center shadow-md">
+      <p class="pt-3 text-sm font-semibold">並び替えを行う</p>
+      <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
 
-          <% if item.image.attached? %>
-            <%= image_tag item.image, class: "h-24 w-24 rounded-2xl object-cover" %>
-          <% else %>
-            <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-stone-100 text-sm text-stone-400">
-              No image
-            </div>
-          <% end %>
+      <%= link_to "購入が新しい順", items_path(category_id: params[:category_id], display: @display, sort: "purchased_desc"), class: "block border-t px-4 py-3" %>
+      <%= link_to "購入が古い順", items_path(category_id: params[:category_id], display: @display, sort: "purchased_asc"), class: "block border-t px-4 py-3" %>
+      <%= link_to "在庫数が多い順", items_path(category_id: params[:category_id], display: @display, sort: "quantity_desc"), class: "block border-t px-4 py-3" %>
+      <%= link_to "在庫数が少ない順", items_path(category_id: params[:category_id], display: @display, sort: "quantity_asc"), class: "block border-t px-4 py-3" %>
+      <%= link_to "あいうえお順", items_path(category_id: params[:category_id], display: @display, sort: "name_asc"), class: "block border-t px-4 py-3" %>
+      <%= link_to "閉じる", items_path(category_id: params[:category_id], display: @display), class: "block border-t px-4 py-3" %>
+    </div>
+  <% end %>
 
-          <div class="min-w-0 flex-1">
-            <div class="mb-2 flex items-center gap-2">
-              <p class="truncate text-xl font-bold"><%= item.name %></p>
+  <% if params[:menu] == "display" %>
+    <div class="mx-4 mt-4 overflow-hidden rounded-2xl bg-white text-center shadow-md">
+      <p class="pt-3 text-sm font-semibold">表示を変更する</p>
+      <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
 
-              <span class="shrink-0 rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-600">
-                <%= item.category.name %>
+      <%= link_to "在庫数", items_path(category_id: params[:category_id], sort: params[:sort], display: "quantity"), class: "block border-t px-4 py-3" %>
+      <%= link_to "期限日", items_path(category_id: params[:category_id], sort: params[:sort], display: "expired_at"), class: "block border-t px-4 py-3" %>
+      <%= link_to "購入日", items_path(category_id: params[:category_id], sort: params[:sort], display: "purchased_at"), class: "block border-t px-4 py-3" %>
+      <%= link_to "閉じる", items_path(category_id: params[:category_id], sort: params[:sort], display: @display), class: "block border-t px-4 py-3" %>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-[1fr_80px_80px] bg-indigo-100/70 px-8 py-3 font-bold">
+    <div>アイテム名</div>
+    <div class="text-center">
+      <% if @display == "expired_at" %>
+        期限日
+      <% elsif @display == "purchased_at" %>
+        購入日
+      <% else %>
+        在庫数
+      <% end %>
+    </div>
+  </div>
+
+  <% if @items.any? %>
+    <%= form_with url: bulk_destroy_items_path, method: :delete do %>
+      <% @items.each do |item| %>
+        <div class="grid grid-cols-[1fr_80px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
+          <div class="flex items-center gap-2">
+            <% if params[:select] == "true" %>
+              <%= check_box_tag "item_ids[]", item.id, false, class: "h-5 w-5 rounded-full border-stone-900" %>
+            <% end %>
+
+            <%= link_to item.name, edit_item_path(item), class: "text-base text-stone-900" %>
+          </div>
+
+          <div class="text-center">
+            <% if @display == "expired_at" %>
+              <div class="flex justify-center">
+                <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
+                  <%= item.expired_at&.strftime("%Y/%m/%d") || "-" %>
+                </span>
+              </div>
+            <% elsif @display == "purchased_at" %>
+              <div class="flex justify-center">
+                <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
+                  <%= item.purchased_at&.strftime("%Y/%m/%d") || "-" %>
+                </span>
+              </div>
+            <% else %>
+              <div class="flex items-center justify-center gap-6">
+                <%= link_to consume_item_path(item),
+                      data: { turbo_method: :patch, turbo_confirm: "本当に消費しますか？" },
+                      class: "text-stone-900" do %>
+                  <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
+                <% end %>
+
+                <span class="text-center font-bold"><%= item.quantity %></span>
+
+                <%= link_to consume_item_path(item),
+                      data: { turbo_method: :patch, turbo_confirm: "本当に消費しますか？" },
+                      class: "text-stone-900" do %>
+                  <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex justify-start pl-11">
+            <% shopping_quantity = @shopping_item_quantities[[item.category_id, item.name]] || 0 %>
+
+            <%= link_to add_to_shopping_item_item_path(
+                          item,
+                          category_id: params[:category_id],
+                          display: @display,
+                          sort: params[:sort]
+                        ),
+                        data: { turbo_method: :patch },
+                        class: "relative inline-flex text-stone-400" do %>
+              <%= heroicon "shopping-cart", type: :outline, class: "h-7 w-7" %>
+
+              <span class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-stone-500">
+                <% if shopping_quantity.positive? %>
+                  <%= shopping_quantity %>
+                <% else %>
+                  <%= heroicon "plus-circle", type: :solid, class: "h-4 w-4" %>
+                <% end %>
               </span>
-            </div>
-
-            <div>
-              <span class="inline-flex rounded-full bg-blue-50 px-4 py-1 text-base font-semibold text-blue-700">
-                在庫数：<%= item.quantity %>
-              </span>
-            </div>
-
-            <div class="mt-5 flex flex-wrap gap-3">
-              <%= link_to "編集",
-                    edit_item_path(item),
-                    class: "rounded-xl border border-blue-200 px-4 py-2 text-base font-semibold text-blue-600" %>
-
-              <%= link_to "削除",
-                    item_path(item),
-                    class: "rounded-xl border border-red-200 px-4 py-2 text-base font-semibold text-red-600",
-                    data: {
-                      turbo_method: :delete,
-                      turbo_confirm: "本当に削除しますか？"
-                    } %>
-
-              <%= link_to "消費",
-                    consume_item_path(item),
-                    class: "rounded-xl border border-green-200 px-4 py-2 text-base font-semibold text-green-700",
-                    data: {
-                      turbo_method: :patch,
-                      turbo_confirm: "本当に消費しますか？"
-                    } %>
-            </div>
+            <% end %>
           </div>
         </div>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
 
-  <%= submit_tag "選択したアイテムを削除",
-        class: "mt-6 w-full rounded-xl border border-red-300 bg-white px-4 py-3 text-base font-semibold text-red-600",
-        data: {
-          turbo_confirm: "選択したアイテムを削除しますか？"
-        } %>
-<% end %>
+      <% if params[:select] == "true" %>
+        <div class="fixed bottom-24 left-1/2 z-10 flex -translate-x-1/2 gap-4 rounded-2xl bg-white px-5 py-3 text-sm shadow-md">
+          <%= submit_tag "全て削除",
+                class: "text-stone-900",
+                data: { turbo_confirm: "選択したアイテムを削除しますか？" } %>
+          <%= button_tag "クリア",
+                type: "reset",
+                class: "text-stone-900" %>
+          <%= link_to "閉じる", items_path(category_id: params[:category_id], display: @display), class: "text-stone-900" %>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="flex h-96 items-center justify-center text-xl font-bold">
+      アイテムなし
+    </div>
+  <% end %>
+</div>
