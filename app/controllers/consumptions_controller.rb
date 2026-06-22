@@ -9,6 +9,10 @@ class ConsumptionsController < ApplicationController
                     .consumptions
                     .where(consumed_at: @month.beginning_of_month..@month.end_of_month)
 
+    @daily_consumptions =
+      consumptions.order(consumed_at: :desc)
+                  .group_by(&:consumed_at)
+
     if params[:keyword].present?
       consumptions = consumptions.where("item_name ILIKE ?", "%#{params[:keyword]}%")
     end
@@ -33,4 +37,19 @@ class ConsumptionsController < ApplicationController
         @consumption_summaries.order("total_quantity DESC")
       end
   end
+
+  def summary_detail
+    @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
+    @display_month = @month.strftime("%Y年 %-m月")
+    @item_name = params[:item_name]
+    @category_name = params[:category_name]
+
+    @consumptions = current_group
+                      .consumptions
+                      .where(consumed_at: @month.beginning_of_month..@month.end_of_month)
+                      .where(item_name: @item_name, category_name: @category_name)
+                      .order(consumed_at: :desc)
+
+    @total_quantity = @consumptions.sum(:quantity)
+  end                      
 end

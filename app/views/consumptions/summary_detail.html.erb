@@ -1,0 +1,57 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <div class="bg-white px-4 pb-3 pt-5">
+    <div class="flex items-center justify-between">
+      <%= link_to consumptions_path(month: @month.strftime("%Y-%m")), class: "text-stone-900" do %>
+        <span class="text-3xl leading-none">＜</span>
+      <% end %>
+
+      <h1 class="text-xl font-bold"><%= @item_name %></h1>
+
+      <div class="w-8"></div>
+    </div>
+  </div>
+
+  <div class="bg-indigo-100 py-3 text-center font-semibold">
+    <%= @display_month %> のまとめ
+  </div>
+
+  <div class="grid grid-cols-[1fr_100px] bg-indigo-100/70 px-8 py-3 font-bold">
+    <div>消費日</div>
+    <div class="text-center">消費数</div>
+  </div>
+
+  <% if @consumptions.any? %>
+    <% @consumptions.each do |consumption| %>
+      <div class="border-b border-stone-300 bg-white px-8 py-4">
+        <div class="grid grid-cols-[1fr_100px] items-center">
+          <div>
+            <p class="font-semibold">
+              <%= consumption.consumed_at.strftime("%Y/%m/%d") %>
+            </p>
+
+            <% if consumption.memo.present? %>
+              <p class="mt-2 text-sm text-stone-500">
+                <%= consumption.memo %>
+              </p>
+            <% end %>
+          </div>
+
+          <div class="text-center font-bold">
+            <%= consumption.quantity %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-4 bg-white px-8 py-4">
+      <div class="flex items-center justify-between font-bold">
+        <span>合計</span>
+        <span><%= @total_quantity %></span>
+      </div>
+    </div>
+  <% else %>
+    <div class="flex h-96 items-center justify-center text-xl font-bold">
+      消費履歴なし
+    </div>
+  <% end %>
+</div>

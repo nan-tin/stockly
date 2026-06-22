@@ -33,7 +33,8 @@ class ShoppingItemsController < ApplicationController
     ActiveRecord::Base.transaction do
       item = current_group.items.find_or_initialize_by(
         category: shopping_item.category,
-        name: shopping_item.name
+        name: shopping_item.name,
+        memo: shopping_item.memo
       )
 
       item.quantity ||= 0

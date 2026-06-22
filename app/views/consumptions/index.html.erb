@@ -80,7 +80,13 @@
       <% @consumption_summaries.each do |summary| %>
         <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-300 bg-white px-8 py-4">
           <div>
-            <p class="text-base"><%= summary.item_name %></p>
+            <%= link_to summary.item_name,
+                  summary_detail_consumptions_path(
+                    month: @month.strftime("%Y-%m"),
+                    item_name: summary.item_name,
+                    category_name: summary.category_name
+                  ),
+                  class: "text-base text-stone-900" %>
             <span class="mt-1 inline-block rounded-full bg-stone-100 px-2 py-1 text-xs text-stone-500">
               <%= summary.category_name %>
             </span>

@@ -35,7 +35,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :consumptions, only: [:index]
+  resources :consumptions, only: [:index] do
+    collection do
+      get :summary_detail
+    end
+  end
 
   resources :inquiries, only: %i[new create]
 end

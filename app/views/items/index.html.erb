@@ -112,7 +112,15 @@
               <%= check_box_tag "item_ids[]", item.id, false, class: "h-5 w-5 rounded-full border-stone-900" %>
             <% end %>
 
-            <%= link_to item.name, edit_item_path(item), class: "text-base text-stone-900" %>
+            <div>
+              <%= link_to item.name, edit_item_path(item), class: "text-base text-stone-900" %>
+
+              <% if item.memo.present? %>
+                <p class="mt-1 text-xs text-stone-500">
+                  <%= item.memo %>
+                </p>
+              <% end %>
+            </div>
           </div>
 
           <div class="text-center">
@@ -166,7 +174,7 @@
             <% end %>
           </div>
           <div class="flex justify-start pl-11">
-            <% shopping_quantity = @shopping_item_quantities[[item.category_id, item.name]] || 0 %>
+            <% shopping_quantity = @shopping_item_quantities[[item.category_id, item.name, item.memo]] || 0 %>
 
             <%= link_to add_to_shopping_item_item_path(
                           item,

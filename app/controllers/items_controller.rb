@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
                               .shopping_list
                               .shopping_items
                               .where(is_purchased: false)
-                              .group(:category_id, :name)
+                              .group(:category_id, :name, :memo)
                               .sum(:quantity)
   end
 
@@ -60,7 +60,8 @@ class ItemsController < ApplicationController
   def create
     existing_item = current_group.items.find_by(
       category_id: item_params[:category_id],
-      name: item_params[:name]
+      name: item_params[:name],
+      memo: item_params[:memo]
     )
 
     if existing_item
@@ -145,6 +146,7 @@ class ItemsController < ApplicationController
                       .find_or_initialize_by(
                         category: @item.category,
                         name: @item.name,
+                        memo: @item.memo,
                         is_purchased: false
                       )
 
@@ -179,7 +181,8 @@ class ItemsController < ApplicationController
     consumption = current_group.consumptions.find_by(
       category_name: @item.category.name,
       item_name: @item.name,
-      consumed_at: Date.current
+      consumed_at: Date.current,
+      memo: @item.memo
     )
 
     if @item.quantity.positive?
