@@ -90,7 +90,7 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-[1fr_80px_80px] bg-indigo-100/70 px-8 py-3 font-bold">
+  <div class="grid grid-cols-[1fr_140px_80px] bg-indigo-100/70 px-8 py-3 font-bold">
     <div>アイテム名</div>
     <div class="text-center">
       <% if @display == "expired_at" %>
@@ -106,7 +106,7 @@
   <% if @items.any? %>
     <%= form_with url: bulk_destroy_items_path, method: :delete do %>
       <% @items.each do |item| %>
-        <div class="grid grid-cols-[1fr_80px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
+        <div class="grid grid-cols-[1fr_140px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
           <div class="flex items-center gap-2">
             <% if params[:select] == "true" %>
               <%= check_box_tag "item_ids[]", item.id, false, class: "h-5 w-5 rounded-full border-stone-900" %>
@@ -130,19 +130,38 @@
               </div>
             <% else %>
               <div class="flex items-center justify-center gap-6">
-                <%= link_to consume_item_path(item),
-                      data: { turbo_method: :patch, turbo_confirm: "本当に消費しますか？" },
-                      class: "text-stone-900" do %>
+                <%= link_to increase_quantity_item_path(
+                              item,
+                              category_id: params[:category_id],
+                              display: params[:display],
+                              sort: params[:sort]
+                            ),
+                            data: { turbo_method: :patch },
+                            class: "flex h-8 w-8 items-center justify-center text-stone-900" do %>
                   <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
                 <% end %>
 
-                <span class="text-center font-bold"><%= item.quantity %></span>
+                <span class="<%= item.quantity.zero? ? 'text-red-600' : 'text-stone-900' %> text-center font-bold">
+                  <%= item.quantity %>
+                </span>
 
-                <%= link_to consume_item_path(item),
-                      data: { turbo_method: :patch, turbo_confirm: "本当に消費しますか？" },
-                      class: "text-stone-900" do %>
-                  <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+                <% if item.quantity.positive? %>
+                  <%= link_to decrease_quantity_item_path(
+                                item,
+                                category_id: params[:category_id],
+                                display: @display,
+                                sort: params[:sort]
+                              ),
+                              data: { turbo_method: :patch },
+                              class: "flex h-8 w-8 items-center justify-center text-stone-900" do %>
+                    <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+                  <% end %>
+                <% else %>
+                  <span class="text-stone-300">
+                    <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+                  </span>
                 <% end %>
+
               </div>
             <% end %>
           </div>

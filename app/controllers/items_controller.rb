@@ -1,6 +1,13 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_item, only: %i[edit update destroy add_to_shopping_item]
+  before_action :set_item, only: %i[
+    edit 
+    update 
+    destroy 
+    add_to_shopping_item
+    increase_quantity
+    decrease_quantity
+  ]
 
   #includes は「N+1問題」を防ぐためのメソッド
   def index
@@ -95,6 +102,7 @@ class ItemsController < ApplicationController
     redirect_to items_path, notice: "アイテムを削除しました"
   end
 
+  # チェックボックスに選択されたアイテムを削除する
   def bulk_destroy
     if params[:item_ids].blank?
       redirect_to items_path, alert: "削除するアイテムを選択してください"
@@ -106,6 +114,9 @@ class ItemsController < ApplicationController
     redirect_to items_path, notice: "選択したアイテムを削除しました"
   end
 
+  # アイテムを消費済みとして処理するアクション
+  # ・消費履歴に登録し、元のアイテムを削除する
+  # ・処理はトランザクションで実行する
   def consume 
     item = current_group.items.find(params[:id])
 
@@ -125,6 +136,8 @@ class ItemsController < ApplicationController
     redirect_to items_path, notice: "消費履歴を登録しました"
   end
 
+  # 買い物リストにアイテムを追加する
+  # すでに存在する場合は数量を1増やす
   def add_to_shopping_item
     shopping_item = current_group
                       .shopping_list
@@ -149,6 +162,50 @@ class ItemsController < ApplicationController
       display: params[:display],
       sort: params[:sort]
     ), notice: "買う物に追加しました"
+  end
+
+  # 在庫数を＋ボタンで1ずつ増やす
+  def increase_quantity
+    @item.increment!(:quantity)
+
+    redirect_to items_path(
+      category_id: params[:category_id],
+      display: params[:display],
+      sort: params[:sort]
+    )
+  end
+
+  def decrease_quantity
+    consumption = current_group.consumptions.find_by(
+      category_name: @item.category.name,
+      item_name: @item.name,
+      consumed_at: Date.current
+    )
+
+    if @item.quantity.positive?
+      ActiveRecord::Base.transaction do
+        if consumption.present?
+          consumption.increment!(:quantity)
+        else
+          current_group.consumptions.create!(
+            category: @item.category,
+            category_name: @item.category.name,
+            item_name: @item.name,
+            quantity: 1,
+            consumed_at: Date.current,
+            memo: @item.memo
+          )
+        end
+
+        @item.decrement!(:quantity)
+      end
+    end
+
+    redirect_to items_path(
+      category_id: params[:category_id],
+      display: params[:display],
+      sort: params[:sort]
+    )
   end
 
   private
