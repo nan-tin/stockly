@@ -4,10 +4,26 @@ class ConsumptionsController < ApplicationController
   def index
     @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
     @display_month = @month.strftime("%Y年 %-m月")
+    @prev_month = @month.prev_month
+    @next_month = @month.next_month
+    @selected_date = params[:date].present? ? Date.parse(params[:date]) : Date.current
+
+    start_date = @month.beginning_of_month.beginning_of_week(:sunday)
+
+    end_date = @month.end_of_month.end_of_week(:sunday)
+
+    @calendar_days = (start_date..end_date).to_a
 
     consumptions = current_group
                     .consumptions
                     .where(consumed_at: @month.beginning_of_month..@month.end_of_month)
+
+    @consumption_counts_by_date = consumptions.group(:consumed_at).sum(:quantity)
+
+    @selected_date_consumptions = current_group
+                                    .consumptions
+                                    .where(consumed_at: @selected_date)
+                                    .order(created_at: :desc)
 
     @daily_consumptions =
       consumptions.order(consumed_at: :desc)

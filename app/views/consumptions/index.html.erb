@@ -70,36 +70,77 @@
     ▼ <%= @display_month %>
   </div>
 
+  <div class="bg-white px-4 py-3">
+    <div class="flex items-center justify-between font-semibold">
+      <%= link_to "＜",
+            consumptions_path(month: @prev_month.strftime("%Y-%m")),
+            class: "text-xl" %>
+
+      <span><%= @display_month %></span>
+
+      <%= link_to "＞",
+            consumptions_path(month: @next_month.strftime("%Y-%m")),
+            class: "text-xl" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-7 bg-white px-4 py-2 text-center text-sm font-semibold">
+    <% %w[日 月 火 水 木 金 土].each do |wday| %>
+      <div><%= wday %></div>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-7 bg-white px-4 pb-4 text-center text-sm">
+    <% @calendar_days.each do |day| %>
+      <% count = @consumption_counts_by_date[day] || 0 %>
+
+      <%= link_to consumptions_path(
+            month: @month.strftime("%Y-%m"),
+            date: day.strftime("%Y-%m-%d")
+          ),
+          class: "flex h-14 flex-col items-center justify-center rounded-lg #{day == @selected_date ? 'bg-stone-100 font-bold' : 'hover:bg-stone-100'}" do %>
+
+        <div class="relative flex h-12 items-center justify-center">
+          <span><%= day.day %></span>
+
+          <% if @daily_consumptions[day].present? %>
+            <div class="absolute bottom-2 w-5 border-b-2 border-red-500"></div>
+          <% end %>
+        </div>
+
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="bg-indigo-100/70 px-8 py-3 font-bold text-center">
+    <%= @selected_date.strftime("%Y年 %-m月 %-d日") %>
+  </div>
+
   <div class="grid grid-cols-[1fr_100px] bg-indigo-100/70 px-8 py-3 font-bold">
     <div>アイテム名</div>
     <div class="text-center">消費数</div>
   </div>
 
-  <% if @consumption_summaries.any? %>
-    <div>
-      <% @consumption_summaries.each do |summary| %>
-        <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-300 bg-white px-8 py-4">
-          <div>
-            <%= link_to summary.item_name,
-                  summary_detail_consumptions_path(
-                    month: @month.strftime("%Y-%m"),
-                    item_name: summary.item_name,
-                    category_name: summary.category_name
-                  ),
-                  class: "text-base text-stone-900" %>
-            <span class="mt-1 inline-block rounded-full bg-stone-100 px-2 py-1 text-xs text-stone-500">
-              <%= summary.category_name %>
-            </span>
-          </div>
+  <% if @selected_date_consumptions.any? %>
+    <% @selected_date_consumptions.each do |consumption| %>
+      <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-300 bg-white px-8 py-4">
+        <div>
+          <p class="text-base"><%= consumption.item_name %></p>
 
-          <div class="text-center font-bold">
-            <%= summary.total_quantity %>
-          </div>
+          <% if consumption.memo.present? %>
+            <p class="mt-1 text-xs text-stone-500">
+              <%= consumption.memo %>
+            </p>
+          <% end %>
         </div>
-      <% end %>
-    </div>
+
+        <div class="text-center font-bold">
+          <%= consumption.quantity %>
+        </div>
+      </div>
+    <% end %>
   <% else %>
-    <div class="flex h-96 items-center justify-center text-xl font-bold">
+    <div class="flex h-52 items-center justify-center text-xl font-bold">
       消費履歴なし
     </div>
   <% end %>
