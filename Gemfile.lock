@@ -131,6 +131,7 @@ GEM
     heroicon-rails (0.2.9)
       activesupport (>= 7.0.8)
       nokogiri (>= 1.14.3)
+    holiday_jp (0.8.1)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.2.3)
@@ -390,6 +391,7 @@ DEPENDENCIES
   devise
   factory_bot_rails
   heroicon-rails
+  holiday_jp
   importmap-rails
   jbuilder
   pg (~> 1.1)

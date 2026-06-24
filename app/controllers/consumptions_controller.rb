@@ -29,6 +29,11 @@ class ConsumptionsController < ApplicationController
       consumptions.order(consumed_at: :desc)
                   .group_by(&:consumed_at)
 
+    @holidays = HolidayJp.between(
+      @month.beginning_of_month,
+      @month.end_of_month
+    ).map(&:date)
+
     if params[:keyword].present?
       consumptions = consumptions.where("item_name ILIKE ?", "%#{params[:keyword]}%")
     end
