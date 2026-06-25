@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :consumptions, only: [:index] do
+  resources :consumptions, only: %i[index new create edit update destroy] do
     collection do
       get :summary_detail
     end

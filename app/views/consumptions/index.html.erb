@@ -137,6 +137,12 @@
     <%= @selected_date.strftime("%Y年 %-m月 %-d日") %>
   </div>
 
+  <div class="bg-white px-4 py-4">
+    <%= link_to "履歴にアイテムを追加する",
+          new_consumption_path(date: @selected_date.strftime("%Y-%m-%d")),
+          class: "block rounded-xl bg-stone-900 px-4 py-3 text-center text-base font-semibold text-white" %>
+  </div>
+
   <div class="grid grid-cols-[1fr_100px] bg-indigo-100/70 px-8 py-3 font-bold">
     <div>アイテム名</div>
     <div class="text-center">消費数</div>
@@ -146,7 +152,9 @@
     <% @selected_date_consumptions.each do |consumption| %>
       <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-300 bg-white px-8 py-4">
         <div>
-          <p class="text-base"><%= consumption.item_name %></p>
+          <%= link_to consumption.item_name,
+                edit_consumption_path(consumption),
+                class: "text-base text-stone-900" %>
 
           <% if consumption.memo.present? %>
             <p class="mt-1 text-xs text-stone-500">

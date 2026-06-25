@@ -1,0 +1,63 @@
+<%= form_with model: consumption, class: "space-y-5" do |f| %>
+  <% if consumption.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+      <p class="font-semibold">
+        入力内容を確認してください
+      </p>
+
+      <ul class="mt-2 list-disc pl-5">
+        <% consumption.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :category_id, "カテゴリー", class: "mb-1 block text-sm font-semibold" %>
+    <%= f.collection_select :category_id,
+          current_group.categories.order(:name),
+          :id,
+          :name,
+          { prompt: "カテゴリーを選択" },
+          class: "w-full rounded-xl border border-stone-300 bg-white px-3 py-3 text-base" %>
+  </div>
+
+  <div>
+    <%= f.label :item_name, "アイテム名", class: "mb-1 block text-sm font-semibold" %>
+    <%= f.text_field :item_name,
+          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
+  </div>
+
+  <div>
+    <%= f.label :quantity, "消費数", class: "mb-1 block text-sm font-semibold" %>
+    <%= f.number_field :quantity,
+          min: 1,
+          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
+  </div>
+
+  <div>
+    <%= f.label :consumed_at, "消費日", class: "mb-1 block text-sm font-semibold" %>
+    <%= f.date_field :consumed_at,
+          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
+  </div>
+
+  <div>
+    <%= f.label :memo, "メモ", class: "mb-1 block text-sm font-semibold" %>
+    <%= f.text_area :memo,
+          rows: 4,
+          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
+  </div>
+
+  <div class="space-y-3 pt-2">
+    <%= f.submit "保存",
+          class: "w-full rounded-xl bg-stone-900 px-4 py-3 text-base font-semibold text-white" %>
+
+    <%= link_to "戻る",
+          consumptions_path(
+            month: consumption.consumed_at&.strftime("%Y-%m"),
+            date: consumption.consumed_at&.strftime("%Y-%m-%d")
+          ),
+          class: "block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-center text-base font-semibold" %>
+  </div>
+<% end %>

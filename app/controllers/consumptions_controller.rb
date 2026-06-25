@@ -1,5 +1,6 @@
 class ConsumptionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_consumption, only: %i[edit update destroy]
 
   def index
     @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
@@ -59,6 +60,64 @@ class ConsumptionsController < ApplicationController
       end
   end
 
+  def new 
+    @consumption = current_group.consumptions.build(
+      consumed_at: params[:date].presence || Date.current,
+      quantity: 1
+    )
+  end
+
+  def create
+    @consumption = current_group.consumptions.build(consumption_params)
+
+    category = current_group.categories.find_by(id: consumption_params[:category_id])
+
+    if category.present?
+      @consumption.category = category
+      @consumption.category_name = category.name
+    end
+
+    if @consumption.save
+      redirect_to consumptions_path(
+        month: @consumption.consumed_at.strftime("%Y-%m"),
+        date: @consumption.consumed_at.strftime("%Y-%m-%d")
+      ), notice: "消費履歴を追加しました"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    category = current_group.categories.find_by(id: consumption_params[:category_id])
+
+    if category.present?
+      @consumption.category = category
+      @consumption.category_name = category.name
+    end
+
+    if @consumption.update(consumption_params.except(:category_id))
+      redirect_to consumptions_path(
+        month: @consumption.consumed_at.strftime("%Y-%m"),
+        date: @consumption.consumed_at.strftime("%Y-%m-%d")
+      ), notice: "消費履歴を更新しました"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    consumed_at = @consumption.consumed_at
+    @consumption.destroy
+
+    redirect_to consumptions_path(
+      month: consumed_at.strftime("%Y-%m"),
+      date: consumed_at.strftime("%Y-%m-%d")
+    ), notice: "消費履歴を削除しました"
+  end
+
   def summary_detail
     @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
     @display_month = @month.strftime("%Y年 %-m月")
@@ -72,5 +131,21 @@ class ConsumptionsController < ApplicationController
                       .order(consumed_at: :desc)
 
     @total_quantity = @consumptions.sum(:quantity)
-  end                      
+  end     
+  
+  private
+
+  def consumption_params
+    params.require(:consumption).permit(
+      :category_id,
+      :item_name,
+      :consumed_at,
+      :quantity,
+      :memo
+    )
+  end
+
+  def set_consumption
+    @consumption = current_group.consumptions.find(params[:id])
+  end
 end
