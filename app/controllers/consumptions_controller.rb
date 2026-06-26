@@ -24,7 +24,18 @@ class ConsumptionsController < ApplicationController
     @selected_date_consumptions = current_group
                                     .consumptions
                                     .where(consumed_at: @selected_date)
-                                    .order(created_at: :desc)
+    
+    @selected_date_consumptions =
+      case params[:sort]
+      when "quantity_desc"
+        @selected_date_consumptions.order(quantity: :desc)
+      when "quantity_asc"
+        @selected_date_consumptions.order(quantity: :asc)
+      when "name_asc"
+        @selected_date_consumptions.order(:item_name)
+      else
+        @selected_date_consumptions.order(created_at: :desc)
+      end
 
     @daily_consumptions =
       consumptions.order(consumed_at: :desc)

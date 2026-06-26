@@ -46,19 +46,33 @@
             <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
 
             <%= link_to "消費数が多い順",
-                  consumptions_path(month: @month.strftime("%Y-%m"), sort: "quantity_desc"),
+                  consumptions_path(
+                    month: @month.strftime("%Y-%m"),
+                    date: @selected_date.strftime("%Y-%m-%d"),
+                    sort: "quantity_desc"
+                    ),
                   class: "block border-t border-stone-100 px-4 py-3 text-base" %>
 
             <%= link_to "消費数が少ない順",
-                  consumptions_path(month: @month.strftime("%Y-%m"), sort: "quantity_asc"),
+                  consumptions_path(
+                    month: @month.strftime("%Y-%m"), 
+                    date: @selected_date.strftime("%Y-%m-%d"),
+                    sort: "quantity_asc"
+                    ),
                   class: "block border-t border-stone-100 px-4 py-3 text-base" %>
 
             <%= link_to "あいうえお順",
-                  consumptions_path(month: @month.strftime("%Y-%m"), sort: "name_asc"),
+                  consumptions_path(
+                    month: @month.strftime("%Y-%m"), 
+                    date: @selected_date.strftime("%Y-%m-%d"),
+                    sort: "name_asc"),
                   class: "block border-t border-stone-100 px-4 py-3 text-base" %>
 
             <%= link_to "閉じる",
-                  consumptions_path(month: @month.strftime("%Y-%m")),
+                  consumptions_path(
+                    month: @month.strftime("%Y-%m"),
+                    date: @selected_date.strftime("%Y-%m-%d")
+                    ),
                   class: "block border-t border-stone-100 px-4 py-3 text-base" %>
           </div>
         </details>
