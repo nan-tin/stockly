@@ -52,6 +52,16 @@
   <div class="space-y-3 pt-2">
     <%= f.submit "保存",
           class: "w-full rounded-xl bg-stone-900 px-4 py-3 text-base font-semibold text-white" %>
+            
+    <% unless consumption.new_record? %>
+      <%= link_to "削除",
+            consumption_path(consumption),
+            data: {
+              turbo_method: :delete,
+              turbo_confirm: "この消費履歴を削除しますか？"
+            },
+            class: "block w-full rounded-xl border border-red-300 bg-white px-4 py-3 text-center text-base font-semibold text-red-600" %>
+    <% end %>       
 
     <%= link_to "戻る",
           consumptions_path(
