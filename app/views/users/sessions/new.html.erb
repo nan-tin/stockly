@@ -40,6 +40,14 @@
       <div class="h-px flex-1 bg-stone-200"></div>
     </div>
 
+    <div class="mt-4">
+      <%= button_to "Googleでログイン",
+                    user_google_oauth2_omniauth_authorize_path,
+                    method: :post,
+                    data: { turbo: false },
+                    class: "w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700" %>
+    </div>
+
     <%= button_to "ゲストとして使ってみる",
           users_guest_sign_in_path,
           method: :post,

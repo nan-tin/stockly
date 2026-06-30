@@ -30,4 +30,45 @@ RSpec.describe User, type: :model do
       expect(user.groups.first.shopping_list).to be_present
     end
   end
+
+  describe ".from_omniauth" do
+    let(:auth) do
+      OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "123456789",
+        info: {
+          email: "google_user@example.com"
+        }
+      )
+    end
+
+    it "Google認証情報からユーザーを作成できること" do
+      expect {
+        described_class.from_omniauth(auth)
+      }.to change(described_class, :count).by(1)
+    end
+
+    it "providerとuidが同じ場合は既存ユーザーを返すこと" do
+      user = described_class.from_omniauth(auth)
+
+      expect {
+        described_class.from_omniauth(auth)
+      }.not_to change(described_class, :count)
+
+      expect(described_class.from_omniauth(auth)).to eq user
+    end
+
+    it "既存のメールアドレスを持つユーザーにGoogleアカウントを紐付けること" do
+      user = create(:user, email: "google_user@example.com")
+
+      expect {
+        described_class.from_omniauth(auth)
+      }.not_to change(User, :count)
+
+      user.reload
+
+      expect(user.provider).to eq "google_oauth2"
+      expect(user.uid).to eq "123456789"
+    end
+  end
 end

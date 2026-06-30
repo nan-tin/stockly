@@ -6,7 +6,9 @@ Rails.application.routes.draw do
 
   #get "consumptions/index", to: "consumptions#index"
 
-  devise_for :users
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
 
   post "users/guest_sign_in", to: "users/sessions#guest_sign_in"
   

@@ -4,6 +4,10 @@ ruby '3.2.8'
 
 gem "devise"
 
+gem "omniauth-google-oauth2"
+
+gem "omniauth-rails_csrf_protection"
+
 gem "heroicon-rails"
 
 gem "holiday_jp"
@@ -53,6 +57,7 @@ gem 'bootsnap', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri windows]
+  gem "dotenv-rails"
 
   gem 'rubocop', '~> 1.58', require: false
   gem 'rubocop-performance', require: false
