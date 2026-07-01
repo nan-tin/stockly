@@ -1,0 +1,93 @@
+<div class="mx-auto flex min-h-screen max-w-[390px] flex-col bg-stone-100">
+  <header class="bg-white py-4 text-center shadow-sm">
+    <h1 class="text-lg font-bold">ログイン</h1>
+  </header>
+
+  <main class="flex flex-1 items-start justify-center px-6 pt-10">
+    <div class="w-full rounded-xl bg-white px-6 py-7 shadow-sm">
+      <div class="mb-8 text-center">
+        <h2 class="text-3xl font-bold">Stockly</h2>
+        <p class="mt-2 text-xs text-stone-500">在庫管理を、もっとシンプルに</p>
+      </div>
+
+      <%= link_to new_user_session_path,
+            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900" do %>
+        <span><%= heroicon "envelope",
+                    variant: :outline,
+                    options: { class: "h-5 w-5" } %></span>
+        <span>メールアドレスでログイン</span>
+      <% end %>
+
+      <div class="mt-5 text-center">
+        <%= link_to "新規登録はこちら", new_user_registration_path,
+              class: "text-sm text-blue-500" %>
+      </div>
+
+      <div class="my-8 flex items-center gap-3">
+        <div class="h-px flex-1 bg-stone-200"></div>
+        <span class="text-xs text-stone-400">または</span>
+        <div class="h-px flex-1 bg-stone-200"></div>
+      </div>
+
+      <%= button_to user_google_oauth2_omniauth_authorize_path,
+            method: :post,
+            data: { turbo: false },
+            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900" do %>
+        <%= image_tag "google_logo.svg",
+              class: "h-5 w-5" %>
+        <span>Googleでログイン</span>
+      <% end %>
+    </div>
+    <div class="mt-6 text-center">
+        <button type="button"
+                onclick="document.getElementById('guest-modal').showModal()"
+                class="text-sm font-semibold text-blue-500">
+          ゲストとして使ってみる
+        </button>
+      </div>
+
+      <dialog id="guest-modal"
+              class="fixed inset-0 m-auto w-[330px] rounded-2xl bg-white p-0 shadow-xl backdrop:bg-black/40">
+        <div class="px-6 py-8 text-left">
+          <p class="text-sm leading-7 text-stone-900">
+            ゲストアカウントでは、以下の操作ができません。
+          </p>
+
+          <ul class="mt-5 list-disc space-y-1 pl-5 text-sm leading-7 text-stone-900">
+            <li>
+              家族、複数人で使う<br>
+              （グループの作成、グループへの参加、グループへの招待）
+            </li>
+          </ul>
+
+          <p class="mt-5 text-sm leading-7 text-stone-900">
+            これらの機能を利用したい場合は、設定から会員登録を行うことで可能なのでぜひ会員登録してみてください。
+          </p>
+
+          <div class="mt-6 space-y-3">
+            <%= button_to "続ける",
+                  users_guest_sign_in_path,
+                  method: :post,
+                  class: "w-full rounded bg-blue-500 px-4 py-3 text-sm font-bold text-white" %>
+
+            <button type="button"
+                    onclick="document.getElementById('guest-modal').close()"
+                    class="w-full rounded border border-stone-900 bg-white px-4 py-3 text-sm font-bold text-stone-900">
+              戻る
+            </button>
+          </div>
+        </div>
+      </dialog>
+  </main>
+
+  <footer class="bg-white py-4 text-center text-xs text-stone-900">
+    <div class="space-x-2">
+      <%= link_to "利用規約", terms_path %>
+      <span>|</span>
+      <%= link_to "プライバシーポリシー", privacy_path %>
+      <span>|</span>
+      <%= link_to "お問い合わせ", new_inquiry_path %>
+    </div>
+    <p class="mt-1">© 2026 Stockly</p>
+  </footer>
+</div>

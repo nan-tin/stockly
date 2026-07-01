@@ -10,6 +10,9 @@ class Users::SessionsController < ApplicationController
                 notice: "ゲストユーザーとしてログインしました"
   end
 
+  def login
+  end
+
   private
 
   def find_or_create_guest_user

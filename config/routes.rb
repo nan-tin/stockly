@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
+  get "users/login", to: "users/sessions#login", as: :login
+
   post "users/guest_sign_in", to: "users/sessions#guest_sign_in"
   
   root "categories#index"

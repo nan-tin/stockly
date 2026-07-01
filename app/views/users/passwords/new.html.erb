@@ -1,16 +1,40 @@
-<h2>Forgot your password?</h2>
+<div class="mx-auto flex min-h-screen max-w-[390px] flex-col bg-stone-100">
+  <header class="bg-white py-4 text-center shadow-sm">
+    <div class="relative mx-auto max-w-sm">
+      <%= link_to new_user_session_path, class: "absolute left-4 top-0 text-3xl leading-none text-stone-900" do %>
+        <%= heroicon "chevron-left",
+              variant: :outline,
+              options: { class: "h-6 w-6" } %>
+      <% end %>
+      <h1 class="text-lg font-bold">パスワードの再設定</h1>
+    </div>
+  </header>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+  <main class="flex flex-1 items-start justify-center px-4 pt-10">
+    <div class="w-full rounded-xl bg-white px-6 py-6 shadow-sm">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-5" }) do |f| %>
+        <%= render "users/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+        <%= f.email_field :email,
+              autofocus: true,
+              autocomplete: "email",
+              placeholder: "メールアドレス",
+              class: "w-full rounded border border-stone-400 px-3 py-3 text-sm" %>
 
-  <div class="actions">
-    <%= f.submit "Send me password reset instructions" %>
-  </div>
-<% end %>
+        <%= f.submit "パスワード再設定メールを送る",
+              class: "w-full rounded bg-blue-500 px-4 py-3 text-sm font-bold text-white" %>
+      <% end %>
+    </div>
+  </main>
 
-<%= render "users/shared/links" %>
+  <footer class="bg-white py-4 text-center text-xs text-stone-900">
+    <div class="space-x-2">
+      <%= link_to "利用規約", terms_path %>
+      <span>|</span>
+      <%= link_to "プライバシーポリシー", privacy_path %>
+      <span>|</span>
+      <%= link_to "お問い合わせ", new_inquiry_path %>
+    </div>
+    <p class="mt-1">© 2026 Stockly</p>
+  </footer>
+</div>
