@@ -1,28 +1,28 @@
-<footer class="fixed bottom-0 left-0 right-0 border-t border-stone-300 bg-white">
-  <nav class="mx-auto grid max-w-md grid-cols-5 text-center text-xs">
+<footer class="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white">
+  <nav class="mx-auto grid max-w-md grid-cols-5 text-center text-[11px]">
     <% nav_class = "flex flex-col items-center gap-1 py-3" %>
 
-    <%= link_to items_path, class: "#{nav_class} #{current_page?(items_path) ? 'text-blue-600 font-semibold' : 'text-stone-900'}" do %>
+    <%= link_to items_path, class: "#{nav_class} #{current_page?(items_path) ? 'text-blue-600 font-semibold' : 'text-stone-500'}" do %>
       <%= heroicon "home", type: :outline, class: "h-6 w-6" %>
       <span>ホーム</span>
     <% end %>
 
-    <%= link_to shopping_items_path, class: "#{nav_class} #{current_page?(shopping_items_path) ? 'text-blue-600 font-semibold' : 'text-stone-900'}" do %>
+    <%= link_to shopping_items_path, class: "#{nav_class} #{current_page?(shopping_items_path) ? 'text-blue-600 font-semibold' : 'text-stone-500'}" do %>
       <%= heroicon "shopping-cart", type: :outline, class: "h-6 w-6" %>
       <span>買う物</span>
     <% end %>
 
-    <%= link_to new_item_path, class: "#{nav_class} #{current_page?(new_item_path) ? 'text-blue-600 font-semibold' : 'text-stone-900'}" do %>
+    <%= link_to new_item_path, class: "#{nav_class} #{current_page?(new_item_path) ? 'text-blue-600 font-semibold' : 'text-stone-500'}" do %>
       <%= heroicon "plus-circle", type: :outline, class: "h-6 w-6" %>
       <span>アイテム追加</span>
     <% end %>
 
-    <%= link_to consumptions_path, class: "#{nav_class} #{current_page?(consumptions_path) ? 'text-blue-600 font-semibold' : 'text-stone-900'}" do %>
+    <%= link_to consumptions_path, class: "#{nav_class} #{current_page?(consumptions_path) ? 'text-blue-600 font-semibold' : 'text-stone-500'}" do %>
       <%= heroicon "chart-bar-square", type: :outline, class: "h-6 w-6" %>
       <span>消費履歴</span>
     <% end %>
 
-    <%= link_to settings_path, class: "#{nav_class} #{current_page?(settings_path) ? 'text-blue-600 font-semibold' : 'text-stone-900'}" do %>
+    <%= link_to settings_path, class: "#{nav_class} #{current_page?(settings_path) ? 'text-blue-600 font-semibold' : 'text-stone-500'}" do %>
       <%= heroicon "cog-6-tooth", type: :outline, class: "h-6 w-6" %>
       <span>設定</span>
     <% end %>

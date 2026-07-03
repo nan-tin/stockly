@@ -54,7 +54,9 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @item = Item.new
+    @item = current_group.items.new(
+      purchased_at: Date.current
+    )
   end
 
   def create
