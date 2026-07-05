@@ -15,25 +15,43 @@
 
       <button
         type="button"
-        class="rounded-lg bg-stone-200 px-3 py-2 text-sm font-semibold text-stone-900">
+        class="rounded-xl bg-stone-200 px-3 py-2 text-sm font-semibold text-stone-900">
         購入済みにする
       </button>
     </div>
   </div>
 
   <div class="grid grid-cols-[1fr_140px] bg-indigo-100/70 px-8 py-3 font-bold">
-    <div>商品名</div>
-    <div class="text-center">個数</div>
+
+    <div class="flex items-center gap-5">
+      <div class="w-7"></div>
+      <span>アイテム名</span>
+    </div>
+
+    <div class="flex justify-center">
+      個数
+    </div>
+
   </div>
 
   <% if @shopping_items.any? %>
     <% @shopping_items.each do |shopping_item| %>
-      <div class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-4">
-        <div class="flex items-center gap-3">
-          <%= check_box_tag "shopping_item_ids[]",
-                shopping_item.id,
-                false,
-                class: "h-5 w-5 rounded-full border-stone-900" %>
+      <div class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-5">
+        <div class="flex items-center gap-5">
+          <label class="relative flex h-7 w-7 cursor-pointer items-center justify-center">
+            <%= check_box_tag "shopping_item_ids[]",
+                  shopping_item.id,
+                  false,
+                  class: "peer hidden" %>
+
+            <span class="h-7 w-7 rounded-full border-2 border-black bg-white peer-checked:bg-black"></span>
+
+            <span class="absolute hidden peer-checked:block">
+              <%= heroicon "check",
+                    type: :solid,
+                    class: "h-4 w-4 text-white" %>
+            </span>
+          </label>
 
           <span class="text-base text-stone-900">
             <%= shopping_item.name %>
