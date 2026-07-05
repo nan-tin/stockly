@@ -6,7 +6,6 @@ class ShoppingItemsController < ApplicationController
     @shopping_items = current_group
                         .shopping_list
                         .shopping_items
-                        .includes(:category)
                         .where(is_purchased: false)
   end
 
