@@ -1,6 +1,7 @@
 class ShoppingItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_shopping_item, only: %i[edit update destroy]
+  before_action :set_shopping_item, 
+                only: %i[edit update destroy increase_quantity decrease_quantity]
 
   def index
     @shopping_items = current_group
@@ -64,6 +65,18 @@ class ShoppingItemsController < ApplicationController
   def destroy
     @shopping_item.destroy
     redirect_to shopping_items_path, notice: "買うものを削除しました"
+  end
+
+  def increase_quantity
+    @shopping_item.increment!(:quantity)
+
+    redirect_to shopping_items_path
+  end
+
+  def decrease_quantity
+    @shopping_item.decrement!(:quantity) if @shopping_item.quantity > 1
+
+    redirect_to shopping_items_path
   end
 
   private

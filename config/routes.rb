@@ -36,6 +36,8 @@ Rails.application.routes.draw do
   resources :shopping_items do
     member do
       patch :purchase
+      patch :increase_quantity
+      patch :decrease_quantity
     end
   end
 

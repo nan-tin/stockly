@@ -41,21 +41,27 @@
         </div>
 
         <div class="flex items-center justify-center gap-5">
-          <button
-            type="button"
-            class="flex h-7 w-7 items-center justify-center text-stone-900">
+          <%= link_to increase_quantity_shopping_item_path(shopping_item),
+                data: { turbo_method: :patch },
+                class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
             <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
-          </button>
+          <% end %>
 
           <span class="text-center font-bold">
             <%= shopping_item.quantity %>
           </span>
 
-          <button
-            type="button"
-            class="flex h-7 w-7 items-center justify-center text-stone-900">
-            <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
-          </button>
+          <% if shopping_item.quantity > 1 %>
+            <%= link_to decrease_quantity_shopping_item_path(shopping_item),
+                  data: { turbo_method: :patch },
+                  class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
+              <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+            <% end %>
+          <% else %>
+            <span class="flex h-7 w-7 items-center justify-center text-stone-300">
+              <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+            </span>
+          <% end %>
         </div>
       </div>
     <% end %>
