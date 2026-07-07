@@ -34,6 +34,11 @@ Rails.application.routes.draw do
 
    # member do ... endはIDを必要とする追加アクション
   resources :shopping_items do
+    collection do
+      patch :bulk_purchase
+      delete :bulk_destroy
+    end
+
     member do
       patch :purchase
       patch :increase_quantity

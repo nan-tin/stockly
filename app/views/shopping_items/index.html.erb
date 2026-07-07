@@ -1,98 +1,109 @@
-<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
-  <div class="bg-white px-4 pb-3 pt-5">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <button type="button" class="text-stone-900">
-          <%= heroicon "check-circle", type: :outline, class: "h-7 w-7" %>
-        </button>
+<div data-controller="select-all" class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <%= form_with url: bulk_purchase_shopping_items_path, method: :patch do %>
+    <div class="bg-white px-4 pb-3 pt-5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            data-action="click->select-all#toggleAll"
+            class="text-stone-900">
+            <%= heroicon "check-circle", type: :outline, class: "h-7 w-7" %>
+          </button>
 
-        <button type="button" class="text-stone-900">
-          <%= heroicon "trash", type: :outline, class: "h-7 w-7" %>
-        </button>
-
-        <h1 class="text-xl font-bold">買う物</h1>
-      </div>
-
-      <button
-        type="button"
-        class="rounded-xl bg-stone-200 px-3 py-2 text-sm font-semibold text-stone-900">
-        購入済みにする
-      </button>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-[1fr_140px] bg-indigo-100/70 px-8 py-3 font-bold">
-
-    <div class="flex items-center gap-5">
-      <div class="w-7"></div>
-      <span>アイテム名</span>
-    </div>
-
-    <div class="flex justify-center">
-      個数
-    </div>
-
-  </div>
-
-  <% if @shopping_items.any? %>
-    <% @shopping_items.each do |shopping_item| %>
-      <div class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-5">
-        <div class="flex items-center gap-5">
-          <label class="relative flex h-7 w-7 cursor-pointer items-center justify-center">
-            <%= check_box_tag "shopping_item_ids[]",
-                  shopping_item.id,
-                  false,
-                  class: "peer hidden" %>
-
-            <span class="h-7 w-7 rounded-full border-2 border-black bg-white peer-checked:bg-black"></span>
-
-            <span class="absolute hidden peer-checked:block">
-              <%= heroicon "check",
-                    type: :solid,
-                    class: "h-4 w-4 text-white" %>
-            </span>
-          </label>
-
-          <span class="text-base text-stone-900">
-            <%= shopping_item.name %>
-          </span>
-        </div>
-
-        <div class="flex items-center justify-center gap-5">
-          <%= link_to increase_quantity_shopping_item_path(shopping_item),
-                data: { turbo_method: :patch },
-                class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
-            <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
+          <%= button_tag type: "submit",
+                formaction: bulk_destroy_shopping_items_path,
+                formmethod: :post,
+                name: "_method",
+                value: "delete",
+                class: "text-stone-900",
+                data: { turbo_confirm: "選択した買うものを削除しますか？" } do %>
+            <%= heroicon "trash", type: :outline, class: "h-7 w-7" %>
           <% end %>
 
-          <span class="text-center font-bold">
-            <%= shopping_item.quantity %>
-          </span>
+          <h1 class="text-xl font-bold">買う物</h1>
+        </div>
 
-          <% if shopping_item.quantity > 1 %>
-            <%= link_to decrease_quantity_shopping_item_path(shopping_item),
+        <%= button_tag "購入済みにする",
+              type: "submit",
+              class: "rounded-xl bg-stone-200 px-3 py-2 text-sm font-semibold text-stone-900",
+              data: { turbo_confirm: "選択した買うものを在庫へ追加しますか？" } %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-[1fr_140px] bg-indigo-100/70 px-8 py-3 font-bold">
+
+      <div class="flex items-center gap-5">
+        <div class="w-7"></div>
+        <span>アイテム名</span>
+      </div>
+
+      <div class="flex justify-center">
+        個数
+      </div>
+
+    </div>
+
+    <% if @shopping_items.any? %>
+      <% @shopping_items.each do |shopping_item| %>
+        <div class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-5">
+          <div class="flex items-center gap-5">
+            <label class="relative flex h-7 w-7 cursor-pointer items-center justify-center">
+              <%= check_box_tag "shopping_item_ids[]",
+                    shopping_item.id,
+                    false,
+                    class: "peer hidden",
+                    data: { select_all_target: "checkbox" } %>
+
+              <span class="h-7 w-7 rounded-full border-2 border-black bg-white peer-checked:bg-black"></span>
+
+              <span class="absolute hidden peer-checked:block">
+                <%= heroicon "check",
+                      type: :solid,
+                      class: "h-4 w-4 text-white" %>
+              </span>
+            </label>
+
+            <span class="text-base text-stone-900">
+              <%= shopping_item.name %>
+            </span>
+          </div>
+
+          <div class="flex items-center justify-center gap-5">
+            <%= link_to increase_quantity_shopping_item_path(shopping_item),
                   data: { turbo_method: :patch },
                   class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
-              <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+              <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
             <% end %>
-          <% else %>
-            <span class="flex h-7 w-7 items-center justify-center text-stone-300">
-              <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+
+            <span class="text-center font-bold">
+              <%= shopping_item.quantity %>
             </span>
-          <% end %>
+
+            <% if shopping_item.quantity > 1 %>
+              <%= link_to decrease_quantity_shopping_item_path(shopping_item),
+                    data: { turbo_method: :patch },
+                    class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
+                <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+              <% end %>
+            <% else %>
+              <span class="flex h-7 w-7 items-center justify-center text-stone-300">
+                <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
+              </span>
+            <% end %>
+          </div>
         </div>
+      <% end %>
+    <% else %>
+      <div class="flex h-72 items-center justify-center text-lg font-bold">
+        買うものなし
       </div>
     <% end %>
-  <% else %>
-    <div class="flex h-72 items-center justify-center text-lg font-bold">
-      買うものなし
+
+    <div class="mt-10 flex justify-center">
+      <%= link_to new_shopping_item_path,
+            class: "rounded-full bg-white px-6 py-3 text-sm font-semibold shadow" do %>
+        ＋ 買う物にアイテムを追加
+      <% end %>
     </div>
   <% end %>
-
-  <div class="mt-10 flex justify-center">
-    <%= link_to new_shopping_item_path,
-          class: "rounded-full bg-white px-6 py-3 text-sm font-semibold shadow" do %>
-      ＋ 買う物にアイテムを追加
-    <% end %>
-  </div>
 </div>
