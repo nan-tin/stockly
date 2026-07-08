@@ -63,9 +63,9 @@
               </span>
             </label>
 
-            <span class="text-base text-stone-900">
-              <%= shopping_item.name %>
-            </span>
+            <%= link_to shopping_item.name,
+                  edit_shopping_item_path(shopping_item),
+                  class: "text-base text-stone-900" %>
           </div>
 
           <div class="flex items-center justify-center gap-5">
