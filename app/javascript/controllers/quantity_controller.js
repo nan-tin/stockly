@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="quantity"
 export default class extends Controller {
   static targets = ["input"]
+  static values = { min: Number }
 
   increase() {
     this.inputTarget.value = Number(this.inputTarget.value) + 1
@@ -10,8 +10,9 @@ export default class extends Controller {
 
   decrease() {
     const value = Number(this.inputTarget.value)
+    const min = this.hasMinValue ? this.minValue : 0
 
-    if (value > 0) {
+    if (value > min) {
       this.inputTarget.value = value - 1
     }
   }

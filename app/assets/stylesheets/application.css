@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+input[type="number"] {
+  appearance: textfield;        /* 標準仕様 */
+  -moz-appearance: textfield;   /* Firefox */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;             /* 標準仕様 */
+  -webkit-appearance: none;     /* Chrome/Safari */
+  margin: 0;
+}

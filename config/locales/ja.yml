@@ -1,0 +1,6 @@
+ja:
+  activerecord:
+    attributes:
+      shopping_item:
+        name: 商品名
+        quantity: 購入数
