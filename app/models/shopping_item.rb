@@ -1,4 +1,6 @@
 class ShoppingItem < ApplicationRecord
+  has_one_attached :image
+  
   belongs_to :shopping_list
   belongs_to :category
 

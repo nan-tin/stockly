@@ -139,7 +139,8 @@ class ShoppingItemsController < ApplicationController
       :category_id,
       :name,
       :quantity,
-      :memo
+      :memo,
+      :image
     )
   end
 

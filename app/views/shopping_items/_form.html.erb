@@ -10,13 +10,36 @@
     </div>
   <% end %>
 
-  <div class="flex justify-center">
-    <div class="flex h-32 w-32 flex-col items-center justify-center rounded-2xl border border-stone-900 bg-white text-sm font-bold text-stone-900">
-      <%= heroicon "photo",
-            variant: :outline,
-            options: { class: "h-8 w-8" } %>
-      <span class="mt-2">画像追加</span>
-    </div>
+  <div data-controller="image-preview" class="flex justify-center">
+    <%= f.label :image,
+          class: "flex h-32 w-32 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-stone-900 bg-white text-sm font-bold text-stone-900" do %>
+
+      <% if @shopping_item.image.attached? %>
+        <%= image_tag @shopping_item.image,
+              data: { image_preview_target: "preview" },
+              class: "h-full w-full rounded-2xl bg-white object-contain" %>
+      <% else %>
+        <%= image_tag "",
+              data: { image_preview_target: "preview" },
+              class: "hidden h-full w-full rounded-2xl bg-white object-contain" %>
+      <% end %>
+
+      <div data-image-preview-target="placeholder"
+          class="<%= @shopping_item.image.attached? ? 'hidden' : 'flex' %> flex-col items-center">
+        <%= heroicon "photo",
+              variant: :outline,
+              options: { class: "h-8 w-8" } %>
+        <span class="mt-2">画像追加</span>
+      </div>
+    <% end %>
+
+    <%= f.file_field :image,
+          class: "hidden",
+          accept: "image/*",
+          data: {
+            image_preview_target: "input",
+            action: "change->image-preview#preview"
+          } %>
   </div>
 
   <div class="divide-y divide-stone-200 border-y border-stone-200">
