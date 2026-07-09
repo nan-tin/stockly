@@ -58,6 +58,11 @@ class User < ApplicationRecord
       ShoppingList.create!(
         group: group
       )
+
+      Category.create!(
+        group: group,
+        name: "冷蔵庫"
+      )
     end
   end
 end
