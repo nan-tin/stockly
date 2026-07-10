@@ -29,19 +29,15 @@
           <%= heroicon "magnifying-glass", type: :outline, class: "h-7 w-7" %>
         <% end %>
 
-        <details class="relative">
-          <summary class="list-none cursor-pointer text-2xl font-bold leading-none">･･･</summary>
-
-          <div class="absolute right-0 z-20 mt-3 w-56 overflow-hidden rounded-2xl bg-white text-center shadow-lg ring-1 ring-stone-200">
-            <p class="pt-3 text-sm font-semibold">編集操作</p>
-            <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
-
-            <%= link_to "並び替えを行う", items_path(category_id: params[:category_id], display: params[:display], menu: "sort"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-            <%= link_to "複数選択を行う", items_path(category_id: params[:category_id], display: params[:display], select: "true"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-            <%= link_to "表示変更を行う", items_path(category_id: params[:category_id], sort: params[:sort], menu: "display"), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-            <%= link_to "閉じる", items_path(category_id: params[:category_id], display: params[:display], sort: params[:sort]), class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-          </div>
-        </details>
+        <%= link_to items_path(
+              category_id: params[:category_id],
+              display: @display,
+              sort: params[:sort],
+              menu: "edit"
+            ),
+            class: "text-2xl font-bold leading-none" do %>
+          ･･･
+        <% end %>
       </div>
     </div>
   </div>
@@ -64,34 +60,182 @@
     </div>
   <% end %>
 
-  <% if params[:menu] == "sort" %>
-    <div class="mx-4 mt-4 overflow-hidden rounded-2xl bg-white text-center shadow-md">
-      <p class="pt-3 text-sm font-semibold">並び替えを行う</p>
-      <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
+  <% modal_wrapper_class = "fixed inset-0 z-40 flex items-start justify-center bg-black/20 px-5 pt-24" %>
+  <% modal_panel_class = "w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-xl" %>
+  <% modal_title_class = "pt-4 text-lg font-bold text-stone-900" %>
+  <% modal_subtitle_class = "pb-3 pt-1 text-sm text-stone-400" %>
+  <% modal_link_class = "block border-t border-stone-200 px-4 py-4 text-center text-lg text-stone-900 hover:bg-stone-50" %>
 
-      <%= link_to "購入が新しい順", items_path(category_id: params[:category_id], display: @display, sort: "purchased_desc"), class: "block border-t px-4 py-3" %>
-      <%= link_to "購入が古い順", items_path(category_id: params[:category_id], display: @display, sort: "purchased_asc"), class: "block border-t px-4 py-3" %>
-      <%= link_to "在庫数が多い順", items_path(category_id: params[:category_id], display: @display, sort: "quantity_desc"), class: "block border-t px-4 py-3" %>
-      <%= link_to "在庫数が少ない順", items_path(category_id: params[:category_id], display: @display, sort: "quantity_asc"), class: "block border-t px-4 py-3" %>
-      <%= link_to "あいうえお順", items_path(category_id: params[:category_id], display: @display, sort: "name_asc"), class: "block border-t px-4 py-3" %>
-      <%= link_to "閉じる", items_path(category_id: params[:category_id], display: @display), class: "block border-t px-4 py-3" %>
+  <% if params[:menu] == "edit" %>
+    <div
+      class="<%= modal_wrapper_class %>"
+      data-controller="modal"
+      data-action="click->modal#close keydown@window->modal#closeWithEscape"
+      data-modal-close-url-value="<%= items_path(
+        category_id: params[:category_id],
+        display: @display,
+        sort: params[:sort]
+      ) %>">
+
+      <div class="<%= modal_panel_class %>">
+        <p class="<%= modal_title_class %>">編集操作</p>
+        <p class="<%= modal_subtitle_class %>">操作を選択してください</p>
+
+        <%= link_to "並び替えを行う",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                menu: "sort"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "複数選択を行う",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: params[:sort],
+                select: "true"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "表示変更を行う",
+              items_path(
+                category_id: params[:category_id],
+                sort: params[:sort],
+                menu: "display"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "閉じる",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: params[:sort]
+              ),
+              class: modal_link_class %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if params[:menu] == "sort" %>
+    <div
+      class="<%= modal_wrapper_class %>"
+      data-controller="modal"
+      data-action="click->modal#close keydown@window->modal#closeWithEscape"
+      data-modal-close-url-value="<%= items_path(
+        category_id: params[:category_id],
+        display: @display,
+        sort: params[:sort]
+      ) %>">
+
+      <div class="<%= modal_panel_class %>">
+        <p class="<%= modal_title_class %>">並び替えを行う</p>
+        <p class="<%= modal_subtitle_class %>">操作を選択してください</p>
+
+        <%= link_to "購入が新しい順",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: "purchased_desc"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "購入が古い順",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: "purchased_asc"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "在庫数が多い順",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: "quantity_desc"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "在庫数が少ない順",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: "quantity_asc"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "あいうえお順",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: "name_asc"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "閉じる",
+              items_path(
+                category_id: params[:category_id],
+                display: @display,
+                sort: params[:sort]
+              ),
+              class: modal_link_class %>
+      </div>
     </div>
   <% end %>
 
   <% if params[:menu] == "display" %>
-    <div class="mx-4 mt-4 overflow-hidden rounded-2xl bg-white text-center shadow-md">
-      <p class="pt-3 text-sm font-semibold">表示を変更する</p>
-      <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
+    <div
+      class="<%= modal_wrapper_class %>"
+      data-controller="modal"
+      data-action="click->modal#close keydown@window->modal#closeWithEscape"
+      data-modal-close-url-value="<%= items_path(
+        category_id: params[:category_id],
+        display: @display,
+        sort: params[:sort]
+      ) %>">
 
-      <%= link_to "在庫数", items_path(category_id: params[:category_id], sort: params[:sort], display: "quantity"), class: "block border-t px-4 py-3" %>
-      <%= link_to "期限日", items_path(category_id: params[:category_id], sort: params[:sort], display: "expired_at"), class: "block border-t px-4 py-3" %>
-      <%= link_to "購入日", items_path(category_id: params[:category_id], sort: params[:sort], display: "purchased_at"), class: "block border-t px-4 py-3" %>
-      <%= link_to "閉じる", items_path(category_id: params[:category_id], sort: params[:sort], display: @display), class: "block border-t px-4 py-3" %>
+      <div class="<%= modal_panel_class %>">
+        <p class="<%= modal_title_class %>">表示を変更する</p>
+        <p class="<%= modal_subtitle_class %>">操作を選択してください</p>
+
+        <%= link_to "在庫数",
+              items_path(
+                category_id: params[:category_id],
+                sort: params[:sort],
+                display: "quantity"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "期限日",
+              items_path(
+                category_id: params[:category_id],
+                sort: params[:sort],
+                display: "expired_at"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "購入日",
+              items_path(
+                category_id: params[:category_id],
+                sort: params[:sort],
+                display: "purchased_at"
+              ),
+              class: modal_link_class %>
+
+        <%= link_to "閉じる",
+              items_path(
+                category_id: params[:category_id],
+                sort: params[:sort],
+                display: @display
+              ),
+              class: modal_link_class %>
+      </div>
     </div>
   <% end %>
 
   <div class="grid grid-cols-[1fr_140px_80px] bg-indigo-100/70 px-8 py-3 font-bold">
     <div>アイテム名</div>
+
     <div class="text-center">
       <% if @display == "expired_at" %>
         期限日
@@ -101,6 +245,8 @@
         在庫数
       <% end %>
     </div>
+
+    <div></div>
   </div>
 
   <% if @items.any? %>
@@ -169,10 +315,10 @@
                     <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
                   </span>
                 <% end %>
-
               </div>
             <% end %>
           </div>
+
           <div class="flex justify-start pl-11">
             <% shopping_quantity = @shopping_item_quantities[[item.category_id, item.name, item.memo]] || 0 %>
 
@@ -203,10 +349,14 @@
           <%= submit_tag "全て削除",
                 class: "text-stone-900",
                 data: { turbo_confirm: "選択したアイテムを削除しますか？" } %>
+
           <%= button_tag "クリア",
                 type: "reset",
                 class: "text-stone-900" %>
-          <%= link_to "閉じる", items_path(category_id: params[:category_id], display: @display), class: "text-stone-900" %>
+
+          <%= link_to "閉じる",
+                items_path(category_id: params[:category_id], display: @display, sort: params[:sort]),
+                class: "text-stone-900" %>
         </div>
       <% end %>
     <% end %>
