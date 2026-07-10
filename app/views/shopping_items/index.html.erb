@@ -67,9 +67,17 @@
               </span>
             </label>
 
-            <%= link_to shopping_item.name,
-                  edit_shopping_item_path(shopping_item),
-                  class: "text-base text-stone-900" %>
+            <div>
+              <%= link_to shopping_item.name,
+                    edit_shopping_item_path(shopping_item),
+                    class: "text-base text-stone-900" %>
+
+              <% if shopping_item.memo.present? %>
+                <p class="mt-1 text-xs text-stone-500">
+                  <%= shopping_item.memo %>
+                </p>
+              <% end %>
+            </div>
           </div>
 
           <div class="flex items-center justify-center gap-5">
