@@ -253,9 +253,22 @@
     <%= form_with url: bulk_destroy_items_path, method: :delete do %>
       <% @items.each do |item| %>
         <div class="grid grid-cols-[1fr_140px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-3">
             <% if params[:select] == "true" %>
-              <%= check_box_tag "item_ids[]", item.id, false, class: "h-5 w-5 rounded-full border-stone-900" %>
+              <label class="relative flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center">
+                <%= check_box_tag "item_ids[]",
+                      item.id,
+                      false,
+                      class: "peer hidden" %>
+
+                <span class="h-7 w-7 rounded-full border-2 border-stone-900 bg-white peer-checked:bg-stone-900"></span>
+
+                <span class="absolute hidden peer-checked:block">
+                  <%= heroicon "check",
+                        type: :solid,
+                        class: "h-4 w-4 text-white" %>
+                </span>
+              </label>
             <% end %>
 
             <div>
@@ -346,12 +359,17 @@
 
       <% if params[:select] == "true" %>
         <div class="fixed bottom-24 left-1/2 z-10 flex -translate-x-1/2 gap-4 rounded-2xl bg-white px-5 py-3 text-sm shadow-md">
-          <%= submit_tag "全て削除",
+          <%= submit_tag "削除",
                 class: "text-stone-900",
                 data: { turbo_confirm: "選択したアイテムを削除しますか？" } %>
 
-          <%= button_tag "クリア",
-                type: "reset",
+          <%= link_to "クリア",
+                items_path(
+                  category_id: params[:category_id],
+                  display: @display,
+                  sort: params[:sort],
+                  select: "true"
+                ),
                 class: "text-stone-900" %>
 
           <%= link_to "閉じる",
