@@ -152,7 +152,8 @@ class ConsumptionsController < ApplicationController
       :item_name,
       :consumed_at,
       :quantity,
-      :memo
+      :memo,
+      :image
     )
   end
 

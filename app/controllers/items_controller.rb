@@ -124,7 +124,7 @@ class ItemsController < ApplicationController
     item = current_group.items.find(params[:id])
 
     ActiveRecord::Base.transaction do
-      current_group.consumptions.create!(
+      consumption = current_group.consumptions.create!(
         category: item.category,
         category_name: item.category.name,
         item_name: item.name,
@@ -132,6 +132,14 @@ class ItemsController < ApplicationController
         consumed_at: Date.current,
         memo: item.memo
       )
+
+      if item.image.attached?
+        consumption.image.attach(
+          io: StringIO.new(item.image.download),
+          filename: item.image.filename.to_s,
+          content_type: item.image.content_type
+        )
+      end
 
       item.destroy!
     end
@@ -192,7 +200,7 @@ class ItemsController < ApplicationController
         if consumption.present?
           consumption.increment!(:quantity)
         else
-          current_group.consumptions.create!(
+          consumption = current_group.consumptions.create!(
             category: @item.category,
             category_name: @item.category.name,
             item_name: @item.name,
@@ -200,6 +208,14 @@ class ItemsController < ApplicationController
             consumed_at: Date.current,
             memo: @item.memo
           )
+
+          if @item.image.attached?
+            consumption.image.attach(
+              io: StringIO.new(@item.image.download),
+              filename: @item.image.filename.to_s,
+              content_type: @item.image.content_type
+            )
+          end
         end
 
         @item.decrement!(:quantity)
