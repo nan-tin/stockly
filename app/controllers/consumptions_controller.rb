@@ -1,6 +1,12 @@
 class ConsumptionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_consumption, only: %i[edit update destroy]
+  before_action :set_consumption, only: %i[
+    edit 
+    update 
+    destroy
+    increase_quantity
+    decrease_quantity
+    ]
 
   def index
     @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
@@ -127,6 +133,34 @@ class ConsumptionsController < ApplicationController
       month: consumed_at.strftime("%Y-%m"),
       date: consumed_at.strftime("%Y-%m-%d")
     ), notice: "消費履歴を削除しました"
+  end
+
+  def increase_quantity
+    @consumption.increment!(:quantity)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to consumptions_path(
+          month: @consumption.consumed_at.strftime("%Y-%m"),
+          date: @consumption.consumed_at.strftime("%Y-%m-%d")
+        )
+      end
+    end
+  end
+
+  def decrease_quantity
+    @consumption.decrement!(:quantity) if @consumption.quantity > 1
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to consumptions_path(
+          month: @consumption.consumed_at.strftime("%Y-%m"),
+          date: @consumption.consumed_at.strftime("%Y-%m-%d")
+        )
+      end
+    end
   end
 
   def summary_detail

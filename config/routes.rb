@@ -47,6 +47,11 @@ Rails.application.routes.draw do
   end
 
   resources :consumptions, only: %i[index new create edit update destroy] do
+    member do
+      patch :increase_quantity
+      patch :decrease_quantity
+    end
+    
     collection do
       get :summary_detail
     end

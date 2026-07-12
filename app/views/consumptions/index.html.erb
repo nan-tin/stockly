@@ -157,31 +157,13 @@
           class: "block rounded-xl bg-stone-900 px-4 py-3 text-center text-base font-semibold text-white" %>
   </div>
 
-  <div class="grid grid-cols-[1fr_100px] bg-indigo-100/70 px-8 py-3 font-bold">
+  <div class="grid grid-cols-[1fr_140px] bg-indigo-100/70 px-8 py-3 font-bold">
     <div>アイテム名</div>
     <div class="text-center">消費数</div>
   </div>
 
   <% if @selected_date_consumptions.any? %>
-    <% @selected_date_consumptions.each do |consumption| %>
-      <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-300 bg-white px-8 py-4">
-        <div>
-          <%= link_to consumption.item_name,
-                edit_consumption_path(consumption),
-                class: "text-base text-stone-900" %>
-
-          <% if consumption.memo.present? %>
-            <p class="mt-1 text-xs text-stone-500">
-              <%= consumption.memo %>
-            </p>
-          <% end %>
-        </div>
-
-        <div class="text-center font-bold">
-          <%= consumption.quantity %>
-        </div>
-      </div>
-    <% end %>
+    <%= render @selected_date_consumptions %>
   <% else %>
     <div class="flex h-52 items-center justify-center text-xl font-bold">
       消費履歴なし
