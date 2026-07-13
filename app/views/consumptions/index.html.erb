@@ -147,26 +147,41 @@
     <% end %>
   </div>
 
-  <div class="bg-indigo-100/70 px-8 py-3 font-bold text-center">
+  <div class="bg-indigo-200/70 px-8 py-3 text-center font-semibold">
     <%= @selected_date.strftime("%Y年 %-m月 %-d日") %>
   </div>
 
-  <div class="bg-white px-4 py-4">
-    <%= link_to "履歴にアイテムを追加する",
-          new_consumption_path(date: @selected_date.strftime("%Y-%m-%d")),
-          class: "block rounded-xl bg-stone-900 px-4 py-3 text-center text-base font-semibold text-white" %>
-  </div>
-
   <div class="grid grid-cols-[1fr_140px] bg-indigo-100/70 px-8 py-3 font-bold">
-    <div>アイテム名</div>
-    <div class="text-center">消費数</div>
+    <div class="flex items-center gap-4">
+      <div class="h-8 w-8 shrink-0"></div>
+      <span>アイテム名</span>
+    </div>
+
+    <div class="flex items-center justify-center">
+      消費数
+    </div>
   </div>
 
   <% if @selected_date_consumptions.any? %>
     <%= render @selected_date_consumptions %>
   <% else %>
-    <div class="flex h-52 items-center justify-center text-xl font-bold">
+    <div class="flex h-32 items-center justify-center text-base font-bold text-stone-900">
       消費履歴なし
     </div>
   <% end %>
+
+  <div class="bg-stone-100 px-4 py-8">
+    <div class="flex justify-center">
+      <%= link_to new_consumption_path(
+            date: @selected_date.strftime("%Y-%m-%d")
+          ),
+          class: "inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-stone-900 shadow" do %>
+        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-stone-900 text-white">
+          <%= heroicon "plus", type: :solid, class: "h-4 w-4" %>
+        </span>
+
+        <span>履歴にアイテムを追加する</span>
+      <% end %>
+    </div>
+  </div>
 </div>

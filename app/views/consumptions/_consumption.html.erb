@@ -1,14 +1,15 @@
 <div
   id="<%= dom_id(consumption) %>"
-  class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-4">
+  class="grid grid-cols-[1fr_140px] items-center border-b border-stone-200 bg-white px-8 py-4">
 
-  <div class="flex min-w-0 items-center gap-3">
+  <div class="flex min-w-0 items-center gap-4">
     <%= link_to consumption_path(consumption),
           data: {
             turbo_method: :delete,
             turbo_confirm: "この消費履歴を削除しますか？"
           },
-          class: "flex h-8 w-8 shrink-0 items-center justify-center text-stone-900" do %>
+          class: "flex h-8 w-8 shrink-0 items-center justify-center text-stone-900",
+          aria: { label: "#{consumption.item_name}の消費履歴を削除する" } do %>
       <%= heroicon "trash",
             type: :outline,
             class: "h-6 w-6" %>

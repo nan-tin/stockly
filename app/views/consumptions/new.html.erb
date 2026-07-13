@@ -1,3 +1,22 @@
-<h1 class="mb-6 text-2xl font-bold">消費履歴を追加</h1>
+<div class="mx-auto max-w-md">
+  <header class="relative bg-white py-4 text-center shadow-sm">
+    <%= link_to consumptions_path(
+          month: @consumption.consumed_at&.strftime("%Y-%m"),
+          date: @consumption.consumed_at&.strftime("%Y-%m-%d")
+        ),
+        class: "absolute left-5 top-1/2 -translate-y-1/2" do %>
 
-<%= render "form", consumption: @consumption %>
+      <%= heroicon "x-mark",
+            variant: :outline,
+            options: { class: "h-7 w-7" } %>
+    <% end %>
+
+    <h1 class="text-lg font-bold">
+      アイテム追加（履歴）
+    </h1>
+  </header>
+
+  <div class="mt-5 rounded-xl bg-white px-6 py-7 shadow-sm">
+    <%= render "form", consumption: @consumption %>
+  </div>
+</div>

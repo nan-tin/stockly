@@ -1,9 +1,7 @@
 <%= form_with model: consumption, class: "space-y-5" do |f| %>
   <% if consumption.errors.any? %>
     <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
-      <p class="font-semibold">
-        入力内容を確認してください
-      </p>
+      <p class="font-semibold">入力内容を確認してください</p>
 
       <ul class="mt-2 list-disc pl-5">
         <% consumption.errors.full_messages.each do |message| %>
@@ -15,22 +13,30 @@
 
   <div data-controller="image-preview" class="flex justify-center">
     <%= f.label :image,
-          class: "flex h-32 w-32 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-stone-900 bg-white text-sm font-bold" do %>
+          class: "flex h-32 w-32 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-stone-900 bg-white text-sm font-bold text-stone-900" do %>
 
-      <% if consumption.image.attached? %>
+      <% image_saved =
+          consumption.image.attached? &&
+          consumption.image.blob.persisted? %>
+
+      <% if image_saved %>
         <%= image_tag consumption.image,
               data: { image_preview_target: "preview" },
-              class: "h-full w-full object-contain" %>
+              class: "h-full w-full rounded-2xl bg-white object-contain" %>
       <% else %>
         <%= image_tag "",
               data: { image_preview_target: "preview" },
-              class: "hidden h-full w-full object-contain" %>
+              class: "hidden h-full w-full rounded-2xl bg-white object-contain" %>
       <% end %>
 
       <div
         data-image-preview-target="placeholder"
-        class="<%= consumption.image.attached? ? 'hidden' : 'flex' %> flex-col items-center">
-        <%= heroicon "photo", variant: :outline, options: { class: "h-8 w-8" } %>
+        class="<%= image_saved ? 'hidden' : 'flex' %> flex-col items-center">
+
+        <%= heroicon "photo",
+              variant: :outline,
+              options: { class: "h-8 w-8" } %>
+
         <span class="mt-2">画像追加</span>
       </div>
     <% end %>
@@ -44,61 +50,105 @@
           } %>
   </div>
 
-  <div>
-    <%= f.label :category_id, "カテゴリー", class: "mb-1 block text-sm font-semibold" %>
-    <%= f.collection_select :category_id,
-          current_group.categories.order(:name),
-          :id,
-          :name,
-          { prompt: "カテゴリーを選択" },
-          class: "w-full rounded-xl border border-stone-300 bg-white px-3 py-3 text-base" %>
+  <div class="divide-y divide-stone-200 border-y border-stone-200">
+    <div class="grid grid-cols-[90px_1fr] items-center py-3">
+      <%= f.label :category_id,
+            "カテゴリー",
+            class: "text-sm font-bold text-stone-900" %>
+
+      <div class="flex justify-end overflow-hidden">
+        <div class="relative inline-block max-w-full">
+          <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-stone-900">
+            ▼
+          </span>
+
+          <%= f.collection_select :category_id,
+                current_group.categories.order(:name),
+                :id,
+                :name,
+                { prompt: "カテゴリーを選択" },
+                {
+                  required: true,
+                  class: "max-w-[220px] appearance-none truncate rounded-full border border-stone-900 bg-white py-2 pl-8 pr-5 text-sm font-semibold text-stone-900"
+                } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-[90px_1fr] items-center py-3">
+      <%= f.label :item_name,
+            "商品名",
+            class: "text-sm font-bold text-stone-900" %>
+
+      <%= f.text_field :item_name,
+            placeholder: "例：みかん",
+            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+    </div>
+
+    <div class="grid grid-cols-[90px_1fr] items-center py-3">
+      <%= f.label :consumed_at,
+            "消費日",
+            class: "text-sm font-bold text-stone-900" %>
+
+      <div class="flex justify-end">
+        <%= f.date_field :consumed_at,
+              class: "w-40 rounded-lg border-0 bg-stone-200 px-3 py-1 text-center text-sm font-bold text-stone-900" %>
+      </div>
+    </div>
+
+    <div
+      class="grid grid-cols-[90px_1fr] items-center py-3"
+      data-controller="quantity"
+      data-quantity-min-value="1">
+
+      <%= f.label :quantity,
+            "消費数",
+            class: "text-sm font-bold text-stone-900" %>
+
+      <div class="flex items-center justify-end gap-6">
+        <%= f.number_field :quantity,
+              min: 1,
+              max: 100,
+              data: { quantity_target: "input" },
+              class: "w-12 rounded-lg border-0 bg-stone-200 py-1 text-center text-sm font-bold text-stone-900" %>
+
+        <button
+          type="button"
+          data-action="click->quantity#increase"
+          class="flex h-7 w-7 items-center justify-center rounded bg-stone-900 text-lg font-bold text-white">
+          ＋
+        </button>
+
+        <button
+          type="button"
+          data-action="click->quantity#decrease"
+          class="flex h-7 w-7 items-center justify-center rounded bg-stone-900 text-lg font-bold text-white">
+          －
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-[90px_1fr] py-3">
+      <%= f.label :memo,
+            "メモ",
+            class: "text-sm font-bold text-stone-900" %>
+
+      <%= f.text_area :memo,
+            rows: 5,
+            placeholder: "例：和歌山県産のみかん",
+            class: "w-full resize-none rounded-lg border-0 px-0 py-0 text-sm focus:ring-0" %>
+    </div>
   </div>
 
-  <div>
-    <%= f.label :item_name, "アイテム名", class: "mb-1 block text-sm font-semibold" %>
-    <%= f.text_field :item_name,
-          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
-  </div>
-
-  <div>
-    <%= f.label :quantity, "消費数", class: "mb-1 block text-sm font-semibold" %>
-    <%= f.number_field :quantity,
-          min: 1,
-          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
-  </div>
-
-  <div>
-    <%= f.label :consumed_at, "消費日", class: "mb-1 block text-sm font-semibold" %>
-    <%= f.date_field :consumed_at,
-          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
-  </div>
-
-  <div>
-    <%= f.label :memo, "メモ", class: "mb-1 block text-sm font-semibold" %>
-    <%= f.text_area :memo,
-          rows: 4,
-          class: "w-full rounded-xl border border-stone-300 px-3 py-3 text-base" %>
-  </div>
-
-  <div class="space-y-3 pt-2">
-    <%= f.submit "保存",
-          class: "w-full rounded-xl bg-stone-900 px-4 py-3 text-base font-semibold text-white" %>
-            
-    <% unless consumption.new_record? %>
-      <%= link_to "削除",
-            consumption_path(consumption),
-            data: {
-              turbo_method: :delete,
-              turbo_confirm: "この消費履歴を削除しますか？"
-            },
-            class: "block w-full rounded-xl border border-red-300 bg-white px-4 py-3 text-center text-base font-semibold text-red-600" %>
-    <% end %>       
-
-    <%= link_to "戻る",
+  <div class="flex gap-4 pt-4">
+    <%= link_to "キャンセル",
           consumptions_path(
             month: consumption.consumed_at&.strftime("%Y-%m"),
             date: consumption.consumed_at&.strftime("%Y-%m-%d")
           ),
-          class: "block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-center text-base font-semibold" %>
+          class: "flex-1 rounded-xl bg-stone-200 py-3 text-center text-sm font-bold text-blue-500" %>
+
+    <%= f.submit consumption.persisted? ? "更新" : "登録",
+          class: "flex-1 rounded-xl bg-blue-500 py-3 text-sm font-bold text-white" %>
   </div>
 <% end %>
