@@ -1,8 +1,18 @@
 <div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
   <div class="bg-white px-4 pb-3 pt-5">
     <div class="flex items-center justify-between">
-      <%= link_to consumptions_path(month: @month.strftime("%Y-%m")), class: "text-stone-900" do %>
-        <span class="text-3xl leading-none">＜</span>
+      <%= link_to summary_consumptions_path(
+            month: @month.strftime("%Y-%m"),
+            category_id: params[:category_id],
+            sort: params[:sort],
+            keyword: params[:keyword]
+          ), 
+          class: "text-stone-900" do %>
+
+        <%= heroicon "chevron-left",
+              type: :outline,
+              class: "h-9 w-9 stroke-[2.5]" %>
+
       <% end %>
 
       <h1 class="text-xl font-bold"><%= @item_name %></h1>
@@ -43,10 +53,11 @@
       </div>
     <% end %>
 
-    <div class="mt-4 bg-white px-8 py-4">
-      <div class="flex items-center justify-between font-bold">
-        <span>合計</span>
-        <span><%= @total_quantity %></span>
+    <div class="mt-4 grid grid-cols-[1fr_100px] items-center bg-white px-8 py-4 font-bold">
+      <div>合計</div>
+
+      <div class="text-center">
+        <%= @total_quantity %>
       </div>
     </div>
   <% else %>

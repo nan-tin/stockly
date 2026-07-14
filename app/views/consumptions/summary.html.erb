@@ -6,7 +6,9 @@
               month: @month.strftime("%Y-%m")
             ),
             class: "text-stone-900" do %>
-          <span class="text-3xl leading-none">＜</span>
+          <%= heroicon "chevron-left",
+                type: :outline,
+                class: "h-9 w-9 stroke-[2.5]" %>
         <% end %>
 
         <div class="flex justify-center">
@@ -83,7 +85,10 @@
               sort: params[:sort]
             ),
             class: "text-stone-900" do %>
-          <span class="text-3xl leading-none">＜</span>
+
+          <%= heroicon "chevron-left",
+                type: :outline,
+                class: "h-9 w-9 stroke-[2.5]" %>
         <% end %>
 
         <%= hidden_field_tag :month, @month.strftime("%Y-%m") %>
