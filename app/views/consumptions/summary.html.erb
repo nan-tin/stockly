@@ -1,0 +1,214 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <% unless params[:search] == "true" || params[:keyword].present? %>
+    <div class="bg-white px-4 pb-3 pt-5">
+      <div class="grid grid-cols-[40px_1fr_auto] items-center gap-4">
+        <%= link_to consumptions_path(
+              month: @month.strftime("%Y-%m")
+            ),
+            class: "text-stone-900" do %>
+          <span class="text-3xl leading-none">＜</span>
+        <% end %>
+
+        <div class="flex justify-center">
+          <details class="relative">
+            <summary class="list-none cursor-pointer rounded-full border border-stone-900 px-3 py-1 text-sm font-semibold">
+              ▼
+              <% if @selected_category_id.present? %>
+                <%= @categories.find {
+                      |category|
+                      category.id.to_s == @selected_category_id.to_s
+                    }&.name %>
+              <% else %>
+                全てのアイテム
+              <% end %>
+            </summary>
+
+            <div class="absolute left-1/2 z-30 mt-2 w-44 -translate-x-1/2 overflow-hidden rounded-2xl bg-white text-sm shadow-lg ring-1 ring-stone-200">
+              <%= link_to "全てのアイテム",
+                    summary_consumptions_path(
+                      month: @month.strftime("%Y-%m"),
+                      sort: params[:sort]
+                    ),
+                    class: "block border-b border-stone-100 px-4 py-3 hover:bg-stone-50" %>
+
+              <% @categories.each do |category| %>
+                <%= link_to category.name,
+                      summary_consumptions_path(
+                        month: @month.strftime("%Y-%m"),
+                        category_id: category.id,
+                        sort: params[:sort]
+                      ),
+                      class: "block border-b border-stone-100 px-4 py-3 hover:bg-stone-50" %>
+              <% end %>
+            </div>
+          </details>
+        </div>
+
+        <div class="flex items-center gap-5">
+          <%= link_to summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: params[:sort],
+                search: "true"
+              ),
+              class: "text-stone-900" do %>
+            <%= heroicon "magnifying-glass",
+                  type: :outline,
+                  class: "h-7 w-7" %>
+          <% end %>
+
+          <%= link_to summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: params[:sort],
+                menu: "sort"
+              ),
+              class: "text-2xl font-bold leading-none" do %>
+            ･･･
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if params[:search] == "true" || params[:keyword].present? %>
+    <div class="bg-white px-4 py-3">
+      <%= form_with url: summary_consumptions_path,
+            method: :get,
+            class: "flex items-center gap-3" do |f| %>
+
+        <%= link_to summary_consumptions_path(
+              month: @month.strftime("%Y-%m"),
+              category_id: params[:category_id],
+              sort: params[:sort]
+            ),
+            class: "text-stone-900" do %>
+          <span class="text-3xl leading-none">＜</span>
+        <% end %>
+
+        <%= hidden_field_tag :month, @month.strftime("%Y-%m") %>
+        <%= hidden_field_tag :category_id, params[:category_id] %>
+        <%= hidden_field_tag :sort, params[:sort] %>
+
+        <div class="flex min-h-12 flex-1 items-center rounded-2xl bg-stone-100 px-3">
+          <%= heroicon "magnifying-glass",
+                type: :outline,
+                class: "mr-2 h-6 w-6" %>
+
+          <%= f.text_field :keyword,
+                value: params[:keyword],
+                placeholder: "アイテム名を入力",
+                autofocus: true,
+                class: "w-full border-0 bg-transparent text-base outline-none focus:ring-0" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if params[:menu] == "sort" %>
+    <div
+      class="fixed inset-0 z-40 flex items-start justify-center bg-black/20 px-5 pt-24"
+      data-controller="modal"
+      data-action="click->modal#close keydown@window->modal#closeWithEscape"
+      data-modal-close-url-value="<%= summary_consumptions_path(
+        month: @month.strftime("%Y-%m"),
+        category_id: params[:category_id],
+        sort: params[:sort]
+      ) %>">
+
+      <div
+        class="w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-xl"
+        data-action="click->modal#stop">
+
+        <div class="px-4 py-4">
+          <p class="text-base font-bold text-stone-900">
+            並び替え
+          </p>
+
+          <p class="mt-1 text-sm text-stone-400">
+            操作を選択してください
+          </p>
+        </div>
+
+        <%= link_to "消費数が多い順",
+              summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: "quantity_desc"
+              ),
+              class: "block border-t border-stone-200 px-4 py-4 text-base hover:bg-stone-50" %>
+
+        <%= link_to "消費数が少ない順",
+              summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: "quantity_asc"
+              ),
+              class: "block border-t border-stone-200 px-4 py-4 text-base hover:bg-stone-50" %>
+
+        <%= link_to "あいうえお順",
+              summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: "name_asc"
+              ),
+              class: "block border-t border-stone-200 px-4 py-4 text-base hover:bg-stone-50" %>
+
+        <%= link_to "閉じる",
+              summary_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                category_id: params[:category_id],
+                sort: params[:sort]
+              ),
+              class: "block border-t border-stone-200 px-4 py-4 text-base hover:bg-stone-50" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-indigo-200 py-3 text-center">
+    <details class="relative inline-block">
+      <summary class="list-none cursor-pointer font-semibold text-stone-900">
+        ▼ <%= @display_month %>
+      </summary>
+
+      <div class="absolute left-1/2 z-30 mt-3 max-h-64 w-44 -translate-x-1/2 overflow-y-auto rounded-2xl bg-white text-sm shadow-lg ring-1 ring-stone-200">
+        <% @available_months.each do |month| %>
+          <%= link_to month.strftime("%Y年 %-m月"),
+                summary_consumptions_path(
+                  month: month.strftime("%Y-%m"),
+                  category_id: params[:category_id],
+                  sort: params[:sort]
+                ),
+                class: "block border-b border-stone-100 px-4 py-3 hover:bg-stone-50" %>
+        <% end %>
+      </div>
+    </details>
+  </div>
+
+  <div class="grid grid-cols-[1fr_100px] bg-indigo-100/70 px-8 py-3 font-bold">
+    <div>商品名</div>
+    <div class="text-center">消費数</div>
+  </div>
+
+  <% if @consumption_summaries.any? %>
+    <% @consumption_summaries.each do |summary| %>
+      <div class="grid grid-cols-[1fr_100px] items-center border-b border-stone-200 bg-white px-8 py-4">
+        <%= link_to summary.item_name,
+              summary_detail_consumptions_path(
+                month: @month.strftime("%Y-%m"),
+                item_name: summary.item_name,
+                category_name: summary.category_name
+              ),
+              class: "text-base text-stone-900" %>
+
+        <div class="text-center font-bold">
+          <%= summary.total_quantity %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="flex h-72 items-center justify-center text-lg font-bold">
+      消費履歴なし
+    </div>
+  <% end %>
+</div>

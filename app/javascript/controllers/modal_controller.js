@@ -18,4 +18,8 @@ export default class extends Controller {
 
     Turbo.visit(this.closeUrlValue)
   }
+
+  stop(event) {
+    event.stopPropagation()
+  }
 }

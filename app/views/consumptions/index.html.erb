@@ -3,99 +3,32 @@
     <div class="flex items-center justify-between">
       <div class="w-8"></div>
 
-      <h1 class="text-xl font-bold ">消費履歴</h1>
+      <h1 class="text-xl font-bold">消費履歴</h1>
 
       <%= link_to "月のまとめ",
-            consumptions_path(month: @month.strftime("%Y-%m")),
+            summary_consumptions_path(
+              month: @month.strftime("%Y-%m")
+            ),
             class: "rounded-lg bg-stone-100 px-3 py-1 text-sm font-semibold text-stone-700" %>
     </div>
   </div>
 
-  <% if params[:keyword].present? %>
-    <div class="bg-white px-4 py-3">
-      <%= form_with url: consumptions_path, method: :get, class: "flex items-center gap-3" do |f| %>
-        <%= link_to consumptions_path(month: @month.strftime("%Y-%m")), class: "text-stone-900" do %>
-          <span class="text-3xl leading-none">＜</span>
+  <div class="bg-indigo-200 py-3 text-center">
+    <details class="relative inline-block">
+      <summary class="list-none cursor-pointer font-semibold text-stone-900">
+        ▼ <%= @display_month %>
+      </summary>
+
+      <div class="absolute left-1/2 z-30 mt-3 max-h-64 w-44 -translate-x-1/2 overflow-y-auto rounded-2xl bg-white text-sm shadow-lg ring-1 ring-stone-200">
+        <% @available_months.each do |month| %>
+          <%= link_to month.strftime("%Y年 %-m月"),
+                consumptions_path(
+                  month: month.strftime("%Y-%m")
+                ),
+                class: "block border-b border-stone-100 px-4 py-3 hover:bg-stone-50" %>
         <% end %>
-
-        <%= hidden_field_tag :month, @month.strftime("%Y-%m") %>
-
-        <div class="flex min-h-12 flex-1 items-center rounded-2xl bg-stone-100 px-3">
-          <%= heroicon "magnifying-glass", type: :outline, class: "mr-2 h-6 w-6" %>
-          <%= f.text_field :keyword,
-                value: params[:keyword],
-                placeholder: "アイテム名を入力",
-                class: "w-full bg-transparent text-base outline-none" %>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="bg-white px-4 py-3">
-      <div class="flex items-center justify-between">
-        <div class="w-8"></div>
-
-        <%= link_to consumptions_path(search: "true", month: @month.strftime("%Y-%m")), class: "text-stone-900" do %>
-          <%= heroicon "magnifying-glass", type: :outline, class: "h-7 w-7" %>
-        <% end %>
-
-        <details class="relative">
-          <summary class="list-none cursor-pointer text-2xl font-bold leading-none">･･･</summary>
-
-          <div class="absolute right-0 z-20 mt-3 w-56 overflow-hidden rounded-2xl bg-white text-center shadow-lg ring-1 ring-stone-200">
-            <p class="pt-3 text-sm font-semibold">並び替え</p>
-            <p class="pb-2 text-xs text-stone-400">操作を選択してください</p>
-
-            <%= link_to "消費数が多い順",
-                  consumptions_path(
-                    month: @month.strftime("%Y-%m"),
-                    date: @selected_date.strftime("%Y-%m-%d"),
-                    sort: "quantity_desc"
-                    ),
-                  class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-
-            <%= link_to "消費数が少ない順",
-                  consumptions_path(
-                    month: @month.strftime("%Y-%m"), 
-                    date: @selected_date.strftime("%Y-%m-%d"),
-                    sort: "quantity_asc"
-                    ),
-                  class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-
-            <%= link_to "あいうえお順",
-                  consumptions_path(
-                    month: @month.strftime("%Y-%m"), 
-                    date: @selected_date.strftime("%Y-%m-%d"),
-                    sort: "name_asc"),
-                  class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-
-            <%= link_to "閉じる",
-                  consumptions_path(
-                    month: @month.strftime("%Y-%m"),
-                    date: @selected_date.strftime("%Y-%m-%d")
-                    ),
-                  class: "block border-t border-stone-100 px-4 py-3 text-base" %>
-          </div>
-        </details>
       </div>
-    </div>
-  <% end %>
-
-  <div class="bg-indigo-100 py-3 text-center font-semibold">
-    ▼ <%= @display_month %>
-  </div>
-
-  <div class="bg-white px-4 py-3">
-    <div class="flex items-center justify-between font-semibold">
-      <%= link_to "＜",
-            consumptions_path(month: @prev_month.strftime("%Y-%m")),
-            class: "text-xl" %>
-
-      <span><%= @display_month %></span>
-
-      <%= link_to "＞",
-            consumptions_path(month: @next_month.strftime("%Y-%m")),
-            class: "text-xl" %>
-    </div>
+    </details>
   </div>
 
   <div class="grid grid-cols-7 bg-white px-4 py-2 text-center text-sm font-semibold">
@@ -108,32 +41,30 @@
 
   <div class="grid grid-cols-7 bg-white px-4 pb-4 text-center text-sm">
     <% @calendar_days.each do |day| %>
-      <% count = @consumption_counts_by_date[day] || 0 %>
-
       <%= link_to consumptions_path(
             month: @month.strftime("%Y-%m"),
             date: day.strftime("%Y-%m-%d")
           ),
           class: "flex h-14 flex-col items-center justify-center rounded-lg #{day == @selected_date ? 'bg-stone-100 font-bold' : 'hover:bg-stone-100'}" do %>
 
+        <% is_other_month = day.month != @month.month %>
+        <% is_sunday = day.sunday? %>
+        <% is_saturday = day.saturday? %>
+        <% is_holiday = @holidays.include?(day) %>
+
+        <% day_color =
+          if is_other_month
+            "text-stone-400"
+          elsif is_sunday || is_holiday
+            "text-red-500"
+          elsif is_saturday
+            "text-blue-600"
+          else
+            "text-stone-900"
+          end
+        %>
+
         <div class="relative flex h-12 items-center justify-center">
-          <% is_other_month = day.month != @month.month %>
-          <% is_sunday = day.sunday? %>
-          <% is_saturday = day.saturday? %>
-          <% is_holiday = @holidays.include?(day) %>
-
-          <% day_color =
-            if is_other_month
-              "text-stone-400"
-            elsif is_sunday || is_holiday
-              "text-red-500"
-            elsif is_saturday
-              "text-blue-600"
-            else
-              "text-stone-900"
-            end
-          %>
-
           <span class="<%= day_color %>">
             <%= day.day %>
           </span>
@@ -142,12 +73,11 @@
             <div class="absolute bottom-2 w-5 border-b-2 border-red-500"></div>
           <% end %>
         </div>
-
       <% end %>
     <% end %>
   </div>
 
-  <div class="bg-indigo-200/70 px-8 py-3 text-center font-semibold">
+  <div class="bg-indigo-200 px-8 py-3 text-center font-semibold">
     <%= @selected_date.strftime("%Y年 %-m月 %-d日") %>
   </div>
 
@@ -176,6 +106,7 @@
             date: @selected_date.strftime("%Y-%m-%d")
           ),
           class: "inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-stone-900 shadow" do %>
+
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-stone-900 text-white">
           <%= heroicon "plus", type: :solid, class: "h-4 w-4" %>
         </span>

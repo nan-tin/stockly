@@ -9,28 +9,49 @@ class ConsumptionsController < ApplicationController
     ]
 
   def index
-    @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
+    @month =
+      if params[:month].present?
+        Date.strptime(params[:month], "%Y-%m").beginning_of_month
+      else
+        Date.current.beginning_of_month
+      end
+
     @display_month = @month.strftime("%Y年 %-m月")
-    @prev_month = @month.prev_month
-    @next_month = @month.next_month
-    @selected_date = params[:date].present? ? Date.parse(params[:date]) : Date.current
+
+    @selected_date =
+      if params[:date].present?
+        Date.parse(params[:date])
+      elsif @month == Date.current.beginning_of_month
+        Date.current
+      else
+        @month.beginning_of_month
+      end
+
+    set_available_months
 
     start_date = @month.beginning_of_month.beginning_of_week(:sunday)
-
     end_date = @month.end_of_month.end_of_week(:sunday)
 
     @calendar_days = (start_date..end_date).to_a
 
-    consumptions = current_group
-                    .consumptions
-                    .where(consumed_at: @month.beginning_of_month..@month.end_of_month)
+    monthly_consumptions = current_group
+                            .consumptions
+                            .where(
+                              consumed_at: @month.beginning_of_month..@month.end_of_month
+                            )
 
-    @consumption_counts_by_date = consumptions.group(:consumed_at).sum(:quantity)
+    @consumption_counts_by_date =
+      monthly_consumptions.group(:consumed_at).sum(:quantity)
+
+    @daily_consumptions =
+      monthly_consumptions
+        .order(consumed_at: :desc)
+        .group_by(&:consumed_at)
 
     @selected_date_consumptions = current_group
                                     .consumptions
                                     .where(consumed_at: @selected_date)
-    
+
     @selected_date_consumptions =
       case params[:sort]
       when "quantity_desc"
@@ -43,38 +64,10 @@ class ConsumptionsController < ApplicationController
         @selected_date_consumptions.order(created_at: :desc)
       end
 
-    @daily_consumptions =
-      consumptions.order(consumed_at: :desc)
-                  .group_by(&:consumed_at)
-
     @holidays = HolidayJp.between(
       @month.beginning_of_month,
       @month.end_of_month
     ).map(&:date)
-
-    if params[:keyword].present?
-      consumptions = consumptions.where("item_name ILIKE ?", "%#{params[:keyword]}%")
-    end
-
-    @consumption_summaries = consumptions
-                              .group(:item_name, :category_name)
-                              .select(
-                                :item_name,
-                                :category_name,
-                                "SUM(quantity) AS total_quantity"
-                              )
-
-    @consumption_summaries =
-      case params[:sort]
-      when "quantity_desc"
-        @consumption_summaries.order("total_quantity DESC")
-      when "quantity_asc"
-        @consumption_summaries.order("total_quantity ASC")
-      when "name_asc"
-        @consumption_summaries.order(:item_name)
-      else
-        @consumption_summaries.order("total_quantity DESC")
-      end
   end
 
   def new 
@@ -163,6 +156,61 @@ class ConsumptionsController < ApplicationController
     end
   end
 
+  def summary
+    @month =
+      if params[:month].present?
+        Date.strptime(params[:month], "%Y-%m").beginning_of_month
+      else
+        Date.current.beginning_of_month
+      end
+
+    @display_month = @month.strftime("%Y年 %-m月")
+    @categories = current_group.categories.order(:name)
+    @selected_category_id = params[:category_id]
+
+    set_available_months
+
+    consumptions = current_group
+                    .consumptions
+                    .where(
+                      consumed_at: @month.beginning_of_month..@month.end_of_month
+                    )
+
+    if @selected_category_id.present?
+      consumptions = consumptions.where(
+        category_id: @selected_category_id
+      )
+    end
+
+    if params[:keyword].present?
+      consumptions =
+        consumptions.where(
+          "item_name ILIKE ?",
+          "%#{params[:keyword]}%"
+        )
+    end
+
+    @consumption_summaries = consumptions
+                              .group(:item_name, :category_name)
+                              .select(
+                                :item_name,
+                                :category_name,
+                                "SUM(quantity) AS total_quantity"
+                              )
+
+    @consumption_summaries =
+      case params[:sort]
+      when "quantity_desc"
+        @consumption_summaries.order("total_quantity DESC")
+      when "quantity_asc"
+        @consumption_summaries.order("total_quantity ASC")
+      when "name_asc"
+        @consumption_summaries.order(:item_name)
+      else
+        @consumption_summaries.order("total_quantity DESC")
+      end
+  end
+
   def summary_detail
     @month = params[:month].present? ? Date.parse("#{params[:month]}-01") : Date.current.beginning_of_month
     @display_month = @month.strftime("%Y年 %-m月")
@@ -193,5 +241,32 @@ class ConsumptionsController < ApplicationController
 
   def set_consumption
     @consumption = current_group.consumptions.find(params[:id])
+  end
+
+  def set_available_months
+    oldest_consumed_at = current_group
+                          .consumptions
+                          .minimum(:consumed_at)
+
+    first_month =
+      if oldest_consumed_at.present?
+        oldest_consumed_at.beginning_of_month
+      else
+        Date.current.beginning_of_month
+      end
+
+    last_month = [
+      Date.current.beginning_of_month,
+      @month
+    ].max
+
+    @available_months = []
+
+    month = last_month
+
+    while month >= first_month
+      @available_months << month
+      month = month.prev_month
+    end
   end
 end

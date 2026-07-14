@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     end
     
     collection do
+      get :summary
       get :summary_detail
     end
   end
