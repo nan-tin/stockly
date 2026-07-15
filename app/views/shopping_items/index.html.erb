@@ -48,63 +48,7 @@
     </div>
 
     <% if @shopping_items.any? %>
-      <% @shopping_items.each do |shopping_item| %>
-        <div class="grid grid-cols-[1fr_140px] items-center border-b border-stone-300 bg-white px-8 py-5">
-          <div class="flex items-center gap-5">
-            <label class="relative flex h-7 w-7 cursor-pointer items-center justify-center">
-              <%= check_box_tag "shopping_item_ids[]",
-                    shopping_item.id,
-                    false,
-                    class: "peer hidden",
-                    data: { select_all_target: "checkbox" } %>
-
-              <span class="h-7 w-7 rounded-full border-2 border-black bg-white peer-checked:bg-black"></span>
-
-              <span class="absolute hidden peer-checked:block">
-                <%= heroicon "check",
-                      type: :solid,
-                      class: "h-4 w-4 text-white" %>
-              </span>
-            </label>
-
-            <div>
-              <%= link_to shopping_item.name,
-                    edit_shopping_item_path(shopping_item),
-                    class: "text-base text-stone-900" %>
-
-              <% if shopping_item.memo.present? %>
-                <p class="mt-1 text-xs text-stone-500">
-                  <%= shopping_item.memo %>
-                </p>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-center gap-5">
-            <%= link_to increase_quantity_shopping_item_path(shopping_item),
-                  data: { turbo_method: :patch },
-                  class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
-              <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
-            <% end %>
-
-            <span class="text-center font-bold">
-              <%= shopping_item.quantity %>
-            </span>
-
-            <% if shopping_item.quantity > 1 %>
-              <%= link_to decrease_quantity_shopping_item_path(shopping_item),
-                    data: { turbo_method: :patch },
-                    class: "flex h-7 w-7 items-center justify-center text-stone-900" do %>
-                <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
-              <% end %>
-            <% else %>
-              <span class="flex h-7 w-7 items-center justify-center text-stone-300">
-                <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
-              </span>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+      <%= render @shopping_items %>
     <% else %>
       <div class="flex h-72 items-center justify-center text-lg font-bold">
         買うものなし

@@ -123,13 +123,19 @@ class ShoppingItemsController < ApplicationController
   def increase_quantity
     @shopping_item.increment!(:quantity)
 
-    redirect_to shopping_items_path
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to shopping_items_path }
+    end
   end
 
   def decrease_quantity
     @shopping_item.decrement!(:quantity) if @shopping_item.quantity > 1
 
-    redirect_to shopping_items_path
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to shopping_items_path }
+    end
   end
 
   private

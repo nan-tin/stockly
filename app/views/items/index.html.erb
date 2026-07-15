@@ -255,109 +255,15 @@
   <% if @items.any? %>
     <%= form_with url: bulk_destroy_items_path, method: :delete do %>
       <% @items.each do |item| %>
-        <div class="grid grid-cols-[1fr_140px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
-          <div class="flex items-center gap-3">
-            <% if params[:select] == "true" %>
-              <label class="relative flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center">
-                <%= check_box_tag "item_ids[]",
-                      item.id,
-                      false,
-                      class: "peer hidden" %>
+        <% shopping_quantity =
+            @shopping_item_quantities[
+              [item.category_id, item.name, item.memo]
+            ] || 0 %>
 
-                <span class="h-7 w-7 rounded-full border-2 border-stone-900 bg-white peer-checked:bg-stone-900"></span>
-
-                <span class="absolute hidden peer-checked:block">
-                  <%= heroicon "check",
-                        type: :solid,
-                        class: "h-4 w-4 text-white" %>
-                </span>
-              </label>
-            <% end %>
-
-            <div>
-              <%= link_to item.name, edit_item_path(item), class: "text-base text-stone-900" %>
-
-              <% if item.memo.present? %>
-                <p class="mt-1 text-xs text-stone-500">
-                  <%= item.memo %>
-                </p>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="text-center">
-            <% if @display == "expired_at" %>
-              <div class="flex justify-center">
-                <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
-                  <%= item.expired_at&.strftime("%Y/%m/%d") || "-" %>
-                </span>
-              </div>
-            <% elsif @display == "purchased_at" %>
-              <div class="flex justify-center">
-                <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
-                  <%= item.purchased_at&.strftime("%Y/%m/%d") || "-" %>
-                </span>
-              </div>
-            <% else %>
-              <div class="flex items-center justify-center gap-6">
-                <%= link_to increase_quantity_item_path(
-                              item,
-                              category_id: params[:category_id],
-                              display: params[:display],
-                              sort: params[:sort]
-                            ),
-                            data: { turbo_method: :patch },
-                            class: "flex h-8 w-8 items-center justify-center text-stone-900" do %>
-                  <%= heroicon "plus-circle", type: :solid, class: "h-7 w-7" %>
-                <% end %>
-
-                <span class="<%= item.quantity.zero? ? 'text-red-600' : 'text-stone-900' %> text-center font-bold">
-                  <%= item.quantity %>
-                </span>
-
-                <% if item.quantity.positive? %>
-                  <%= link_to decrease_quantity_item_path(
-                                item,
-                                category_id: params[:category_id],
-                                display: @display,
-                                sort: params[:sort]
-                              ),
-                              data: { turbo_method: :patch },
-                              class: "flex h-8 w-8 items-center justify-center text-stone-900" do %>
-                    <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
-                  <% end %>
-                <% else %>
-                  <span class="text-stone-300">
-                    <%= heroicon "minus-circle", type: :solid, class: "h-7 w-7" %>
-                  </span>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-
-          <div class="flex justify-start pl-11">
-            <% shopping_quantity = @shopping_item_quantities[[item.category_id, item.name, item.memo]] || 0 %>
-
-            <%= link_to add_to_shopping_item_item_path(
-                          item,
-                          category_id: params[:category_id],
-                          display: @display,
-                          sort: params[:sort]
-                        ),
-                        data: { turbo_method: :patch },
-                        class: "relative inline-flex text-stone-400" do %>
-              <%= heroicon "shopping-cart", type: :outline, class: "h-7 w-7" %>
-
-              <span class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-stone-500">
-                <% if shopping_quantity.positive? %>
-                  <%= shopping_quantity %>
-                <% else %>
-                  <%= heroicon "plus-circle", type: :solid, class: "h-4 w-4" %>
-                <% end %>
-              </span>
-            <% end %>
-          </div>
-        </div>
+        <%= render "items/item",
+              item: item,
+              shopping_quantity: shopping_quantity,
+              display: @display %>
       <% end %>
 
       <% if params[:select] == "true" %>

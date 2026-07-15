@@ -1,0 +1,6 @@
+<%= turbo_stream.replace dom_id(@item, :shopping_cart) do %>
+  <%= render "items/shopping_cart_button",
+        item: @item,
+        shopping_quantity: @shopping_quantity,
+        display: params[:display].presence || "quantity" %>
+<% end %>

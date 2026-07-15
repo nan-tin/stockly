@@ -26,10 +26,6 @@ class ItemsController < ApplicationController
       @items = @items.where("items.name ILIKE ?", "%#{params[:keyword]}%")
     end
 
-    if params[:category_id].present?
-      @items = @items.where(category_id: params[:category_id])
-    end
-
     case params[:sort]
     when "purchased_desc"
       @items = @items.order(purchased_at: :desc)
@@ -150,7 +146,7 @@ class ItemsController < ApplicationController
   # 買い物リストにアイテムを追加する
   # すでに存在する場合は数量を1増やす
   def add_to_shopping_item
-    shopping_item = current_group
+    @shopping_item = current_group
                       .shopping_list
                       .shopping_items
                       .find_or_initialize_by(
@@ -160,31 +156,43 @@ class ItemsController < ApplicationController
                         is_purchased: false
                       )
 
-    if shopping_item.new_record?
-      shopping_item.quantity = 1
-      shopping_item.memo = @item.memo
+    if @shopping_item.new_record?
+      @shopping_item.quantity = 1
+      @shopping_item.memo = @item.memo
     else
-      shopping_item.quantity += 1
+      @shopping_item.quantity += 1
     end
 
-    shopping_item.save!
+    @shopping_item.save!
 
-    redirect_to items_path(
-      category_id: params[:category_id],
-      display: params[:display],
-      sort: params[:sort]
-    ), notice: "買う物に追加しました"
+    @shopping_quantity = shopping_quantity_for(@item)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to items_path(
+          category_id: params[:category_id],
+          display: params[:display],
+          sort: params[:sort]
+        ), notice: "買う物に追加しました"
+      end
+    end
   end
 
-  # 在庫数を＋ボタンで1ずつ増やす
   def increase_quantity
     @item.increment!(:quantity)
+    @shopping_quantity = shopping_quantity_for(@item)
 
-    redirect_to items_path(
-      category_id: params[:category_id],
-      display: params[:display],
-      sort: params[:sort]
-    )
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to items_path(
+          category_id: params[:category_id],
+          display: params[:display],
+          sort: params[:sort]
+        )
+      end
+    end
   end
 
   def decrease_quantity
@@ -222,11 +230,18 @@ class ItemsController < ApplicationController
       end
     end
 
-    redirect_to items_path(
-      category_id: params[:category_id],
-      display: params[:display],
-      sort: params[:sort]
-    )
+    @shopping_quantity = shopping_quantity_for(@item)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to items_path(
+          category_id: params[:category_id],
+          display: params[:display],
+          sort: params[:sort]
+        )
+      end
+    end
   end
 
   private
@@ -245,6 +260,19 @@ class ItemsController < ApplicationController
 
   def set_item
     @item = current_group.items.find(params[:id])
+  end
+
+  def shopping_quantity_for(item)
+    current_group
+      .shopping_list
+      .shopping_items
+      .where(
+        category_id: item.category_id,
+        name: item.name,
+        memo: item.memo,
+        is_purchased: false
+      )
+      .sum(:quantity)
   end
 
 end

@@ -1,0 +1,6 @@
+<%= turbo_stream.replace @item do %>
+  <%= render "items/item",
+        item: @item,
+        shopping_quantity: @shopping_quantity,
+        display: params[:display].presence || "quantity" %>
+<% end %>

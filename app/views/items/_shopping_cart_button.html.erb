@@ -1,0 +1,35 @@
+<div
+  id="<%= dom_id(item, :shopping_cart) %>"
+  class="flex justify-start pl-11">
+
+  <%= link_to add_to_shopping_item_item_path(
+                item,
+                category_id: params[:category_id],
+                display: display,
+                sort: params[:sort],
+                select: params[:select]
+              ),
+              data: {
+                turbo_method: :patch,
+                turbo_stream: true
+              },
+              class: "relative inline-flex text-stone-400",
+              aria: {
+                label: "#{item.name}を買うものに追加する"
+              } do %>
+
+    <%= heroicon "shopping-cart",
+          type: :outline,
+          class: "h-7 w-7" %>
+
+    <span class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-stone-500">
+      <% if shopping_quantity.positive? %>
+        <%= shopping_quantity %>
+      <% else %>
+        <%= heroicon "plus-circle",
+              type: :solid,
+              class: "h-4 w-4" %>
+      <% end %>
+    </span>
+  <% end %>
+</div>

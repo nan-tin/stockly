@@ -1,0 +1,4 @@
+<%= turbo_stream.replace @shopping_item do %>
+  <%= render "shopping_items/shopping_item",
+        shopping_item: @shopping_item %>
+<% end %>

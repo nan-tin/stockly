@@ -1,0 +1,117 @@
+<div
+  id="<%= dom_id(item) %>"
+  class="grid grid-cols-[1fr_140px_80px] items-center border-b border-stone-300 bg-white px-8 py-4">
+
+  <div class="flex items-center gap-3">
+    <% if params[:select] == "true" %>
+      <label class="relative flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center">
+        <%= check_box_tag "item_ids[]",
+              item.id,
+              false,
+              class: "peer hidden" %>
+
+        <span class="h-7 w-7 rounded-full border-2 border-stone-900 bg-white peer-checked:bg-stone-900"></span>
+
+        <span class="absolute hidden peer-checked:block">
+          <%= heroicon "check",
+                type: :solid,
+                class: "h-4 w-4 text-white" %>
+        </span>
+      </label>
+    <% end %>
+
+    <div>
+      <%= link_to item.name,
+            edit_item_path(item),
+            class: "text-base text-stone-900" %>
+
+      <% if item.memo.present? %>
+        <p class="mt-1 text-xs text-stone-500">
+          <%= item.memo %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <% if display == "expired_at" %>
+      <div class="flex justify-center">
+        <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
+          <%= item.expired_at&.strftime("%Y/%m/%d") || "-" %>
+        </span>
+      </div>
+
+    <% elsif display == "purchased_at" %>
+      <div class="flex justify-center">
+        <span class="rounded-lg bg-stone-200 px-3 py-1 font-bold">
+          <%= item.purchased_at&.strftime("%Y/%m/%d") || "-" %>
+        </span>
+      </div>
+
+    <% else %>
+      <div class="flex items-center justify-center gap-6">
+        <%= link_to increase_quantity_item_path(
+                      item,
+                      category_id: params[:category_id],
+                      display: display,
+                      sort: params[:sort],
+                      select: params[:select]
+                    ),
+                    data: {
+                      turbo_method: :patch,
+                      turbo_stream: true
+                    },
+                    class: "flex h-8 w-8 items-center justify-center text-stone-900",
+                    aria: {
+                      label: "#{item.name}の在庫数を増やす"
+                    } do %>
+
+          <%= heroicon "plus-circle",
+                type: :solid,
+                class: "h-7 w-7" %>
+        <% end %>
+
+        <span class="<%= item.quantity.zero? ? 'text-red-600' : 'text-stone-900' %> min-w-4 text-center font-bold">
+          <%= item.quantity %>
+        </span>
+
+        <% if item.quantity.positive? %>
+          <%= link_to decrease_quantity_item_path(
+                        item,
+                        category_id: params[:category_id],
+                        display: display,
+                        sort: params[:sort],
+                        select: params[:select]
+                      ),
+                      data: {
+                        turbo_method: :patch,
+                        turbo_stream: true
+                      },
+                      class: "flex h-8 w-8 items-center justify-center text-stone-900",
+                      aria: {
+                        label: "#{item.name}の在庫数を減らす"
+                      } do %>
+
+            <%= heroicon "minus-circle",
+                  type: :solid,
+                  class: "h-7 w-7" %>
+          <% end %>
+        <% else %>
+          <span
+            class="flex h-8 w-8 items-center justify-center text-stone-300"
+            aria-label="在庫数はこれ以上減らせません">
+
+            <%= heroicon "minus-circle",
+                  type: :solid,
+                  class: "h-7 w-7" %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render "items/shopping_cart_button",
+        item: item,
+        shopping_quantity: shopping_quantity,
+        display: display %>
+</div>
