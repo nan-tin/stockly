@@ -26,7 +26,7 @@ RSpec.describe "Categories", type: :request do
         }
       }.to change(Category, :count).by(1)
 
-      expect(response).to redirect_to(categories_path)
+      expect(response).to redirect_to(settings_path)
     end
   end
 
@@ -40,7 +40,7 @@ RSpec.describe "Categories", type: :request do
         }
       }
 
-      expect(response).to redirect_to(categories_path)
+      expect(response).to redirect_to(settings_path)
       expect(category.reload.name).to eq "日用品"
     end
   end
@@ -53,7 +53,7 @@ RSpec.describe "Categories", type: :request do
         delete category_path(category)
       }.to change(Category, :count).by(-1)
 
-      expect(response).to redirect_to(categories_path)
+      expect(response).to redirect_to(settings_path)
     end
   end
 end

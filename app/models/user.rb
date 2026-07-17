@@ -11,6 +11,15 @@ class User < ApplicationRecord
 
   after_create :create_default_group
 
+  def guest?
+    guest_token.present?
+  end
+
+  def google_login?
+    provider == "google_oauth2" 
+  end
+  
+
   def self.guest
     create!(
       email: "guest_#{SecureRandom.hex(10)}@example.com",
