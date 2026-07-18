@@ -125,18 +125,31 @@
             </div>
           <% end %>
 
-          <%= link_to destroy_user_session_path,
-                data: {
-                  turbo_method: :delete,
-                  turbo_confirm: "本当にログアウトしますか？"
-                },
-                class: "flex items-center justify-between px-4 py-3 text-stone-900" do %>
-            <span>ログアウト</span>
+          <div data-controller="confirm-modal">
+            <button
+              type="button"
+              data-action="confirm-modal#open"
+              class="w-full text-left"
+            >
+              <div class="flex items-center justify-between px-4 py-4">
+                <span class="text-sm font-semibold text-stone-900">
+                  ログアウト
+                </span>
 
-            <%= heroicon "chevron-right",
-                  type: :outline,
-                  class: "h-5 w-5 text-stone-400" %>
-          <% end %>
+                <%= heroicon "chevron-right",
+                      type: :outline,
+                      class: "h-5 w-5 text-stone-400" %>
+              </div>
+            </button>
+
+            <%= render "shared/confirm_modal",
+                  modal_id: "logout-confirm-modal",
+                  title: "ログアウト",
+                  message: "本当にログアウトしますか？",
+                  confirm_text: "ログアウト",
+                  confirm_path: destroy_user_session_path,
+                  confirm_method: :delete %>
+          </div>
         <% end %>
       </div>
     </section>
