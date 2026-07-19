@@ -73,7 +73,7 @@
             <%= render "shared/confirm_modal",
                   modal_id: "guest-delete-data-confirm-modal",
                   title: "データをすべて削除",
-                  message: "在庫・買うもの・消費履歴をすべて削除します。\nこの操作は取り消せません。",
+                  message: "在庫・買うもの・消費履歴をすべて削除し、\nカテゴリーを初期状態（「冷蔵庫」）に戻します。\n\nこの操作は取り消せません。",
                   confirm_text: "削除する",
                   confirm_path: destroy_data_path,
                   confirm_method: :delete %>
@@ -111,7 +111,7 @@
             <%= render "shared/confirm_modal",
                   modal_id: "delete-data-confirm-modal",
                   title: "データをすべて削除",
-                  message: "在庫・買うもの・消費履歴をすべて削除します。\nこの操作は取り消せません。",
+                  message: "在庫・買うもの・消費履歴をすべて削除し、\nカテゴリーを初期状態（「冷蔵庫」）に戻します。\n\nこの操作は取り消せません。",
                   confirm_text: "削除する",
                   confirm_path: destroy_data_path,
                   confirm_method: :delete %>
