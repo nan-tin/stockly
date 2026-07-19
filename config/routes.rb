@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   
   get "settings", to: "settings#index"
 
+  delete "settings/data", to: "settings#destroy_data", as: :destroy_data
+
   #get "consumptions/index", to: "consumptions#index"
 
   devise_for :users, controllers: {

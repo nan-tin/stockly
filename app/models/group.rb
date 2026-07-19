@@ -5,6 +5,7 @@ class Group < ApplicationRecord
   has_many :items, dependent: :destroy
   has_many :consumptions, dependent: :destroy
   has_one :shopping_list, dependent: :destroy
+  has_many :shopping_items, through: :shopping_list
 
   validates :invite_code, presence: true, uniqueness: true
 end
