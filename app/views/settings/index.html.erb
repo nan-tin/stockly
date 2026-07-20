@@ -79,12 +79,26 @@
                   confirm_method: :delete %>
           </div>
 
-          <div class="flex items-center justify-between border-b border-stone-100 px-4 py-3 text-stone-900">
-            <span>アカウントの削除・退会</span>
+          <div data-controller="confirm-modal" class="border-b border-stone-100">
+            <button
+              type="button"
+              data-action="confirm-modal#open"
+              class="flex w-full items-center justify-between px-4 py-3 text-left text-stone-900"
+            >
+              <span>アカウントの削除・退会</span>
 
-            <%= heroicon "chevron-right",
-                  type: :outline,
-                  class: "h-5 w-5 text-stone-400" %>
+              <%= heroicon "chevron-right",
+                    type: :outline,
+                    class: "h-5 w-5 text-stone-400" %>
+            </button>
+
+            <%= render "shared/confirm_modal",
+                  modal_id: "guest-delete-account-confirm-modal",
+                  title: "アカウントの削除・退会",
+                  message: "アカウントを削除します。\nこの操作は取り消せません。",
+                  confirm_text: "削除する",
+                  confirm_path: destroy_account_path,
+                  confirm_method: :delete %>
           </div>
 
           <div class="flex items-center justify-between px-4 py-3 text-stone-900">
@@ -117,12 +131,26 @@
                   confirm_method: :delete %>
           </div>
 
-          <div class="flex items-center justify-between border-b border-stone-100 px-4 py-3 text-stone-900">
-            <span>アカウントの削除・退会</span>
+          <div data-controller="confirm-modal" class="border-b border-stone-100">
+            <button
+              type="button"
+              data-action="confirm-modal#open"
+              class="flex w-full items-center justify-between px-4 py-3 text-left text-stone-900"
+            >
+              <span>アカウントの削除・退会</span>
 
-            <%= heroicon "chevron-right",
-                  type: :outline,
-                  class: "h-5 w-5 text-stone-400" %>
+              <%= heroicon "chevron-right",
+                    type: :outline,
+                    class: "h-5 w-5 text-stone-400" %>
+            </button>
+
+            <%= render "shared/confirm_modal",
+                  modal_id: "delete-account-confirm-modal",
+                  title: "アカウントの削除・退会",
+                  message: "アカウントを削除します。\nこの操作は取り消せません。",
+                  confirm_text: "削除する",
+                  confirm_path: destroy_account_path,
+                  confirm_method: :delete %>
           </div>
 
           <% if current_user.google_login? %>

@@ -19,4 +19,18 @@ class SettingsController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed
     redirect_to settings_path, alert: "データの削除に失敗しました"
   end
+
+  def destroy_account
+    user = current_user
+    groups = user.groups.to_a
+
+    ActiveRecord::Base.transaction do
+      groups.each(&:destroy!)
+      user.destroy!
+    end
+
+    redirect_to login_path, notice: "アカウントを削除しました"
+  rescue ActiveRecord::RecordNotDestroyed
+    redirect_to settings_path, alert: "アカウントの削除に失敗しました"
+  end
 end

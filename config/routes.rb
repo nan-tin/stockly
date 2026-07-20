@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   
   get "settings", to: "settings#index"
 
-  delete "settings/data", to: "settings#destroy_data", as: :destroy_data
+  delete "settings/data", 
+          to: "settings#destroy_data", 
+          as: :destroy_data
+
+  delete "settings/account",
+          to: "settings#destroy_account",
+          as: :destroy_account
 
   #get "consumptions/index", to: "consumptions#index"
 
@@ -12,9 +18,12 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  get "users/login", to: "users/sessions#login", as: :login
+  get "users/login", 
+        to: "users/sessions#login", 
+        as: :login
 
-  post "users/guest_sign_in", to: "users/sessions#guest_sign_in"
+  post "users/guest_sign_in", 
+        to: "users/sessions#guest_sign_in"
   
   root "categories#index"
 

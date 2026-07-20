@@ -65,4 +65,57 @@ RSpec.describe "Settings", type: :request do
       expect(flash[:notice]).to eq("データをすべて削除しました")
     end
   end
+
+  describe "DELETE /settings/account" do
+    before do
+      category = group.categories.create!(name: "日用品")
+
+      group.items.create!(
+        category: category,
+        name: "牛乳",
+        quantity: 2
+      )
+
+      shopping_list.shopping_items.create!(
+        category: category,
+        name: "卵",
+        quantity: 1
+      )
+
+      group.consumptions.create!(
+        category: category,
+        category_name: category.name,
+        item_name: "パン",
+        consumed_at: Date.current,
+        quantity: 1
+      )
+
+      user.inquiries.create!(
+        inquiry_type: :bug,
+        email: user.email,
+        content: "テスト"
+      )
+    end
+    
+    it "ユーザーと関連データを削除する" do
+      expect do
+        delete destroy_account_path
+      end.to change(User, :count).by(-1)
+        .and change(Group, :count).by(-1)
+        .and change(GroupUser, :count).by(-1)
+        .and change(ShoppingList, :count).by(-1)
+        .and change(Category, :count).by(-2)
+        .and change(Item, :count).by(-1)
+        .and change(ShoppingItem, :count).by(-1)
+        .and change(Consumption, :count).by(-1)
+        .and change(Inquiry, :count).by(-1)
+    end
+
+    it "ログイン画面へリダイレクトする" do
+      delete destroy_account_path
+
+      expect(response).to redirect_to(login_path)
+      expect(flash[:notice]).to eq("アカウントを削除しました")
+    end
+  end
 end
