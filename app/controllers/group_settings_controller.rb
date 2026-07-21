@@ -1,6 +1,8 @@
 class GroupSettingsController < ApplicationController
   before_action :authenticate_user!
   before_action :reject_guest_user
+  before_action :require_group_owner,
+                only: :regenerate_invite_code
 
   def index
     @group = current_group
@@ -36,10 +38,11 @@ class GroupSettingsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       current_group.destroy!
+
       joining_group.group_users.create!(
         user: current_user,
         display_name: current_user.email
-        )
+      )
     end
 
     redirect_to group_settings_path,
@@ -47,6 +50,18 @@ class GroupSettingsController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed
     flash.now[:alert] = "グループへの参加に失敗しました"
     render :join, status: :unprocessable_entity
+  end
+
+  def regenerate_invite_code
+    current_group.update!(
+      invite_code: generate_unique_invite_code
+    )
+
+    redirect_to group_settings_path,
+                notice: "招待コードを再発行しました"
+  rescue ActiveRecord::RecordInvalid
+    redirect_to group_settings_path,
+                alert: "招待コードの再発行に失敗しました"
   end
 
   private
@@ -60,6 +75,21 @@ class GroupSettingsController < ApplicationController
     current_group.items.none? &&
       current_group.shopping_items.none? &&
       current_group.consumptions.none?
+  end
+
+  def require_group_owner
+    return if current_group.owner == current_user
+
+    redirect_to group_settings_path,
+                alert: "オーナーのみ操作できます"
+  end
+
+  def generate_unique_invite_code
+    loop do
+      invite_code = SecureRandom.hex(4)
+
+      return invite_code unless Group.exists?(invite_code: invite_code)
+    end
   end
 
   def reject_guest_user

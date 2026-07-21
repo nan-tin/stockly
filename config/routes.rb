@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     collection do
       get :join
       post :join_group
+      patch :regenerate_invite_code
     end
   end
 

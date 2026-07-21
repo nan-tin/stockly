@@ -21,17 +21,39 @@
       </h2>
 
       <div class="bg-white">
-
         <div class="border-b border-stone-100 px-4 py-3">
           <p class="text-xs text-stone-400">
             招待コード
           </p>
 
-          <p class="mt-1 font-semibold">
+          <p class="mt-1 font-semibold text-stone-900">
             <%= @group.invite_code %>
           </p>
         </div>
 
+        <% if @group.owner == current_user %>
+          <div data-controller="confirm-modal">
+            <button
+              type="button"
+              data-action="confirm-modal#open"
+              class="flex w-full items-center justify-between px-4 py-3 text-left text-stone-900"
+            >
+              <span>招待コードを再発行する</span>
+
+              <%= heroicon "arrow-path",
+                    type: :outline,
+                    class: "h-5 w-5 text-stone-400" %>
+            </button>
+
+            <%= render "shared/confirm_modal",
+                  modal_id: "regenerate-invite-code-confirm-modal",
+                  title: "招待コードを再発行",
+                  message: "現在の招待コードは使用できなくなります。\n新しい招待コードを再発行しますか？",
+                  confirm_text: "再発行する",
+                  confirm_path: regenerate_invite_code_group_settings_path,
+                  confirm_method: :patch %>
+          </div>
+        <% end %>
       </div>
     </section>
 
