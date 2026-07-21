@@ -39,13 +39,16 @@
         </h2>
 
         <div class="bg-white">
-          <div class="flex items-center justify-between px-4 py-3 text-stone-900">
+          <%= link_to group_settings_path,
+                class: "flex items-center justify-between px-4 py-3 text-stone-900" do %>
+
             <span>家族・複数人で使う</span>
 
             <%= heroicon "chevron-right",
                   type: :outline,
                   class: "h-5 w-5 text-stone-400" %>
-          </div>
+
+          <% end %>
         </div>
       </section>
     <% end %>

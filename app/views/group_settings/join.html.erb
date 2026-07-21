@@ -1,0 +1,51 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-28">
+  <header class="bg-white px-4 py-5">
+    <div class="grid grid-cols-3 items-center">
+      <div>
+        <%= link_to group_settings_path,
+              class: "inline-flex text-stone-900" do %>
+          <%= heroicon "chevron-left",
+                type: :outline,
+                class: "h-6 w-6" %>
+        <% end %>
+      </div>
+
+      <h1 class="whitespace-nowrap text-center text-xl font-bold text-stone-900">
+        グループに参加
+      </h1>
+
+      <div></div>
+    </div>
+  </header>
+
+  <div class="px-4 py-5">
+    <section>
+      <h2 class="mb-2 px-4 text-sm text-stone-400">
+        招待コード
+      </h2>
+
+      <div class="bg-white px-4 py-5">
+        <%= form_with url: join_group_group_settings_path,
+              method: :post,
+              class: "space-y-5" do |form| %>
+          <div>
+            <%= form.text_field :invite_code,
+                  value: params[:invite_code],
+                  placeholder: "招待コードを入力",
+                  required: true,
+                  autocomplete: "off",
+                  autocapitalize: "none",
+                  class: "w-full rounded-lg border border-stone-300 px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-stone-500 focus:outline-none focus:ring-0" %>
+          </div>
+
+          <p class="text-sm leading-6 text-stone-500">
+            現在の個人グループに在庫・買うもの・消費履歴が残っている場合は、共有グループに参加できません。
+          </p>
+
+          <%= form.submit "参加する",
+                class: "w-full rounded-lg bg-stone-900 px-4 py-3 font-semibold text-white" %>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

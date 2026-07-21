@@ -1,0 +1,76 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-28">
+  <header class="bg-white px-4 py-5">
+    <div class="flex items-center">
+      <%= link_to settings_path do %>
+        <%= heroicon "chevron-left",
+              type: :outline,
+              class: "h-6 w-6 text-stone-900" %>
+      <% end %>
+
+      <h1 class="mx-auto text-xl font-bold text-stone-900">
+        共有設定
+      </h1>
+    </div>
+  </header>
+
+  <div class="space-y-4 px-4 py-5">
+
+    <section>
+      <h2 class="mb-2 px-4 text-sm text-stone-400">
+        グループ情報
+      </h2>
+
+      <div class="bg-white">
+
+        <div class="border-b border-stone-100 px-4 py-3">
+          <p class="text-xs text-stone-400">
+            招待コード
+          </p>
+
+          <p class="mt-1 font-semibold">
+            <%= @group.invite_code %>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-2 px-4 text-sm text-stone-400">
+        メンバー
+      </h2>
+
+      <div class="bg-white">
+
+        <% @members.each do |member| %>
+
+          <div class="border-b border-stone-100 px-4 py-3">
+
+            <%= member.email %>
+
+          </div>
+
+        <% end %>
+
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-2 px-4 text-sm text-stone-400">
+        グループに参加
+      </h2>
+
+      <div class="bg-white">
+        <%= link_to join_group_settings_path,
+              class: "flex items-center justify-between px-4 py-3 text-stone-900" do %>
+          <span>招待コードで参加する</span>
+
+          <%= heroicon "chevron-right",
+                type: :outline,
+                class: "h-5 w-5 text-stone-400" %>
+        <% end %>
+      </div>
+    </section>
+
+  </div>
+</div>

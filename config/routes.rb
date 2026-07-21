@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
+  get 'group_settings/index'
   get "terms", to: "static_pages#terms"
   get "privacy", to: "static_pages#privacy"
   
   get "settings", to: "settings#index"
+
+  resources :group_settings, only: :index do
+    collection do
+      get :join
+      post :join_group
+    end
+  end
 
   delete "settings/data", 
           to: "settings#destroy_data", 
