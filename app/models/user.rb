@@ -55,7 +55,8 @@ class User < ApplicationRecord
   def create_default_group
     ActiveRecord::Base.transaction do
       group = Group.create!(
-        invite_code: SecureRandom.hex(4)
+        invite_code: SecureRandom.hex(4),
+        owner: self
       )
 
       GroupUser.create!(

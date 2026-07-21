@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_29_224455) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_20_231223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,7 +80,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_29_224455) do
     t.string "invite_code", null: false, comment: "グループ招待コード"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "owner_id"
     t.index ["invite_code"], name: "index_groups_on_invite_code", unique: true
+    t.index ["owner_id"], name: "index_groups_on_owner_id"
   end
 
   create_table "inquiries", comment: "お問い合わせ", force: :cascade do |t|
@@ -152,6 +154,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_29_224455) do
   add_foreign_key "consumptions", "groups"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
+  add_foreign_key "groups", "users", column: "owner_id"
   add_foreign_key "inquiries", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "groups"
