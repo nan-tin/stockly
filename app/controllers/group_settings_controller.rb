@@ -3,6 +3,8 @@ class GroupSettingsController < ApplicationController
   before_action :reject_guest_user
   before_action :require_group_owner,
                 only: :regenerate_invite_code
+  before_action :reject_group_owner,
+                only: :leave
 
   def index
     @group = current_group
@@ -64,6 +66,26 @@ class GroupSettingsController < ApplicationController
                 alert: "招待コードの再発行に失敗しました"
   end
 
+  def leave
+    leaving_group = current_group
+
+    ActiveRecord::Base.transaction do
+      leaving_group.group_users.find_by!(
+        user: current_user
+      ).destroy!
+
+      current_user.create_personal_group
+    end
+
+    redirect_to settings_path,
+                notice: "共有グループから退出しました"
+  rescue ActiveRecord::RecordNotFound,
+        ActiveRecord::RecordInvalid,
+        ActiveRecord::RecordNotDestroyed
+    redirect_to group_settings_path,
+                alert: "共有グループからの退出に失敗しました"
+  end
+
   private
 
   def personal_group?
@@ -97,5 +119,12 @@ class GroupSettingsController < ApplicationController
 
     redirect_to settings_path,
                 alert: "ゲストユーザーは共有機能を利用できません"
+  end
+
+  def reject_group_owner
+    return unless current_group.owner == current_user
+
+    redirect_to group_settings_path,
+                alert: "オーナーはグループから退出できません"
   end
 end

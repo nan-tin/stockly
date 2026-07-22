@@ -94,5 +94,34 @@
       </div>
     </section>
 
+    <% if @group.owner != current_user %>
+      <section>
+        <h2 class="mb-2 px-4 text-sm text-stone-400">
+          共有グループ
+        </h2>
+
+        <div class="bg-white" data-controller="confirm-modal">
+          <button
+            type="button"
+            data-action="confirm-modal#open"
+            class="flex w-full items-center justify-between px-4 py-3 text-left text-red-600"
+          >
+            <span>グループから退出する</span>
+
+            <%= heroicon "arrow-left-on-rectangle",
+                  type: :outline,
+                  class: "h-5 w-5 text-red-400" %>
+          </button>
+
+          <%= render "shared/confirm_modal",
+                modal_id: "leave-shared-group-confirm-modal",
+                title: "共有グループから退出",
+                message: "共有グループから退出しますか？\n共有中の在庫・買うもの・消費履歴は閲覧できなくなります。\n退出後は新しい個人グループが作成されます。",
+                confirm_text: "退出する",
+                confirm_path: leave_group_settings_path,
+                confirm_method: :delete %>
+        </div>
+      </section>
+    <% end %>
   </div>
 </div>

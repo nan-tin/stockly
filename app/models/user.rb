@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :groups, through: :group_users
   has_many :inquiries, dependent: :destroy
 
-  after_create :create_default_group
+  after_create :create_personal_group
 
   def guest?
     guest_token.present?
@@ -50,9 +50,7 @@ class User < ApplicationRecord
     user
   end
 
-  private
-
-  def create_default_group
+  def create_personal_group
     ActiveRecord::Base.transaction do
       group = Group.create!(
         invite_code: SecureRandom.hex(4),
@@ -73,6 +71,18 @@ class User < ApplicationRecord
         group: group,
         name: "冷蔵庫"
       )
+
+      group
+    end
+  end
+
+  private
+
+  def generate_unique_invite_code
+    loop do
+      invite_code = SecureRandom.hex(4)
+
+      return invite_code unless Group.exists?(invite_code: invite_code)
     end
   end
 end
