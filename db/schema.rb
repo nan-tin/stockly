@@ -80,7 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_20_231223) do
     t.string "invite_code", null: false, comment: "グループ招待コード"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "owner_id"
+    t.bigint "owner_id", null: false
     t.index ["invite_code"], name: "index_groups_on_invite_code", unique: true
     t.index ["owner_id"], name: "index_groups_on_owner_id"
   end
