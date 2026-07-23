@@ -51,7 +51,8 @@ class ItemsController < ApplicationController
 
   def new
     @item = current_group.items.new(
-      purchased_at: Date.current
+      purchased_at: Date.current,
+      quantity: 1
     )
   end
 
