@@ -1,8 +1,10 @@
 class GroupSettingsController < ApplicationController
   before_action :authenticate_user!
   before_action :reject_guest_user
+
   before_action :require_group_owner,
-                only: :regenerate_invite_code
+                only: %i[regenerate_invite_code disband]
+                
   before_action :reject_group_owner,
                 only: :leave
 
@@ -84,6 +86,24 @@ class GroupSettingsController < ApplicationController
         ActiveRecord::RecordNotDestroyed
     redirect_to group_settings_path,
                 alert: "共有グループからの退出に失敗しました"
+  end
+
+  def disband
+    disbanding_group = current_group
+    members = disbanding_group.users.to_a
+
+    ActiveRecord::Base.transaction do
+      disbanding_group.destroy!
+
+      members.each(&:create_personal_group)
+    end
+
+    redirect_to settings_path,
+                notice: "共有グループを解散しました"
+  rescue ActiveRecord::RecordInvalid,
+         ActiveRecord::RecordNotDestroyed
+    redirect_to group_settings_path,
+                alert: "共有グループの解散に失敗しました"
   end
 
   private

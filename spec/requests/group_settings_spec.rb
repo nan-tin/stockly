@@ -121,4 +121,64 @@ RSpec.describe "GroupSettings", type: :request do
       end
     end
   end
+
+  describe "DELETE /group_settings/disband" do
+    let(:owner) { create(:user) }
+    let(:shared_group) { owner.groups.first }
+    let(:member) { create(:user) }
+
+    before do
+      member.groups.first.destroy!
+
+      shared_group.group_users.create!(
+        user: member,
+        display_name: member.email
+      )
+    end
+
+    context "オーナーの場合" do
+      before do
+        sign_in owner
+      end
+
+      it "共有グループを削除して全メンバーに個人グループを作成すること" do
+        shared_group_id = shared_group.id
+
+        expect do
+          delete disband_group_settings_path
+        end.to change(Group, :count).by(1)
+
+        expect(response).to redirect_to(settings_path)
+        expect(Group.exists?(shared_group_id)).to be(false)
+
+        owner_personal_group = owner.reload.groups.first
+        member_personal_group = member.reload.groups.first
+
+        expect(owner_personal_group.owner).to eq(owner)
+        expect(owner_personal_group.users).to contain_exactly(owner)
+        expect(owner_personal_group.shopping_list).to be_present
+        expect(owner_personal_group.categories.pluck(:name)).to include("冷蔵庫")
+
+        expect(member_personal_group.owner).to eq(member)
+        expect(member_personal_group.users).to contain_exactly(member)
+        expect(member_personal_group.shopping_list).to be_present
+        expect(member_personal_group.categories.pluck(:name)).to include("冷蔵庫")
+      end
+    end
+
+    context "一般メンバーの場合" do
+      before do
+        sign_in member
+      end
+
+      it "共有グループを解散できないこと" do
+        expect do
+          delete disband_group_settings_path
+        end.not_to change(Group, :count)
+
+        expect(response).to redirect_to(group_settings_path)
+        expect(Group.exists?(shared_group.id)).to be(true)
+      end
+    end
+  end
 end

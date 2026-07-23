@@ -123,5 +123,35 @@
         </div>
       </section>
     <% end %>
+
+    <% if @group.owner == current_user && @group.users.many? %>
+      <section>
+        <h2 class="mb-2 px-4 text-sm text-stone-400">
+          共有グループ
+        </h2>
+
+        <div class="bg-white" data-controller="confirm-modal">
+          <button
+            type="button"
+            data-action="confirm-modal#open"
+            class="flex w-full items-center justify-between px-4 py-3 text-left text-red-600"
+          >
+            <span>グループを解散する</span>
+
+            <%= heroicon "trash",
+                  type: :outline,
+                  class: "h-5 w-5 text-red-400" %>
+          </button>
+
+          <%= render "shared/confirm_modal",
+                modal_id: "disband-shared-group-confirm-modal",
+                title: "共有グループを解散",
+                message: "共有グループを解散しますか？\n在庫・買うもの・消費履歴など、共有中のデータはすべて削除されます。\n各メンバーには新しい個人グループが作成されます。\nこの操作は取り消せません。",
+                confirm_text: "解散する",
+                confirm_path: disband_group_settings_path,
+                confirm_method: :delete %>
+        </div>
+      </section>
+    <% end %>
   </div>
 </div>
