@@ -9,7 +9,18 @@ class Inquiry < ApplicationRecord
     other: 2
   }
 
-  validates :email, presence: true
-  validates :content, presence: true
   validates :inquiry_type, presence: true
+  validates :email,
+            presence: true,
+            format: {
+              with: URI::MailTo::EMAIL_REGEXP,
+              allow_blank: true
+            }
+
+  validates :content,
+            presence: true,
+            length: {
+              maximum: 2_000,
+              allow_blank: true
+            }
 end

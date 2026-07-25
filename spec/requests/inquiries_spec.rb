@@ -15,19 +15,61 @@ RSpec.describe "Inquiries", type: :request do
     end
   end
 
+  describe "GET /inquiries/thanks" do
+    it "正常にレスポンスが返ること" do
+      get thanks_inquiries_path
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   describe "POST /inquiries" do
-    it "お問い合わせを作成できること" do
-      expect {
-        post inquiries_path, params: {
+    context "入力内容が正常な場合" do
+      let(:valid_params) do
+        {
           inquiry: {
             inquiry_type: "bug",
             email: "test@example.com",
-            content: "テスト問い合わせです"
+            content: "テスト問い合わせ中です"
           }
         }
-      }.to change(Inquiry, :count).by(1)
+      end
 
-      expect(response).to redirect_to(settings_path)
+      it "お問い合わせを作成できること" do
+        expect {
+          post inquiries_path, params: valid_params
+        }.to change(Inquiry, :count).by(1)
+      end
+
+      it "サンクスページへリダイレクトされること" do
+        post inquiries_path, params: valid_params
+
+        expect(response).to redirect_to(thanks_inquiries_path)
+      end
+    end
+
+    context "入力内容が不正な場合" do
+      let(:invalid_params) do
+        {
+          inquiry: {
+            inquiry_type: "",
+            email: "",
+            content: ""
+          }
+        }
+      end
+
+      it "お問い合わせが作成されないこと" do
+        expect {
+          post inquiries_path, params: invalid_params
+        }.not_to change(Inquiry, :count)
+      end
+
+      it "ステータス４２２で入力画面を再表示すること" do
+        post inquiries_path, params: invalid_params
+
+        expect(response).to have_http_status(:unprocessable_content)
+      end
     end
   end
 end

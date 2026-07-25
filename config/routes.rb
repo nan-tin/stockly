@@ -83,5 +83,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :inquiries, only: %i[new create]
+  resources :inquiries, only: %i[new create] do
+    collection do
+      get :thanks
+    end
+  end
 end

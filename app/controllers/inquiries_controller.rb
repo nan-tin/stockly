@@ -2,17 +2,22 @@ class InquiriesController < ApplicationController
   before_action :authenticate_user!
 
   def new
-    @inquiry = current_user.inquiries.build
+    @inquiry = current_user.inquiries.build(
+      email: current_user.email
+    )
   end
 
   def create
     @inquiry = current_user.inquiries.build(inquiry_params)
 
     if @inquiry.save
-      redirect_to settings_path, notice: "お問い合わせを送信しました"
+      redirect_to thanks_inquiries_path
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
+  end
+
+  def thanks
   end
 
   private

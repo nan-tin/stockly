@@ -1,0 +1,39 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <header class="relative flex h-16 items-center justify-center bg-white px-4">
+    <%= link_to settings_path,
+          class: "absolute left-4 flex items-center gap-1 text-stone-900" do %>
+      <%= heroicon "chevron-left", type: :outline, class: "h-7 w-7" %>
+      <span class="text-sm">設定</span>
+    <% end %>
+
+    <h1 class="text-xl font-bold text-stone-900">
+      お問い合わせ
+    </h1>
+  </header>
+
+  <div class="px-4 pt-16">
+    <div class="rounded-xl bg-white px-7 py-7">
+      <div class="flex justify-center">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full border-[3px] border-green-500">
+          <%= heroicon "check",
+                type: :outline,
+                class: "h-9 w-9 stroke-[2.5] text-green-500" %>
+        </div>
+      </div>
+
+      <p class="mt-5 text-center text-xl font-medium text-stone-900">
+        送信が完了いたしました
+      </p>
+
+      <div class="mt-4 space-y-4 text-sm leading-7 text-center text-stone-900">
+        <p>
+          内容を確認し、必要に応じてご連絡いたします。
+        </p>
+
+        <p>
+          返信まで少しお時間をいただく場合があります。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
