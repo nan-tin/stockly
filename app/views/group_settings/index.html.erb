@@ -64,14 +64,31 @@
 
       <div class="bg-white">
 
-        <% @members.each do |member| %>
+        <% @group_users.each do |group_user| %>
+          <div class="flex items-center justify-between border-b border-stone-100 px-4 py-3">
+            <div>
+              <p class="font-medium text-stone-900">
+                <%= group_user.display_name %>
 
-          <div class="border-b border-stone-100 px-4 py-3">
+                <% if @group.owner == group_user.user %>
+                  <span class="ml-1 text-xs font-normal text-stone-400">
+                    （オーナー）
+                  </span>
+                <% end %>
+              </p>
 
-            <%= member.email %>
+              <p class="mt-1 text-xs text-stone-400">
+                <%= group_user.user.email %>
+              </p>
+            </div>
 
+            <% if group_user.user == current_user %>
+              <%= link_to edit_display_name_group_settings_path,
+                    class: "text-sm font-medium text-blue-500" do %>
+                変更
+              <% end %>
+            <% end %>
           </div>
-
         <% end %>
 
       </div>

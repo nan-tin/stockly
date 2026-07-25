@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       patch :regenerate_invite_code
       delete :leave
       delete :disband
+
+      get :edit_display_name
+      patch :update_display_name
     end
   end
 

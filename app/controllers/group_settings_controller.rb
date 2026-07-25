@@ -10,7 +10,10 @@ class GroupSettingsController < ApplicationController
 
   def index
     @group = current_group
-    @members = @group.users
+    @group_users = @group
+                  .group_users
+                  .includes(:user)
+                  .order(:created_at)
   end
 
   def join
@@ -106,6 +109,26 @@ class GroupSettingsController < ApplicationController
                 alert: "共有グループの解散に失敗しました"
   end
 
+  def edit_display_name
+    @group_user = current_group.group_users.find_by!(
+      user: current_user
+    )
+  end
+
+  def update_display_name
+    @group_user = current_group.group_users.find_by!(
+      user: current_user
+    )
+
+    if @group_user.update(display_name_params)
+      redirect_to group_settings_path,
+                  notice: "表示名を変更しました"
+    else
+      render :edit_display_name,
+             status: :unprocessable_content
+    end
+  end
+
   private
 
   def personal_group?
@@ -146,5 +169,9 @@ class GroupSettingsController < ApplicationController
 
     redirect_to group_settings_path,
                 alert: "オーナーはグループから退出できません"
+  end
+
+  def display_name_params
+    params.require(:group_user).permit(:display_name)
   end
 end

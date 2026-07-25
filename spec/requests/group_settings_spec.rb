@@ -181,4 +181,55 @@ RSpec.describe "GroupSettings", type: :request do
       end
     end
   end
+
+  describe "GET /group_settings/edit_display_name" do
+    before do
+      sign_in user
+    end
+
+    it "表示名編集画面を正常に表示すること" do
+      get edit_display_name_group_settings_path
+
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "PATCH /group_settings/patch_display_name" do
+    before do
+      sign_in user
+    end
+
+    context "有効な表示名の場合" do
+      it "自分の表示名を変更すること" do
+        group_user = user.group_users.first
+
+        patch update_display_name_group_settings_path,
+              params: {
+                group_user: {
+                  display_name: "ろん"
+                }
+              }
+
+        expect(response).to redirect_to(group_settings_path)
+        expect(group_user.reload.display_name).to eq("ろん")
+      end
+    end
+
+    context "表示が空の場合" do
+      it "変更されず編集画面を再表示すること" do
+        group_user = user.group_users.first
+        old_display_name = group_user.display_name
+
+        patch update_display_name_group_settings_path,
+                params: {
+                  group_user: {
+                    display_name: ""
+                  }
+                }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(group_user.reload.display_name).to eq(old_display_name)
+      end
+    end
+  end
 end

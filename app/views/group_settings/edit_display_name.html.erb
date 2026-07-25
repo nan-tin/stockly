@@ -1,0 +1,64 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-28">
+  <header class="bg-white px-4 py-5">
+    <div class="flex items-center">
+      <%= link_to group_settings_path do %>
+        <%= heroicon "chevron-left",
+              type: :outline,
+              class: "h-6 w-6 text-stone-900" %>
+      <% end %>
+
+      <h1 class="mx-auto text-xl font-bold text-stone-900">
+        表示名変更
+      </h1>
+    </div>
+  </header>
+
+  <div class="px-4 py-5">
+    <div class="bg-white p-4">
+      <%= form_with model: @group_user,
+            url: update_display_name_group_settings_path,
+            method: :patch do |f| %>
+
+        <% if @group_user.errors.any? %>
+          <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+            <p class="font-semibold">
+              入力内容を確認してください
+            </p>
+
+            <ul class="mt-2 list-disc pl-5">
+              <% @group_user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div>
+          <%= f.label :display_name,
+                "表示名",
+                class: "text-sm font-bold text-stone-900" %>
+
+          <%= f.text_field :display_name,
+                maxlength: 30,
+                required: true,
+                autocomplete: "name",
+                class: "mt-2 w-full rounded-lg border border-stone-300 px-3 py-3 text-sm",
+                placeholder: "例：山田 太郎" %>
+
+          <p class="mt-2 text-xs text-stone-400">
+            共有メンバーに表示される名前です
+          </p>
+        </div>
+
+        <div class="mt-6 flex gap-4">
+          <%= link_to "キャンセル",
+                group_settings_path,
+                class: "flex-1 rounded-xl bg-stone-200 py-3 text-center text-sm font-bold text-stone-700" %>
+
+          <%= f.submit "変更する",
+                class: "flex-1 rounded-xl bg-blue-500 py-3 text-sm font-bold text-white" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
