@@ -21,7 +21,7 @@ class ShoppingItemsController < ApplicationController
     if @shopping_item.save
       redirect_to shopping_items_path, notice: "買うものを追加しました"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -32,7 +32,7 @@ class ShoppingItemsController < ApplicationController
     if @shopping_item.update(shopping_item_params)
       redirect_to shopping_items_path, notice: "買うものを更新しました"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

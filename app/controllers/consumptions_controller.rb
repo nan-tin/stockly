@@ -93,7 +93,7 @@ class ConsumptionsController < ApplicationController
         date: @consumption.consumed_at.strftime("%Y-%m-%d")
       ), notice: "消費履歴を追加しました"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -114,7 +114,7 @@ class ConsumptionsController < ApplicationController
         date: @consumption.consumed_at.strftime("%Y-%m-%d")
       ), notice: "消費履歴を更新しました"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

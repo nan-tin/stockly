@@ -73,7 +73,7 @@ class ItemsController < ApplicationController
         redirect_to items_path, notice: "既存アイテムの在庫数を更新しました"
       else
         @item = existing_item
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     else
       @item = current_group.items.build(item_params)
@@ -81,7 +81,7 @@ class ItemsController < ApplicationController
       if @item.save
         redirect_to items_path, notice: "アイテムを作成しました"
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
   end
@@ -93,7 +93,7 @@ class ItemsController < ApplicationController
     if @item.update(item_params)
       redirect_to items_path, notice: "アイテムを更新しました"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

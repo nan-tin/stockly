@@ -1,4 +1,8 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
-  layout 'mailer'
+  default from: ENV.fetch(
+    "MAIL_FROM",
+    "Stockly <onboarding@resend.dev>"
+  )
+
+  layout "mailer"
 end

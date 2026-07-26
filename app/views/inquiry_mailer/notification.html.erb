@@ -1,0 +1,51 @@
+<h1>Stocklyにお問い合わせが届きました</h1>
+
+<p>お問い合わせ内容は以下のとおりです。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left">ユーザーID</th>
+      <td><%= @user.id %></td>
+    </tr>
+
+    <tr>
+      <th align="left">登録メールアドレス</th>
+      <td><%= @user.email %></td>
+    </tr>
+
+    <tr>
+      <th align="left">返信先メールアドレス</th>
+      <td><%= @inquiry.email %></td>
+    </tr>
+
+    <tr>
+      <th align="left">お問い合わせ種類</th>
+      <td>
+        <%= {
+          "bug" => "不具合報告",
+          "feature" => "機能要望",
+          "other" => "その他"
+        }.fetch(@inquiry.inquiry_type) %>
+      </td>
+    </tr>
+
+    <tr>
+      <th align="left">送信日時</th>
+      <td><%= l(@inquiry.created_at, format: :long) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>お問い合わせ内容</h2>
+
+<p style="white-space: pre-wrap;"><%= @inquiry.content %></p>
+
+<% if @inquiry.image.attached? %>
+  <p>
+    添付画像：
+    <%= @inquiry.image.filename %>
+  </p>
+<% end %>

@@ -25,22 +25,22 @@ class GroupSettingsController < ApplicationController
 
     if joining_group.nil?
       flash.now[:alert] = "招待コードが見つかりません"
-      return render :join, status: :unprocessable_entity
+      return render :join, status: :unprocessable_content
     end
 
     if joining_group == current_group
       flash.now[:alert] = "現在所属しているグループの招待コードです"
-      return render :join, status: :unprocessable_entity
+      return render :join, status: :unprocessable_content
     end
 
     unless personal_group?
       flash.now[:alert] = "共有中のグループから別のグループには参加できません"
-      return render :join, status: :unprocessable_entity
+      return render :join, status: :unprocessable_content
     end
 
     unless current_group_empty?
       flash.now[:alert] = "在庫などのデータが残っているため参加できません"
-      return render :join, status: :unprocessable_entity
+      return render :join, status: :unprocessable_content
     end
 
     ActiveRecord::Base.transaction do
@@ -56,7 +56,7 @@ class GroupSettingsController < ApplicationController
                 notice: "共有グループに参加しました"
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed
     flash.now[:alert] = "グループへの参加に失敗しました"
-    render :join, status: :unprocessable_entity
+    render :join, status: :unprocessable_content
   end
 
   def regenerate_invite_code

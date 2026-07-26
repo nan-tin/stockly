@@ -11,6 +11,7 @@ class InquiriesController < ApplicationController
     @inquiry = current_user.inquiries.build(inquiry_params)
 
     if @inquiry.save
+      InquiryMailer.notification(@inquiry).deliver_later
       redirect_to thanks_inquiries_path
     else
       render :new, status: :unprocessable_content
