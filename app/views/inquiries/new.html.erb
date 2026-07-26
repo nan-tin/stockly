@@ -1,73 +1,158 @@
-<h1 class="mb-6 text-2xl font-bold">お問い合わせ</h1>
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-24">
+  <header class="relative flex h-16 items-center justify-center bg-white px-4">
+    <%= link_to settings_path,
+          class: "absolute left-4 flex items-center gap-1 text-stone-900" do %>
+      <%= heroicon "chevron-left",
+            type: :outline,
+            class: "h-7 w-7" %>
 
-<div class="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
-  <%= form_with model: @inquiry, class: "space-y-5" do |f| %>
-
-    <% if @inquiry.errors.any? %>
-      <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
-        <p class="font-semibold">入力内容を確認してください</p>
-
-        <ul class="mt-2 list-disc pl-5">
-          <% @inquiry.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
+      <span class="text-sm">
+        設定
+      </span>
     <% end %>
 
-    <div>
-      <%= f.label :inquiry_type,
-            "お問い合わせの種類",
-            class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <h1 class="text-xl font-bold text-stone-900">
+      お問い合わせ
+    </h1>
+  </header>
 
-      <%= f.select :inquiry_type,
-            [
-              ["不具合報告", "bug"],
-              ["機能要望", "feature"],
-              ["その他", "other"]
-            ],
-            {},
-            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+  <div class="px-4 py-10">
+    <div class="rounded-xl bg-white px-7 py-6">
+      <%= form_with model: @inquiry,
+            class: "space-y-5",
+            multipart: true,
+            html: { novalidate: true } do |f| %>
+
+        <p class="text-sm text-red-500">
+          ※は必ず入力してください
+        </p>
+
+        <% inquiry_type_error = @inquiry.errors[:inquiry_type].any? %>
+
+        <div>
+          <%= f.label :inquiry_type,
+                class: "mb-2 block text-sm font-medium text-stone-900" do %>
+            お問い合わせの種類
+            <span class="text-red-500">※</span>
+          <% end %>
+
+          <div class="relative">
+            <%= f.select :inquiry_type,
+                  [
+                    ["不具合報告", "bug"],
+                    ["機能要望", "feature"],
+                    ["その他", "other"]
+                  ],
+                  {
+                    include_blank: "選択してください"
+                  },
+                  class: [
+                    "h-12 w-full appearance-none rounded-lg border bg-white px-4 pr-10 text-base text-stone-900 focus:outline-none focus:ring-1",
+                    inquiry_type_error ?
+                      "border-red-500 focus:border-red-500 focus:ring-red-500" :
+                      "border-stone-400 focus:border-blue-500 focus:ring-blue-500"
+                  ] %>
+
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+              <%= heroicon "chevron-down",
+                    type: :outline,
+                    class: "h-5 w-5 text-stone-900" %>
+            </div>
+          </div>
+
+          <% if inquiry_type_error %>
+            <p class="mt-2 text-sm text-red-500">
+              お問い合わせの種類は必須です。
+            </p>
+          <% end %>
+        </div>
+
+        <% email_error = @inquiry.errors[:email].any? %>
+
+        <div>
+          <%= f.label :email,
+                class: "mb-2 block text-sm font-medium text-stone-900" do %>
+            メールアドレス
+            <span class="text-red-500">※</span>
+          <% end %>
+
+          <%= f.email_field :email,
+                placeholder: "例：example@icloud.com",
+                autocomplete: "email",
+                class: [
+                  "h-12 w-full rounded-lg border bg-white px-4 text-base text-stone-900 placeholder:text-stone-300 focus:outline-none focus:ring-1",
+                  email_error ?
+                    "border-red-500 focus:border-red-500 focus:ring-red-500" :
+                    "border-stone-400 focus:border-blue-500 focus:ring-blue-500"
+                ] %>
+
+          <% if email_error %>
+            <p class="mt-2 text-sm text-red-500">
+              <% if @inquiry.email.blank? %>
+                メールアドレスは必須です。
+              <% else %>
+                メールアドレスの形式が正しくありません。
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+
+        <% content_error = @inquiry.errors[:content].any? %>
+
+        <div>
+          <%= f.label :content,
+                class: "mb-2 block text-sm font-medium text-stone-900" do %>
+            お問い合わせ内容
+            <span class="text-red-500">※</span>
+          <% end %>
+
+          <%= f.text_area :content,
+                rows: 6,
+                placeholder: "例：カテゴリー追加ができなくなりました。",
+                class: [
+                  "min-h-40 w-full resize-none rounded-lg border bg-white px-4 py-3 text-base leading-relaxed text-stone-900 placeholder:text-stone-300 focus:outline-none focus:ring-1",
+                  content_error ?
+                    "border-red-500 focus:border-red-500 focus:ring-red-500" :
+                    "border-stone-400 focus:border-blue-500 focus:ring-blue-500"
+                ] %>
+
+          <% if content_error %>
+            <p class="mt-2 text-sm text-red-500">
+              <% if @inquiry.content.blank? %>
+                お問い合わせ内容は必須です。
+              <% else %>
+                お問い合わせ内容は2,000文字以内で入力してください。
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+
+        <div>
+          <p class="mb-2 text-sm font-medium text-stone-900">
+            画像の添付
+          </p>
+
+          <%= f.file_field :image,
+                accept: "image/png,image/jpeg,image/gif,image/webp",
+                class: "sr-only" %>
+
+          <%= label_tag :inquiry_image,
+                class: "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-stone-500 bg-white px-4 py-3 text-sm font-medium text-stone-900 hover:bg-stone-50" do %>
+            <%= heroicon "photo",
+                  type: :outline,
+                  class: "h-6 w-6" %>
+
+            <span>
+              画像を添付
+            </span>
+          <% end %>
+        </div>
+
+        <div class="flex justify-center pt-1">
+          <%= f.submit "送信する",
+                class: "cursor-pointer rounded-lg bg-blue-500 px-5 py-3 text-base font-semibold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+        </div>
+      <% end %>
     </div>
-
-    <div>
-      <%= f.label :email,
-            "返信先メールアドレス",
-            class: "mb-1 block text-sm font-semibold text-stone-700" %>
-
-      <%= f.email_field :email,
-            placeholder: "example@email.com",
-            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
-    </div>
-
-    <div>
-      <%= f.label :content,
-            "お問い合わせ内容",
-            class: "mb-1 block text-sm font-semibold text-stone-700" %>
-
-      <%= f.text_area :content,
-            rows: 6,
-            placeholder: "お問い合わせ内容をご入力ください",
-            class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
-    </div>
-
-    <div>
-      <%= f.label :image,
-            "画像添付",
-            class: "mb-1 block text-sm font-semibold text-stone-700" %>
-
-      <%= f.file_field :image,
-            class: "block w-full text-sm text-stone-700 file:mr-4 file:rounded-lg file:border-0 file:bg-stone-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" %>
-    </div>
-
-    <div class="flex gap-3 pt-4">
-      <%= link_to "キャンセル",
-            settings_path,
-            class: "flex-1 rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-sm font-semibold text-stone-700" %>
-
-      <%= f.submit "送信",
-            class: "flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-semibold text-white" %>
-    </div>
-
-  <% end %>
+  </div>
 </div>
