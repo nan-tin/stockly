@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
     login_path
   end
 
+  def after_sign_in_path_for(_resource)
+    items_path
+  end
+
   private
 
   def current_group

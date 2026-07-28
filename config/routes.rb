@@ -39,7 +39,13 @@ Rails.application.routes.draw do
   post "users/guest_sign_in", 
         to: "users/sessions#guest_sign_in"
   
-  root "categories#index"
+  authenticated :user do
+    root "categories#index", as: :authenticated_root
+  end
+
+  unauthenticated :user do
+    root "users/sessions#login", as: :unauthenticated_root
+  end
 
   resources :categories
 
