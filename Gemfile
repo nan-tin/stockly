@@ -14,6 +14,8 @@ gem "holiday_jp"
 
 gem "rails-i18n"
 
+gem "resend"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.1.6'
 

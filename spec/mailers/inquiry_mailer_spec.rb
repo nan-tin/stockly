@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe InquiryMailer, type: :mailer do
   describe "#notification" do
+    let(:admin_email) { "admin@example.com" }
+
     let(:inquiry) do
       create(
         :inquiry,
@@ -15,8 +17,15 @@ RSpec.describe InquiryMailer, type: :mailer do
       described_class.notification(inquiry)
     end
 
+    before do
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch)
+        .with("INQUIRY_ADMIN_EMAIL")
+        .and_return(admin_email)
+    end
+
     it "管理者宛てに送信されること" do
-      expect(mail.to).to eq(["admin@example.com"])
+      expect(mail.to).to eq([admin_email])
     end
 
     it "問い合わせメールアドレスが返信先に設定されること" do

@@ -6,10 +6,7 @@ class InquiryMailer < ApplicationMailer
     attach_image if @inquiry.image.attached?
 
     mail(
-      to: ENV.fetch(
-        "INQUIRY_ADMIN_EMAIL",
-        "admin@example.com"
-      ),
+      to: ENV.fetch("INQUIRY_ADMIN_EMAIL"),
       reply_to: @inquiry.email,
       subject: "【Stockly】お問い合わせを受信しました"
     )
