@@ -2,5 +2,22 @@ ja:
   activerecord:
     attributes:
       shopping_item:
-        name: 商品名
+        name: アイテム名
         quantity: 購入数
+
+      category:
+        name: "カテゴリー名"
+
+      item:
+        name: "アイテム名"
+        quantity: "在庫数"
+
+      consumption:
+        item_name: "アイテム名"
+        consumed_at: "消費日"
+
+      inquiry:
+        name: "お名前"
+        email: "メールアドレス"
+        subject: "件名"
+        message: "お問い合わせ内容"

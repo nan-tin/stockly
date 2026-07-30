@@ -1,8 +1,9 @@
-<%= form_with model: category, class: "space-y-5" do |f| %>
+<%= form_with model: category do |f| %>
   <% if category.errors.any? %>
-    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+    <div class="mb-5 rounded-lg bg-red-50 p-4 text-sm text-red-700">
       <p class="font-semibold">入力内容を確認してください</p>
-      <ul class="mt-2 list-disc pl-5">
+
+      <ul class="mt-2 list-disc space-y-1 pl-5">
         <% category.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -11,19 +12,33 @@
   <% end %>
 
   <div>
-    <%= f.label :name, "カテゴリー名", class: "mb-1 block text-sm font-semibold text-stone-700" %>
+    <%= f.label :name,
+          "カテゴリー名",
+          class: "mb-2 block text-sm text-stone-500" %>
+
     <%= f.text_field :name,
           maxlength: 15,
-          placeholder: "例：冷蔵庫",
-          class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
+          autofocus: true,
+          placeholder: placeholder_text,
+          class: "w-full rounded-lg border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
   </div>
 
-  <div class="flex gap-3 pt-4">
-    <%= link_to "キャンセル",
-          settings_path,
-          class: "flex-1 rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-sm font-semibold text-stone-700" %>
+  <div class="mt-10 flex gap-4">
+    <% if category.persisted? %>
+      <%= link_to "削除",
+            category_path(category),
+            data: {
+              turbo_method: :delete,
+              turbo_confirm: "このカテゴリーを削除しますか？\n紐づいている在庫と買うものも削除されます。"
+            },
+            class: "flex-1 rounded-xl bg-stone-200 py-3 text-center text-sm font-bold text-red-500" %>
+    <% else %>
+      <%= link_to "キャンセル",
+            settings_path,
+            class: "flex-1 rounded-xl bg-stone-200 py-3 text-center text-sm font-bold text-blue-500" %>
+    <% end %>
 
     <%= f.submit submit_text,
-          class: "flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-semibold text-white" %>
+          class: "flex-1 rounded-xl bg-blue-500 py-3 text-sm font-bold text-white hover:bg-blue-600" %>
   </div>
 <% end %>
