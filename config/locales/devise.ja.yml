@@ -69,3 +69,23 @@ ja:
       not_saved:
         one: "入力内容を確認してください。（1件のエラーがあります）"
         other: "入力内容を確認してください。（%{count}件のエラーがあります）"
+
+  activerecord:
+    attributes:
+      user:
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        reset_password_token: "パスワード再設定用リンク"
+
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              blank: "を入力してください"
+              too_short: "は%{count}文字以上で入力してください"
+            password_confirmation:
+              confirmation: "が一致しません"
+            reset_password_token:
+              invalid: "が無効です"

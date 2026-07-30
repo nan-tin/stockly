@@ -1,25 +1,69 @@
-<h2>Change your password</h2>
-
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
-
-  <div class="field">
-    <p><%= f.label :password, "New password" %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100">
+  <header class="relative flex h-20 items-center justify-center border-b bg-white shadow-sm">
+    <%= link_to login_path,
+          class: "absolute left-5 text-stone-900",
+          aria: { label: "ログイン画面へ戻る" } do %>
+      <%= heroicon "chevron-left", type: :outline, class: "h-7 w-7" %>
     <% end %>
-    <p><%= f.password_field :password, autofocus: true, autocomplete: "new-password" %></p>
-  </div>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation, "Confirm new password" %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
+    <h1 class="text-xl font-bold text-stone-900">
+      パスワードの再設定
+    </h1>
+  </header>
 
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
+  <main class="px-5 pt-10">
+    <div class="mx-auto max-w-md rounded-2xl bg-white p-6 shadow">
+      <p class="mb-6 text-sm leading-6 text-stone-600">
+        新しいパスワードを入力してください。
+      </p>
 
-<%= render "users/shared/links" %>
+      <%= form_for(
+            resource,
+            as: resource_name,
+            url: password_path(resource_name),
+            html: { method: :put }
+          ) do |f| %>
+
+        <%= f.hidden_field :reset_password_token %>
+
+        <% if resource.errors.any? %>
+          <div class="mb-5 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+            <ul class="space-y-1">
+              <% resource.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-5">
+          <%= f.label :password,
+                "新しいパスワード",
+                class: "mb-2 block font-bold text-stone-900" %>
+
+          <p class="mb-2 text-sm text-stone-500">
+            6文字以上で入力してください
+          </p>
+
+          <%= f.password_field :password,
+                autofocus: true,
+                autocomplete: "new-password",
+                class: "w-full rounded-lg border border-stone-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" %>
+        </div>
+
+        <div class="mb-7">
+          <%= f.label :password_confirmation,
+                "新しいパスワード（確認）",
+                class: "mb-2 block font-bold text-stone-900" %>
+
+          <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                class: "w-full rounded-lg border border-stone-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" %>
+        </div>
+
+        <%= f.submit "パスワードを変更する",
+              class: "w-full rounded-lg bg-blue-500 py-3 font-bold text-white hover:bg-blue-600" %>
+      <% end %>
+    </div>
+  </main>
+</div>
