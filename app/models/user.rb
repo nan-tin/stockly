@@ -51,16 +51,23 @@ class User < ApplicationRecord
   end
 
   def create_personal_group
+    display_name =
+      if guest?
+        "ゲスト"
+      else
+        email.split("@").first.first(30)
+      end
+
     ActiveRecord::Base.transaction do
       group = Group.create!(
-        invite_code: SecureRandom.hex(4),
+        invite_code: generate_unique_invite_code,
         owner: self
       )
 
       GroupUser.create!(
         user: self,
         group: group,
-        display_name: email
+        display_name: display_name
       )
 
       ShoppingList.create!(
