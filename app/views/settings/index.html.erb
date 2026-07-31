@@ -103,14 +103,6 @@
                   confirm_path: destroy_account_path,
                   confirm_method: :delete %>
           </div>
-
-          <div class="flex items-center justify-between px-4 py-3 text-stone-900">
-            <span>会員登録を行う</span>
-
-            <%= heroicon "chevron-right",
-                  type: :outline,
-                  class: "h-5 w-5 text-stone-400" %>
-          </div>
         <% else %>
           <div data-controller="confirm-modal" class="border-b border-stone-100">
             <button
