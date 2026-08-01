@@ -1,4 +1,6 @@
 class Inquiry < ApplicationRecord
+  include ImageValidatable
+  
   belongs_to :user
 
   has_one_attached :image
@@ -10,6 +12,7 @@ class Inquiry < ApplicationRecord
   }
 
   validates :inquiry_type, presence: true
+
   validates :email,
             presence: true,
             format: {
@@ -23,4 +26,5 @@ class Inquiry < ApplicationRecord
               maximum: 2_000,
               allow_blank: true
             }
+
 end

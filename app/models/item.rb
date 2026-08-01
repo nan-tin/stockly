@@ -1,12 +1,16 @@
 class Item < ApplicationRecord
+  include ImageValidatable
+  
   belongs_to :group
   belongs_to :category
 
   has_one_attached :image
 
+  validate :image_size
+
   validates :name, 
             presence: true,
-            length: { maximum: 50 }
+            length: { maximum: 15 }
 
   validates :quantity, 
             presence: true,
@@ -17,4 +21,14 @@ class Item < ApplicationRecord
 
   validates :memo,
             length: { maximum: 500 }
+
+  private
+
+  def image_size
+    return unless image.attached?
+
+    if image.blob.byte_size > 5.megabytes
+      errors.add(:image, "は5MB以下にしてください")
+    end
+  end
 end

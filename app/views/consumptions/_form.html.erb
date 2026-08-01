@@ -81,6 +81,7 @@
             class: "text-sm font-bold text-stone-900" %>
 
       <%= f.text_field :item_name,
+            maxlength: 15,
             placeholder: "例：みかん",
             class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
     </div>
@@ -134,6 +135,7 @@
             class: "text-sm font-bold text-stone-900" %>
 
       <%= f.text_area :memo,
+            maxlength: 500,
             rows: 5,
             placeholder: "例：和歌山県産のみかん",
             class: "w-full resize-none rounded-lg border-0 px-0 py-0 text-sm focus:ring-0" %>

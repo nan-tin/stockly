@@ -63,6 +63,7 @@
     <div class="grid grid-cols-[90px_1fr] items-center py-3">
       <%= f.label :name, "アイテム名", class: "text-sm font-bold text-stone-900" %>
       <%= f.text_field :name,
+            maxlength: 15,
             placeholder: "例：みかん",
             class: "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm" %>
     </div>
@@ -143,6 +144,7 @@
     <div class="grid grid-cols-[90px_1fr] py-3">
       <%= f.label :memo, "メモ", class: "text-sm font-bold text-stone-900" %>
       <%= f.text_area :memo,
+            maxlength: 500,
             rows: 5,
             placeholder: "例：和歌山県産のみかん",
             class: "w-full resize-none rounded-lg border-0 px-0 py-0 text-sm focus:ring-0" %>

@@ -37,5 +37,41 @@ RSpec.describe Consumption, type: :model do
 
       expect(consumption).not_to be_valid
     end
+
+    it "カテゴリー名が15文字以内なら有効なこと" do
+      consumption = build(:consumption, category_name: "あ" * 15)
+
+      expect(consumption).to be_valid
+    end
+
+    it "カテゴリー名が16文字以上なら無効なこと" do
+      consumption = build(:consumption, category_name: "あ" * 16)
+
+      expect(consumption).not_to be_valid
+    end
+
+    it "アイテム名が15文字以内なら有効なこと" do
+      consumption = build(:consumption, item_name: "あ" * 15)
+
+      expect(consumption).to be_valid
+    end
+
+    it "アイテム名が16文字以上なら無効なこと" do
+      consumption = build(:consumption, item_name: "あ" * 16)
+
+      expect(consumption).not_to be_valid
+    end
+
+    it "メモが500文字以内なら有効なこと" do
+      consumption = build(:consumption, memo: "あ" * 500)
+
+      expect(consumption).to be_valid
+    end
+
+    it "メモが501文字以上なら無効なこと" do
+      consumption = build(:consumption, memo: "あ" * 501)
+
+      expect(consumption).not_to be_valid
+    end
   end
 end
