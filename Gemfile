@@ -79,6 +79,8 @@ group :development do
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
+  gem "brakeman", require: false
+  gem "bundler-audit", require: false
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
