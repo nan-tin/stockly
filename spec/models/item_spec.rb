@@ -8,7 +8,7 @@ RSpec.describe Item, type: :model do
       expect(item).to be_valid
     end
 
-    it "名前がなければ無効なこと" do\
+    it "名前がなければ無効なこと" do
       item = build(:item, name: nil)
 
       expect(item).not_to be_valid
@@ -25,5 +25,9 @@ RSpec.describe Item, type: :model do
 
       expect(item).not_to be_valid
     end
+  end
+
+  describe "画像バリデーション" do
+    it_behaves_like "画像バリデーション", :item
   end
 end

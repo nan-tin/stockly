@@ -26,4 +26,8 @@ RSpec.describe ShoppingItem, type: :model do
       expect(shopping_item).not_to be_valid
     end
   end
+
+  describe "画像バリデーション" do
+    it_behaves_like "画像バリデーション", :shopping_item
+  end
 end

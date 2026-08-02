@@ -74,4 +74,8 @@ RSpec.describe Consumption, type: :model do
       expect(consumption).not_to be_valid
     end
   end
+
+  describe "画像バリデーション" do
+    it_behaves_like "画像バリデーション", :consumption
+  end
 end
