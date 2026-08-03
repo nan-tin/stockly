@@ -33,6 +33,31 @@ RSpec.describe "ShoppingItems", type: :request do
 
       expect(response).to redirect_to(shopping_items_path)
     end
+
+    context "別グループのカテゴリーIDを送信した場合" do
+      let!(:other_user) { create(:user) }
+      let!(:other_category) do
+        other_user.groups.first.categories.create!(name: "他グループ")
+      end
+
+      it "買うものを作成できない" do
+        expect do
+          post shopping_items_path, params: {
+            shopping_item: {
+              category_id: other_category.id,
+              name: "不正な買うもの",
+              quantity: 1,
+              memo: ""
+            }
+          }
+        end.not_to change(ShoppingItem, :count)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include(
+          "カテゴリーは現在のグループに存在しません"
+        )
+      end
+    end
   end
 
   describe "PATCH /shopping_items/:id" do
@@ -52,6 +77,48 @@ RSpec.describe "ShoppingItems", type: :request do
 
       expect(response).to redirect_to(shopping_items_path)
       expect(shopping_item.reload.name).to eq "豆乳"
+    end
+
+    context "別グループのカテゴリーIDを送信した場合" do
+      let!(:shopping_item) do
+        create(
+          :shopping_item,
+          shopping_list: shopping_list,
+          category: category,
+          name: "牛乳"
+        )
+      end
+
+      let!(:other_user) { create(:user) }
+
+      let!(:other_category) do
+        other_user.groups.first.categories.create!(
+          name: "他グループ"
+        )
+      end
+
+      it "買うものを更新できない" do
+        original_category_id = shopping_item.category_id
+        original_name = shopping_item.name
+
+        patch shopping_item_path(shopping_item), params: {
+          shopping_item: {
+            category_id: other_category.id,
+            name: "変更後の名前",
+            quantity: shopping_item.quantity,
+            memo: shopping_item.memo
+          }
+        }
+
+        shopping_item.reload
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(shopping_item.category_id).to eq(original_category_id)
+        expect(shopping_item.name).to eq(original_name)
+        expect(response.body).to include(
+          "カテゴリーは現在のグループに存在しません"
+        )
+      end
     end
   end
 

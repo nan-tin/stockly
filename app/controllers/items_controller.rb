@@ -57,8 +57,10 @@ class ItemsController < ApplicationController
   end
 
   def create
+    category = current_group.categories.find(item_params[:category_id])
+
     existing_item = current_group.items.find_by(
-      category_id: item_params[:category_id],
+      category: category,
       name: item_params[:name],
       memo: item_params[:memo]
     )
@@ -70,31 +72,62 @@ class ItemsController < ApplicationController
       existing_item.memo = item_params[:memo] if item_params[:memo].present?
 
       if existing_item.save
-        redirect_to items_path, notice: "既存アイテムの在庫数を更新しました"
+        redirect_to items_path,
+                    notice: "既存アイテムの在庫数を更新しました"
       else
         @item = existing_item
         render :new, status: :unprocessable_content
       end
     else
-      @item = current_group.items.build(item_params)
+      @item = current_group.items.build(
+        item_params.except(:category_id)
+      )
+      @item.category = category
 
       if @item.save
-        redirect_to items_path, notice: "アイテムを作成しました"
+        redirect_to items_path,
+                    notice: "アイテムを作成しました"
       else
         render :new, status: :unprocessable_content
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    @item = current_group.items.build(
+      item_params.except(:category_id)
+    )
+    @item.errors.add(
+      :category,
+      "は現在のグループに存在しません"
+    )
+
+    render :new, status: :unprocessable_content
   end
 
   def edit
   end
 
   def update
-    if @item.update(item_params)
-      redirect_to items_path, notice: "アイテムを更新しました"
+    update_params = item_params.except(:category_id)
+
+    if item_params[:category_id].present?
+      @item.category = current_group.categories.find(
+        item_params[:category_id]
+      )
+    end
+
+    if @item.update(update_params)
+      redirect_to items_path,
+                  notice: "アイテムを更新しました"
     else
       render :edit, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordNotFound
+    @item.errors.add(
+      :category,
+      "は現在のグループに存在しません"
+    )
+
+    render :edit, status: :unprocessable_content
   end
 
   def destroy

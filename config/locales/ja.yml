@@ -4,6 +4,7 @@ ja:
       shopping_item:
         name: アイテム名
         quantity: 購入数
+        category: カテゴリー
 
       category:
         name: "カテゴリー名"
@@ -11,6 +12,7 @@ ja:
       item:
         name: "アイテム名"
         quantity: "在庫数"
+        category: カテゴリー
 
       consumption:
         item_name: "アイテム名"

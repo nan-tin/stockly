@@ -31,6 +31,33 @@ RSpec.describe "Items", type: :request do
 
       expect(response).to redirect_to(items_path)
     end
+
+     context "別グループのカテゴリーIDを送信した場合" do
+      let!(:other_user) { create(:user) }
+      let!(:other_category) do
+        other_user.groups.first.categories.create!(name: "他グループ")
+      end
+
+      it "アイテムを作成できない" do
+        expect do
+          post items_path, params: {
+            item: {
+              category_id: other_category.id,
+              name: "不正なアイテム",
+              quantity: 1,
+              purchased_at: Date.current,
+              expired_at: "",
+              memo: ""
+            }
+          }
+        end.not_to change(Item, :count)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include(
+          "カテゴリーは現在のグループに存在しません"
+        )
+      end
+    end
   end
 
   describe "PATCH /items/:id" do
@@ -50,6 +77,50 @@ RSpec.describe "Items", type: :request do
 
       expect(response).to redirect_to(items_path)
       expect(item.reload.name).to eq "豆乳"
+    end
+
+    context "別グループのカテゴリーIDを送信した場合" do
+      let!(:item) do
+        create(
+          :item,
+          group: group,
+          category: category,
+          name: "牛乳"
+        )
+      end
+
+      let!(:other_user) { create(:user) }
+
+      let!(:other_category) do
+        other_user.groups.first.categories.create!(
+          name: "他グループ"
+        )
+      end
+
+      it "アイテムを更新できない" do
+        original_category_id = item.category_id
+        original_name = item.name
+
+        patch item_path(item), params: {
+          item: {
+            category_id: other_category.id,
+            name: "変更後の名前",
+            quantity: item.quantity,
+            purchased_at: item.purchased_at,
+            expired_at: item.expired_at,
+            memo: item.memo
+          }
+        }
+
+        item.reload
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(item.category_id).to eq(original_category_id)
+        expect(item.name).to eq(original_name)
+        expect(response.body).to include(
+          "カテゴリーは現在のグループに存在しません"
+        )
+      end
     end
   end
 

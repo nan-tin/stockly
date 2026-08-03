@@ -16,24 +16,66 @@ class ShoppingItemsController < ApplicationController
   end
 
   def create
-    @shopping_item = current_group.shopping_list.shopping_items.build(shopping_item_params)
+    category = current_group.categories.find(
+      shopping_item_params[:category_id]
+    )
+
+    @shopping_item = current_group
+                      .shopping_list
+                      .shopping_items
+                      .build(
+                        shopping_item_params.except(:category_id)
+                      )
+
+    @shopping_item.category = category
 
     if @shopping_item.save
-      redirect_to shopping_items_path, notice: "買うものを追加しました"
+      redirect_to shopping_items_path,
+                  notice: "買うものを追加しました"
     else
       render :new, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordNotFound
+    @shopping_item = current_group
+                      .shopping_list
+                      .shopping_items
+                      .build(
+                        shopping_item_params.except(:category_id)
+                      )
+
+    @shopping_item.errors.add(
+      :category,
+      "は現在のグループに存在しません"
+    )
+
+    render :new, status: :unprocessable_content
   end
 
   def edit
   end
 
   def update
-    if @shopping_item.update(shopping_item_params)
-      redirect_to shopping_items_path, notice: "買うものを更新しました"
+    update_params = shopping_item_params.except(:category_id)
+
+    if shopping_item_params[:category_id].present?
+      @shopping_item.category = current_group.categories.find(
+        shopping_item_params[:category_id]
+      )
+    end
+
+    if @shopping_item.update(update_params)
+      redirect_to shopping_items_path,
+                  notice: "買うものを更新しました"
     else
       render :edit, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordNotFound
+    @shopping_item.errors.add(
+      :category,
+      "は現在のグループに存在しません"
+    )
+
+    render :edit, status: :unprocessable_content
   end
 
   def destroy
