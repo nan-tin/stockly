@@ -118,4 +118,124 @@ RSpec.describe "Settings", type: :request do
       expect(flash[:notice]).to eq("アカウントを削除しました")
     end
   end
+
+  describe "セキュリティと権限の確認" do
+    describe "DELETE /settings/data" do
+      context "共有グループの一般メンバーの場合" do
+        let!(:owner) { create(:user) }
+        let!(:member) { create(:user) }
+        let!(:shared_group) { owner.groups.first }
+
+        before do
+          # member作成時に自動生成された個人グループを削除
+          member.groups.first.destroy!
+
+          shared_group.group_users.create!(
+            user: member,
+            display_name: member.email
+          )
+
+          shared_group.items.create!(
+            category: shared_group.categories.first,
+            name: "共有グループの在庫",
+            quantity: 1,
+            purchased_at: Date.current
+          )
+
+          sign_in member
+        end
+
+        it "共有グループのデータを削除できない" do
+          expect do
+            delete destroy_data_path
+          end.not_to change(Item, :count)
+
+          expect(response).to redirect_to(settings_path)
+          expect(flash[:alert]).to eq("オーナーのみ操作できます")
+        end
+      end
+    end
+
+    describe "DELETE /settings/account" do
+      context "共有グループの一般メンバーの場合" do
+        let!(:owner) { create(:user) }
+        let!(:member) { create(:user) }
+        let!(:shared_group) { owner.groups.first }
+
+        before do
+          member.groups.first.destroy!
+
+          shared_group.group_users.create!(
+            user: member,
+            display_name: member.email
+          )
+
+          shared_group.items.create!(
+            category: shared_group.categories.first,
+            name: "共有グループの在庫",
+            quantity: 1,
+            purchased_at: Date.current
+          )
+
+          sign_in member
+        end
+
+        it "本人だけを削除し、共有グループとデータを残す" do
+          group_id = shared_group.id
+          item_id = shared_group.items.first.id
+          owner_id = owner.id
+          member_id = member.id
+
+          expect do
+            delete destroy_account_path
+          end.to change(User, :count).by(-1)
+            .and change(GroupUser, :count).by(-1)
+            .and change(Group, :count).by(0)
+            .and change(Item, :count).by(0)
+
+          expect(User.exists?(member_id)).to be false
+          expect(User.exists?(owner_id)).to be true
+          expect(Group.exists?(group_id)).to be true
+          expect(Item.exists?(item_id)).to be true
+
+          expect(response).to redirect_to(login_path)
+          expect(flash[:notice]).to eq("アカウントを削除しました")
+        end
+      end
+
+      context "共有グループのオーナーの場合" do
+        let!(:owner) { create(:user) }
+        let!(:member) { create(:user) }
+        let!(:shared_group) { owner.groups.first }
+
+        before do
+          member.groups.first.destroy!
+
+          shared_group.group_users.create!(
+            user: member,
+            display_name: member.email
+          )
+
+          sign_in owner
+        end
+
+        it "グループを解散する前はアカウントを削除できない" do
+          owner_id = owner.id
+          group_id = shared_group.id
+
+          expect do
+            delete destroy_account_path
+          end.not_to change(User, :count)
+
+          expect(User.exists?(owner_id)).to be true
+          expect(Group.exists?(group_id)).to be true
+
+          expect(response).to redirect_to(settings_path)
+          expect(flash[:alert]).to eq(
+            "共有グループのオーナーは、先にグループを解散してください"
+          )
+        end
+      end
+    end
+  end
 end
