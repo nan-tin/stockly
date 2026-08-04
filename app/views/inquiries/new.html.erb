@@ -127,25 +127,52 @@
           <% end %>
         </div>
 
-        <div>
+        <div data-controller="image-preview">
           <p class="mb-2 text-sm font-medium text-stone-900">
             画像の添付
           </p>
 
+          <div class="mb-3 flex justify-center">
+            <div class="flex h-40 w-40 items-center justify-center overflow-hidden rounded-xl border border-stone-300 bg-stone-50">
+              <img
+                data-image-preview-target="preview"
+                class="hidden h-full w-full object-contain"
+                alt="選択した画像のプレビュー">
+
+              <div
+                data-image-preview-target="placeholder"
+                class="flex flex-col items-center gap-2 text-stone-400">
+                <%= heroicon "photo",
+                      type: :outline,
+                      class: "h-8 w-8" %>
+
+                <span class="text-sm">
+                  選択した画像
+                </span>
+              </div>
+            </div>
+          </div>
+
           <%= f.file_field :image,
                 accept: "image/png,image/jpeg,image/gif,image/webp",
-                class: "sr-only" %>
+                class: "sr-only",
+                data: {
+                  image_preview_target: "input",
+                  action: "change->image-preview#preview"
+                } %>
 
-          <%= label_tag :inquiry_image,
-                class: "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-stone-500 bg-white px-4 py-3 text-sm font-medium text-stone-900 hover:bg-stone-50" do %>
-            <%= heroicon "photo",
-                  type: :outline,
-                  class: "h-6 w-6" %>
+          <div class="text-center">
+            <%= label_tag :inquiry_image,
+                  class: "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-stone-500 bg-white px-4 py-3 text-sm font-medium text-stone-900 hover:bg-stone-50" do %>
+              <%= heroicon "photo",
+                    type: :outline,
+                    class: "h-6 w-6" %>
 
-            <span>
-              画像を添付
-            </span>
-          <% end %>
+              <span>
+                画像を添付
+              </span>
+            <% end %>
+          </div>
         </div>
 
         <div class="flex justify-center pt-1">
