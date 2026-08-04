@@ -5,7 +5,7 @@ class Inquiry < ApplicationRecord
 
   has_one_attached :image
 
-  enum inquiry_type: {
+  enum :inquiry_type, {
     bug: 0,
     feature: 1,
     other: 2
