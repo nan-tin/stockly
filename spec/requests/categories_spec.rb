@@ -8,14 +8,6 @@ RSpec.describe "Categories", type: :request do
     sign_in user
   end
 
-  describe "GET /categories" do
-    it "正常にレスポンスが返ること" do
-      get categories_path
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   describe "POST /categories" do
     it "カテゴリーを作成できること" do
       expect {

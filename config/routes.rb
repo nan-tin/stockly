@@ -40,14 +40,14 @@ Rails.application.routes.draw do
         to: "users/sessions#guest_sign_in"
   
   authenticated :user do
-    root "categories#index", as: :authenticated_root
+    root "items#index", as: :authenticated_root
   end
 
   unauthenticated :user do
     root "users/sessions#login", as: :unauthenticated_root
   end
 
-  resources :categories
+  resources :categories, except: :index
 
   # collection do ... endはIDを必要としない追加アクション
   resources :items do
