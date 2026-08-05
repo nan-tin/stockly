@@ -40,14 +40,5 @@
     </div>
   </main>
 
-  <footer class="bg-white py-4 text-center text-xs text-stone-900">
-    <div class="space-x-2">
-      <%= link_to "利用規約", terms_path %>
-      <span>|</span>
-      <%= link_to "プライバシーポリシー", privacy_path %>
-      <span>|</span>
-      <%= link_to "お問い合わせ", new_inquiry_path %>
-    </div>
-    <p class="mt-1">© 2026 Stockly</p>
-  </footer>
+  <%= render "users/shared/auth_footer" %>
 </div>
