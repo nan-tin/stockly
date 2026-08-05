@@ -71,7 +71,6 @@ Rails.application.routes.draw do
     end
 
     member do
-      patch :purchase
       patch :increase_quantity
       patch :decrease_quantity
     end

@@ -108,6 +108,10 @@ class ShoppingItemsController < ApplicationController
         item.purchased_at = Date.current
         item.memo = shopping_item.memo if item.memo.blank?
 
+        if shopping_item.image.attached? && !item.image.attached?
+          item.image.attach(shopping_item.image.blob)
+        end
+
         item.save!
         shopping_item.destroy!
       end
@@ -134,33 +138,6 @@ class ShoppingItemsController < ApplicationController
     redirect_to shopping_items_path,
                 notice: "選択した買うものを削除しました"
   end  
-
-  def purchase
-    shopping_item = current_group
-                      .shopping_list
-                      .shopping_items
-                      .find(params[:id])
-
-    ActiveRecord::Base.transaction do
-      item = current_group.items.find_or_initialize_by(
-        category: shopping_item.category,
-        name: shopping_item.name,
-        memo: shopping_item.memo
-      )
-
-      item.quantity ||= 0
-      item.quantity += shopping_item.quantity
-      item.purchased_at = Date.current
-      item.memo = shopping_item.memo if item.memo.blank?
-
-      item.save!
-
-      shopping_item.destroy!
-    end
-
-    redirect_to shopping_items_path,
-                notice: "在庫へ追加しました"
-  end
 
   def increase_quantity
     @shopping_item.increment!(:quantity)

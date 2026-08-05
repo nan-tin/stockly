@@ -197,6 +197,10 @@ class ItemsController < ApplicationController
       @shopping_item.quantity += 1
     end
 
+    if @item.image.attached? && !@shopping_item.image.attached?
+      @shopping_item.image.attach(@item.image.blob)
+    end
+
     @shopping_item.save!
 
     @shopping_quantity = shopping_quantity_for(@item)

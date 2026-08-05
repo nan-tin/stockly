@@ -137,31 +137,6 @@ RSpec.describe "ShoppingItems", type: :request do
       expect(response).to redirect_to(shopping_items_path)
     end
   end
-
-  describe "PATCH /shopping_items/:id/purchase" do
-    it "買う物を在庫に追加し、買うものリストから削除できること" do
-      shopping_item = create(
-        :shopping_item,
-        shopping_list: shopping_list,
-        category: category,
-        name: "牛乳",
-        quantity: 2,
-        memo: "テスト用メモ" 
-      )
-
-      expect {
-        patch purchase_shopping_item_path(shopping_item)
-      }.to change(Item, :count).by(1)
-      .and change(ShoppingItem, :count).by(-1)
-
-      expect(response).to redirect_to(shopping_items_path)
-
-      item = Item.last
-      expect(item.name).to eq "牛乳"
-      expect(item.quantity).to eq 2
-      expect(item.memo).to eq "テスト用メモ"
-    end
-  end
 end
 
 
