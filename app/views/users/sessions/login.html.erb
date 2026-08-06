@@ -1,54 +1,73 @@
-<div class="mx-auto flex min-h-screen max-w-[390px] flex-col bg-stone-100">
+<div class="-mx-4 -mt-6 flex min-h-screen flex-col bg-stone-100">
   <header class="bg-white py-4 text-center shadow-sm">
-    <h1 class="text-lg font-bold">ログイン</h1>
+    <h1 class="text-lg font-bold text-stone-900">
+      ログイン
+    </h1>
   </header>
 
   <main class="flex flex-1 items-start justify-center px-6 pt-10">
-    <div class="w-full rounded-xl bg-white px-6 py-7 shadow-sm">
+    <div class="w-full max-w-sm rounded-xl bg-white px-6 py-7 shadow-md">
       <div class="mb-8 text-center">
-        <h2 class="text-3xl font-bold">Stockly</h2>
-        <p class="mt-2 text-xs text-stone-500">在庫管理を、もっとシンプルに</p>
+        <h2 class="text-3xl font-bold text-stone-900">
+          Stockly
+        </h2>
+
+        <p class="mt-2 text-xs text-stone-500">
+          在庫管理を、もっとシンプルに
+        </p>
       </div>
 
       <%= link_to new_user_session_path,
-            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900" do %>
-        <span><%= heroicon "envelope",
-                    variant: :outline,
-                    options: { class: "h-5 w-5" } %></span>
+            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900 transition hover:bg-stone-50" do %>
+        <%= heroicon "envelope",
+              variant: :outline,
+              options: { class: "h-5 w-5" } %>
+
         <span>メールアドレスでログイン</span>
       <% end %>
 
       <div class="mt-5 text-center">
-        <%= link_to "新規登録はこちら", new_user_registration_path,
-              class: "text-sm text-blue-500" %>
+        <%= link_to "新規登録はこちら",
+              new_user_registration_path,
+              class: "text-sm text-blue-500 hover:underline" %>
       </div>
 
       <div class="my-8 flex items-center gap-3">
         <div class="h-px flex-1 bg-stone-200"></div>
-        <span class="text-xs text-stone-400">または</span>
+
+        <span class="text-xs text-stone-400">
+          または
+        </span>
+
         <div class="h-px flex-1 bg-stone-200"></div>
       </div>
 
       <%= button_to user_google_oauth2_omniauth_authorize_path,
             method: :post,
             data: { turbo: false },
-            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900" do %>
+            class: "flex w-full items-center justify-center gap-3 rounded border border-stone-900 px-4 py-3 text-sm font-bold text-stone-900 transition hover:bg-stone-50" do %>
         <%= image_tag "google_logo.svg",
+              alt: "Google",
               class: "h-5 w-5" %>
+
         <span>Googleでログイン</span>
       <% end %>
 
       <div class="mt-6 text-center">
-        <button type="button"
-                onclick="document.getElementById('guest-modal').showModal()"
-                class="text-sm font-semibold text-blue-500">
+        <button
+          type="button"
+          onclick="document.getElementById('guest-modal').showModal()"
+          class="text-sm font-semibold text-blue-500 hover:underline"
+        >
           ゲストとして使ってみる
         </button>
       </div>
 
-      <dialog id="guest-modal"
-              onclick="if (event.target === this) this.close()"
-              class="fixed inset-0 m-auto w-[330px] rounded-2xl bg-white p-0 shadow-xl backdrop:bg-black/40">
+      <dialog
+        id="guest-modal"
+        onclick="if (event.target === this) this.close()"
+        class="fixed inset-0 m-auto w-[330px] rounded-2xl bg-white p-0 shadow-xl backdrop:bg-black/40"
+      >
         <div class="px-6 py-8 text-left">
           <p class="text-sm leading-7 text-stone-900">
             ゲストアカウントでは、<br>
@@ -72,11 +91,13 @@
             <%= button_to "続ける",
                   users_guest_sign_in_path,
                   method: :post,
-                  class: "w-full rounded bg-blue-500 px-4 py-3 text-sm font-bold text-white" %>
+                  class: "w-full rounded bg-blue-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-600" %>
 
-            <button type="button"
-                    onclick="document.getElementById('guest-modal').close()"
-                    class="w-full rounded border border-stone-900 bg-white px-4 py-3 text-sm font-bold text-stone-900">
+            <button
+              type="button"
+              onclick="document.getElementById('guest-modal').close()"
+              class="w-full rounded border border-stone-900 bg-white px-4 py-3 text-sm font-bold text-stone-900 transition hover:bg-stone-50"
+            >
               戻る
             </button>
           </div>
