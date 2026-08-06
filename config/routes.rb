@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get 'group_settings/index'
   get "terms", to: "static_pages#terms"
   get "privacy", to: "static_pages#privacy"
+  get "guide", to: "static_pages#guide", as: :guide
   
   get "settings", to: "settings#index"
 

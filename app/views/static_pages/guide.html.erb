@@ -1,0 +1,183 @@
+<div class="-mx-4 -mt-6 min-h-screen bg-stone-100 pb-28">
+  <header class="sticky top-0 z-20 bg-white py-4 text-center shadow-sm">
+    <div class="relative mx-auto w-full">
+      <%= link_to settings_path,
+            class: "absolute left-4 top-1/2 -translate-y-1/2 text-stone-900" do %>
+        <%= heroicon "chevron-left",
+              variant: :outline,
+              options: { class: "h-6 w-6" } %>
+      <% end %>
+
+      <h1 class="text-lg font-bold">アプリの使い方</h1>
+    </div>
+  </header>
+
+  <main class="px-4 py-6">
+    <p class="mb-6 text-sm leading-6 text-stone-600">
+      Stocklyの基本的な使い方をご案内します。<br>
+      知りたい項目を選んでください。
+    </p>
+
+    <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+      <details class="group border-b border-stone-200" open>
+        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-5">
+          <span class="font-semibold">在庫を追加する</span>
+
+          <%= heroicon "chevron-down",
+                variant: :outline,
+                options: {
+                  class: "h-5 w-5 shrink-0 text-stone-500 transition-transform group-open:rotate-180"
+                } %>
+        </summary>
+
+        <div class="px-5 pb-5 text-sm leading-7 text-stone-600">
+          <ol class="list-decimal space-y-2 pl-5">
+            <li>
+              画面下部の「アイテム追加」をタップします。
+            </li>
+            <li>
+              カテゴリー・アイテム名・購入日・在庫数などを入力します。
+            </li>
+            <li>
+              画面下部の「登録」をタップします。
+            </li>
+          </ol>
+
+          <p class="mt-4">
+            画像を追加した場合は、買うものリストや消費履歴にも引き継がれます。
+          </p>
+        </div>
+      </details>
+
+      <details class="group border-b border-stone-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-5">
+          <span class="font-semibold">在庫を消費する</span>
+
+          <%= heroicon "chevron-down",
+                variant: :outline,
+                options: {
+                  class: "h-5 w-5 shrink-0 text-stone-500 transition-transform group-open:rotate-180"
+                } %>
+        </summary>
+
+        <div class="px-5 pb-5 text-sm leading-7 text-stone-600">
+          <ol class="list-decimal space-y-2 pl-5">
+            <li>
+              ホーム画面で、消費するアイテムの「－」をタップします。
+            </li>
+            <li>
+              在庫数が1つ減り、消費履歴に記録されます。
+            </li>
+          </ol>
+
+          <p class="mt-4">
+            在庫数を増やす場合は「＋」をタップします。
+          </p>
+        </div>
+      </details>
+
+      <details class="group border-b border-stone-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-5">
+          <span class="font-semibold">買うものリストを使う</span>
+
+          <%= heroicon "chevron-down",
+                variant: :outline,
+                options: {
+                  class: "h-5 w-5 shrink-0 text-stone-500 transition-transform group-open:rotate-180"
+                } %>
+        </summary>
+
+        <div class="px-5 pb-5 text-sm leading-7 text-stone-600">
+          <ol class="list-decimal space-y-2 pl-5">
+            <li>
+              ホーム画面のカートアイコンから、アイテムを買うものリストへ追加できます。
+            </li>
+            <li>
+              買うもの画面では、アイテムの個数を「＋」「－」で変更できます。
+            </li>
+            <li>
+              購入したアイテムを選択し、「購入済みにする」をタップします。
+            </li>
+          </ol>
+
+          <p class="mt-4">
+            購入済みにすると、アイテムの情報や画像を引き継いで在庫へ登録できます。
+          </p>
+        </div>
+      </details>
+
+      <details class="group border-b border-stone-200">
+        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-5">
+          <span class="font-semibold">消費履歴を見る</span>
+
+          <%= heroicon "chevron-down",
+                variant: :outline,
+                options: {
+                  class: "h-5 w-5 shrink-0 text-stone-500 transition-transform group-open:rotate-180"
+                } %>
+        </summary>
+
+        <div class="px-5 pb-5 text-sm leading-7 text-stone-600">
+          <p>
+            画面下部の「消費履歴」から、消費したアイテムを日付ごとに確認できます。
+          </p>
+
+          <p class="mt-4">
+            カレンダーの日付を選択すると、その日に消費したアイテムが表示されます。
+          </p>
+
+          <p class="mt-4">
+            月のまとめでは、アイテムごとの消費数を月単位で確認できます。
+          </p>
+        </div>
+      </details>
+
+      <details class="group">
+        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-5">
+          <span class="font-semibold">家族・複数人で共有する</span>
+
+          <%= heroicon "chevron-down",
+                variant: :outline,
+                options: {
+                  class: "h-5 w-5 shrink-0 text-stone-500 transition-transform group-open:rotate-180"
+                } %>
+        </summary>
+
+        <div class="px-5 pb-5 text-sm leading-7 text-stone-600">
+          <p>
+            家族や同居人など、複数人で在庫情報を共有できます。
+          </p>
+
+          <ol class="mt-4 list-decimal space-y-2 pl-5">
+            <li>
+              設定画面の「家族・複数人で使う」をタップします。
+            </li>
+            <li>
+              共有相手を招待する場合は、表示されている招待コードを相手に伝えます。
+            </li>
+            <li>
+              共有グループに参加する場合は、「招待コードで参加する」をタップします。
+            </li>
+            <li>
+              相手から受け取った招待コードを入力し、「参加する」をタップします。
+            </li>
+          </ol>
+
+          <p class="mt-4">
+            グループに参加すると、在庫・買うものリスト・消費履歴をメンバー全員で共有できます。
+          </p>
+
+          <div class="mt-4 space-y-2 text-xs leading-5 text-stone-500">
+            <p>
+              ※個人グループに在庫・買うもの・消費履歴が残っている場合は、共有グループに参加できません。
+            </p>
+
+            <p>
+              ※ゲストアカウントでは共有機能を利用できません。
+            </p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </main>
+</div>
