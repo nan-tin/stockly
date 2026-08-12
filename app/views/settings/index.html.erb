@@ -158,22 +158,6 @@
                 Googleアカウントでログイン中
               </p>
             </div>
-          <% else %>
-            <div class="flex items-center justify-between border-b border-stone-100 px-4 py-3 text-stone-900">
-              <span>メールアドレスの変更</span>
-
-              <%= heroicon "chevron-right",
-                    type: :outline,
-                    class: "h-5 w-5 text-stone-400" %>
-            </div>
-
-            <div class="flex items-center justify-between border-b border-stone-100 px-4 py-3 text-stone-900">
-              <span>パスワード変更</span>
-
-              <%= heroicon "chevron-right",
-                    type: :outline,
-                    class: "h-5 w-5 text-stone-400" %>
-            </div>
           <% end %>
 
           <div data-controller="confirm-modal">
