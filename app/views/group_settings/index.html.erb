@@ -94,22 +94,24 @@
       </div>
     </section>
 
-    <section>
-      <h2 class="mb-2 px-4 text-sm text-stone-400">
-        グループに参加
-      </h2>
+    <% if @personal_group %>
+      <section>
+        <h2 class="mb-2 px-4 text-sm text-stone-400">
+          グループに参加
+        </h2>
 
-      <div class="bg-white">
-        <%= link_to join_group_settings_path,
-              class: "flex items-center justify-between px-4 py-3 text-stone-900" do %>
-          <span>招待コードで参加する</span>
+        <div class="bg-white">
+          <%= link_to join_group_settings_path,
+                class: "flex items-center justify-between px-4 py-3 text-stone-900" do %>
+            <span>招待コードで参加する</span>
 
-          <%= heroicon "chevron-right",
-                type: :outline,
-                class: "h-5 w-5 text-stone-400" %>
-        <% end %>
-      </div>
-    </section>
+            <%= heroicon "chevron-right",
+                  type: :outline,
+                  class: "h-5 w-5 text-stone-400" %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
 
     <% if @group.owner != current_user %>
       <section>

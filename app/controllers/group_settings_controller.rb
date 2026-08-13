@@ -14,6 +14,7 @@ class GroupSettingsController < ApplicationController
                   .group_users
                   .includes(:user)
                   .order(:created_at)
+    @personal_group = personal_group?           
   end
 
   def join
