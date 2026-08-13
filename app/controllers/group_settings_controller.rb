@@ -43,12 +43,16 @@ class GroupSettingsController < ApplicationController
       return render :join, status: :unprocessable_content
     end
 
+    display_name = current_group.group_users.find_by!(
+      user: current_user
+    ).display_name
+
     ActiveRecord::Base.transaction do
       current_group.destroy!
 
       joining_group.group_users.create!(
         user: current_user,
-        display_name: current_user.email
+        display_name: display_name
       )
     end
 
@@ -74,12 +78,18 @@ class GroupSettingsController < ApplicationController
   def leave
     leaving_group = current_group
 
-    ActiveRecord::Base.transaction do
-      leaving_group.group_users.find_by!(
-        user: current_user
-      ).destroy!
+    group_user = leaving_group.group_users.find_by!(
+      user: current_user
+    )
 
-      current_user.create_personal_group
+    display_name = group_user.display_name
+
+    ActiveRecord::Base.transaction do
+      group_user.destroy!
+
+      current_user.create_personal_group(
+        display_name: display_name
+      )
     end
 
     redirect_to settings_path,
@@ -93,12 +103,21 @@ class GroupSettingsController < ApplicationController
 
   def disband
     disbanding_group = current_group
-    members = disbanding_group.users.to_a
+    member_data = disbanding_group.group_users.includes(:user).map do |group_user|
+      {
+        user: group_user.user,
+        display_name: group_user.display_name
+      }
+    end
 
     ActiveRecord::Base.transaction do
       disbanding_group.destroy!
 
-      members.each(&:create_personal_group)
+      member_data.each do |member|
+        member[:user].create_personal_group(
+          display_name: member[:display_name]
+        )
+      end
     end
 
     redirect_to settings_path,

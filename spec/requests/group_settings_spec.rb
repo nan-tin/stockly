@@ -104,6 +104,20 @@ RSpec.describe "GroupSettings", type: :request do
         expect(personal_group.shopping_list).to be_present
         expect(personal_group.categories.pluck(:name)).to include("冷蔵庫")
       end
+
+      it "グループ退出後も表示名が維持されること" do
+        group_user = shared_group.group_users.find_by!(user: member)
+        group_user.update!(display_name: "はなこ")
+
+        delete leave_group_settings_path
+
+        expect(response).to redirect_to(settings_path)
+
+        personal_group = member.reload.groups.first
+        new_group_user = personal_group.group_users.find_by!(user: member)
+
+        expect(new_group_user.display_name).to eq("はなこ")
+      end
     end
 
     context "オーナーの場合" do
@@ -163,6 +177,27 @@ RSpec.describe "GroupSettings", type: :request do
         expect(member_personal_group.users).to contain_exactly(member)
         expect(member_personal_group.shopping_list).to be_present
         expect(member_personal_group.categories.pluck(:name)).to include("冷蔵庫")
+      end
+
+      it "グループ解散後も各メンバーの表示名が維持されること" do
+        owner_group_user = shared_group.group_users.find_by!(user: owner)
+        member_group_user = shared_group.group_users.find_by!(user: member)
+
+        owner_group_user.update!(display_name: "たろう")
+        member_group_user.update!(display_name: "はなこ")
+
+        delete disband_group_settings_path
+
+        expect(response).to redirect_to(settings_path)
+
+        owner_group_user =
+          owner.reload.groups.first.group_users.find_by!(user: owner)
+
+        member_group_user =
+          member.reload.groups.first.group_users.find_by!(user: member)
+
+        expect(owner_group_user.display_name).to eq("たろう")
+        expect(member_group_user.display_name).to eq("はなこ")
       end
     end
 
@@ -232,4 +267,29 @@ RSpec.describe "GroupSettings", type: :request do
       end
     end
   end
+
+  describe "POST /group_settings/join_group" do
+    it "グループ参加後も表示名が維持される" do
+      user = create(:user)
+      joining_user = create(:user)
+
+      personal_group = joining_user.groups.first
+      group_user = personal_group.group_users.find_by!(user: joining_user)
+      group_user.update!(display_name: "はなこ")
+
+      shared_group = user.groups.first
+
+      sign_in joining_user
+
+      post join_group_group_settings_path, params: {
+        invite_code: shared_group.invite_code
+      }
+
+      expect(response).to redirect_to(group_settings_path)
+
+      new_group_user = shared_group.group_users.find_by!(user: joining_user)
+
+      expect(new_group_user.display_name).to eq("はなこ")
+    end
+  end    
 end

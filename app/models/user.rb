@@ -50,13 +50,12 @@ class User < ApplicationRecord
     user
   end
 
-  def create_personal_group
-    display_name =
-      if guest?
-        "ゲスト"
-      else
-        email.split("@").first.first(30)
-      end
+  def create_personal_group(display_name: nil)
+    display_name ||= if guest?
+                      "ゲスト"
+                    else
+                      email.split("@").first.first(30)
+                    end
 
     ActiveRecord::Base.transaction do
       group = Group.create!(
