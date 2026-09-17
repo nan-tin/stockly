@@ -15,6 +15,137 @@ RSpec.describe "Items", type: :request do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it "カテゴリーでアイテムを絞り込めること" do
+      other_category = create(:category, group: group)
+
+      target_item = create(
+        :item,
+        group: group,
+        category: category,
+        name: "牛乳"
+      )
+
+      other_item = create(
+        :item,
+        group: group,
+        category: other_category,
+        name: "卵"
+      )
+
+      get items_path, params: { category_id: category.id }
+
+      expect(response.body).to include(target_item.name)
+      expect(response.body).not_to include(other_item.name)
+    end
+
+    it "数量の多い順に並び替えられること" do
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "少ない",
+        quantity: 1
+      )
+
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "多い",
+        quantity: 5
+      )
+
+      get items_path, params: { sort: "quantity_desc" }
+
+      expect(response.body.index("多い")).to be < response.body.index("少ない")
+    end
+
+    it "数量の少ない順に並び替えられること" do
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "少ない",
+        quantity: 1
+      )
+
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "多い",
+        quantity: 5
+      )
+
+      get items_path, params: { sort: "quantity_asc" }
+
+      expect(response.body.index("少ない")).to be < response.body.index("多い")
+    end
+
+    it "名前の昇順で並び替えられること" do
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "Banana"
+      )
+
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "Apple"
+      )
+
+      get items_path, params: { sort: "name_asc" }
+
+      expect(response.body.index("Apple")).to be < response.body.index("Banana")
+    end
+
+    it "購入日の新しい順で並び替えられること" do
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "古いアイテム",
+        purchased_at: 2.day.ago.to_date
+      )
+
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "新しいアイテム",
+        purchased_at: Date.current
+      )
+
+      get items_path, params: { sort: "purchased_desc" }
+
+      expect(response.body.index("新しいアイテム")).to be < response.body.index("古いアイテム")
+    end
+
+    it "購入日の古い順で並び替えられること" do
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "古いアイテム",
+        purchased_at: 2.day.ago.to_date
+      )
+
+      create(
+        :item,
+        group: group,
+        category: category,
+        name: "新しいアイテム",
+        purchased_at: Date.current
+      )
+
+      get items_path, params: { sort: "purchased_asc" }
+
+      expect(response.body.index("古いアイテム")).to be < response.body.index("新しいアイテム")
+    end
   end
 
   describe "POST /items" do
